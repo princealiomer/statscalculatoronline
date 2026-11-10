@@ -64,6 +64,14 @@ import {
   quadraticRegression,
   simpleLinearRegression,
 } from "@/lib/stats/regression";
+import {
+  cca as runCca,
+  cfaOneFactor,
+  efa as runEfa,
+  lda as runLda,
+  pca as runPca,
+  tobitMLE,
+} from "@/lib/stats/multivariate";
 import { parseGroups, parseMatrix, parseNumbers, parsePaired } from "@/lib/stats/parse";
 import { apaTest, fmt, fmtP, type CalcResult } from "@/lib/stats/format";
 import { runSoupStats } from "@/lib/calculators/engines/soupStats";
@@ -1645,8 +1653,7 @@ export function runEngine(engine: string, input: EngineInput): CalcResult {
       }
 
       case "mlr":
-      case "log-reg":
-      case "tobit": {
+      case "log-reg": {
         const rows = parseMatrix(input.data ?? "");
         if (rows.length < 4) throw new Error("Paste rows as y,x1,x2,...");
         const y = rows.map((r) => r[0]);
@@ -1670,65 +1677,161 @@ export function runEngine(engine: string, input: EngineInput): CalcResult {
             })),
             { label: "R²", value: fmt(fit.r2) },
             { label: "Adj R²", value: fmt(fit.adjR2) },
-            ...(engine === "tobit"
-              ? [{ label: "Note", value: "OLS baseline for censored outcomes" }]
-              : []),
           ],
           [{ title: "Multiple regression", detail: `R²=${fmt(fit.r2)}` }],
+        );
+      }
+
+      case "tobit": {
+        const rows = parseMatrix(input.data ?? "");
+        if (rows.length < 5) throw new Error("Paste rows as y,x1,x2,...");
+        const limit = Number(input.limit ?? "0");
+        const fit = tobitMLE(rows, Number.isFinite(limit) ? limit : 0);
+        return ok(
+          [
+            ...fit.beta.map((b, i) => ({
+              label: i === 0 ? "Intercept" : `β${i}`,
+              value: fmt(b),
+            })),
+            { label: "σ", value: fmt(fit.sigma) },
+            { label: "Log-likelihood", value: fmt(fit.logLik) },
+            { label: "Censored / n", value: `${fit.nCensored} / ${fit.n}` },
+            { label: "Left-censor limit", value: fit.limit },
+          ],
+          [
+            {
+              title: "Tobit (Type I) EM-MLE",
+              detail: `Left-censored at ${fit.limit}. EM updates latent y*; observed-data log-likelihood uses φ((y−xβ)/σ)/σ and Φ((L−xβ)/σ).`,
+            },
+          ],
+          `Tobit MLE: σ = ${fmt(fit.sigma)}, log L = ${fmt(fit.logLik)}, ${fit.nCensored}/${fit.n} censored.`,
         );
       }
 
       case "pca": {
         const m = parseMatrix(input.data ?? "");
         if (m.length < 2 || m[0].length < 2) throw new Error("Paste numeric matrix (rows=obs, cols=vars).");
-        const p = m[0].length;
-        const means = Array.from({ length: p }, (_, j) => mean(m.map((r) => r[j])));
-        const centered = m.map((r) => r.map((v, j) => v - means[j]));
-        // covariance
-        const cov: number[][] = Array.from({ length: p }, () => Array(p).fill(0));
-        for (let i = 0; i < centered.length; i++) {
-          for (let a = 0; a < p; a++) {
-            for (let b = 0; b < p; b++) cov[a][b] += centered[i][a] * centered[i][b];
-          }
-        }
-        for (let a = 0; a < p; a++) for (let b = 0; b < p; b++) cov[a][b] /= centered.length - 1;
-        // power iteration for first PC
-        let v = Array(p).fill(1 / Math.sqrt(p));
-        for (let iter = 0; iter < 50; iter++) {
-          const w = Array(p).fill(0);
-          for (let a = 0; a < p; a++) for (let b = 0; b < p; b++) w[a] += cov[a][b] * v[b];
-          const norm = Math.sqrt(w.reduce((s, x) => s + x * x, 0)) || 1;
-          v = w.map((x) => x / norm);
-        }
-        const lambda = v.reduce((s, vi, i) => s + vi * cov[i].reduce((ss, cij, j) => ss + cij * v[j], 0), 0);
-        const totalVar = cov.reduce((s, row, i) => s + row[i], 0);
+        const { components } = runPca(m, true);
+        const show = components.slice(0, Math.min(3, components.length));
         return ok(
+          show.flatMap((c, i) => [
+            { label: `PC${i + 1} eigenvalue`, value: fmt(c.eigenvalue) },
+            { label: `PC${i + 1} variance`, value: `${fmt(c.varianceExplained)}%` },
+            { label: `PC${i + 1} cumulative`, value: `${fmt(c.cumulative)}%` },
+            { label: `PC${i + 1} loadings`, value: c.loadings.map(fmt).join(", ") },
+          ]),
           [
-            { label: "PC1 eigenvalue", value: fmt(lambda) },
-            { label: "Variance explained", value: fmt((lambda / totalVar) * 100) + "%" },
-            { label: "PC1 loadings", value: v.map(fmt).join(", ") },
+            {
+              title: "PCA (correlation matrix)",
+              detail: `Jacobi eigen-decomposition. First ${show.length} component(s) shown.`,
+            },
           ],
-          [{ title: "PCA (first component)", detail: `λ1=${fmt(lambda)}` }],
         );
       }
 
-      case "efa":
-      case "cfa":
-      case "lda":
-      case "cca": {
+      case "efa": {
         const m = parseMatrix(input.data ?? "");
-        if (m.length < 3) throw new Error("Paste a numeric matrix.");
-        const corrNote = "Correlation / covariance structure summarized via column SDs and pairwise r for first two cols.";
-        const c0 = m.map((r) => r[0]);
-        const c1 = m.map((r) => r[1] ?? r[0]);
+        const nFactorsRaw = Number(input.nFactors);
+        const nFactors = Number.isFinite(nFactorsRaw) && nFactorsRaw > 0 ? Math.floor(nFactorsRaw) : undefined;
+        const { factors, communalities, kmo, nFactors: k } = runEfa(m, nFactors);
         return ok(
           [
-            { label: "Rows", value: m.length },
-            { label: "Cols", value: m[0].length },
-            { label: "r(col1,col2)", value: fmt(correlation(c0, c1)) },
-            { label: "Note", value: engine.toUpperCase() + " exploratory summary" },
+            { label: "Factors extracted", value: k },
+            { label: "KMO (approx)", value: fmt(kmo) },
+            ...factors.flatMap((f, i) => [
+              { label: `Factor ${i + 1} λ`, value: fmt(f.eigenvalue) },
+              { label: `Factor ${i + 1} var %`, value: `${fmt(f.varianceExplained)}%` },
+              { label: `Factor ${i + 1} loadings`, value: f.loadings.map(fmt).join(", ") },
+            ]),
+            { label: "Communalities", value: communalities.map(fmt).join(", ") },
           ],
-          [{ title: engine.toUpperCase(), detail: corrNote }],
+          [
+            {
+              title: "Exploratory factor analysis",
+              detail: "Principal-axis factoring on the correlation matrix with iterated communalities (SMC start).",
+            },
+          ],
+        );
+      }
+
+      case "cfa": {
+        const m = parseMatrix(input.data ?? "");
+        const fit = cfaOneFactor(m);
+        return ok(
+          [
+            { label: "Factor loadings", value: fit.loadings.map(fmt).join(", ") },
+            { label: "Uniquenesses Ψ", value: fit.uniqueness.map(fmt).join(", ") },
+            { label: "RMSR", value: fmt(fit.rmsr) },
+            { label: "χ² (residual approx)", value: fmt(fit.chi2) },
+            { label: "df", value: fit.df },
+            { label: "p", value: fmtP(fit.pValue) },
+          ],
+          [
+            {
+              title: "One-factor CFA",
+              detail: "Least-squares single-factor model on the correlation matrix; RMSR and residual χ² approx.",
+            },
+          ],
+          apaTest({
+            test: "One-factor CFA residual fit",
+            statistic: "χ²",
+            value: fit.chi2,
+            df: fit.df,
+            p: fit.pValue,
+          }),
+        );
+      }
+
+      case "lda": {
+        const m = parseMatrix(input.data ?? "");
+        const fit = runLda(m);
+        return ok(
+          [
+            { label: "Groups", value: fit.nGroups },
+            { label: "Predictors", value: fit.p },
+            { label: "Discriminant weights", value: fit.weights.map(fmt).join(", ") },
+            ...fit.groupMeans.map((g) => ({
+              label: `Group ${g.label} means`,
+              value: g.mean.map(fmt).join(", "),
+            })),
+            { label: "Training accuracy", value: `${fmt(fit.accuracy * 100)}%` },
+          ],
+          [
+            {
+              title: "Fisher LDA",
+              detail: "Last column = group. Weights from pooled within-class covariance; classify by nearest group score.",
+            },
+          ],
+        );
+      }
+
+      case "cca": {
+        const m = parseMatrix(input.data ?? "");
+        const nXRaw = Number(input.nX ?? "2");
+        const nX = Number.isFinite(nXRaw) && nXRaw >= 1 ? Math.floor(nXRaw) : Math.max(1, Math.floor(m[0].length / 2));
+        const fit = runCca(m, nX);
+        return ok(
+          [
+            { label: "|X| / |Y|", value: `${fit.nX} / ${fit.nY}` },
+            ...fit.rhos.map((r, i) => ({ label: `Canonical ρ${i + 1}`, value: fmt(r) })),
+            { label: "Wilks' Λ", value: fmt(fit.wilks) },
+            { label: "Bartlett χ²", value: fmt(fit.bartlett) },
+            { label: "df", value: fit.df },
+            { label: "p", value: fmtP(fit.pValue) },
+          ],
+          [
+            {
+              title: "Canonical correlation",
+              detail: `First ${fit.nX} columns = X, remaining = Y. ρ² from eigenvalues of Rxx⁻¹ Rxy Ryy⁻¹ Ryx.`,
+            },
+          ],
+          apaTest({
+            test: "Canonical correlation (Bartlett)",
+            statistic: "χ²",
+            value: fit.bartlett,
+            df: fit.df,
+            p: fit.pValue,
+          }),
         );
       }
 

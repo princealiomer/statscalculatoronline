@@ -742,4 +742,130 @@ export const engineGuides: Record<string, Partial<CalculatorGuideContent>> = {
     interpretation: ["Temperature conversions are affine, not pure proportions."],
     tips: ["Double-check prefixes (m vs km, mL vs L)."],
   },
+
+  pca: {
+    overview:
+      "Principal component analysis finds orthogonal directions of maximum variance in a multivariate dataset, usually after standardizing variables (correlation-matrix PCA).",
+    howTo: [
+      "Paste a numeric matrix: rows = observations, columns = variables.",
+      "Read eigenvalues, variance explained, cumulative %, and loadings for the leading components.",
+    ],
+    formulas: [
+      { label: "Standardize / correlate", latex: "R=\\mathrm{corr}(X)" },
+      { label: "Eigenproblem", latex: "R v = \\lambda v" },
+      { label: "Loadings", latex: "\\ell_j = v_j\\sqrt{\\lambda_j}" },
+    ],
+    interpretation: [
+      "Large λ with high cumulative variance means a few PCs capture most structure.",
+      "Loadings show how each original variable contributes to a component.",
+    ],
+    tips: ["Standardize when variables are on different scales—this calculator uses the correlation matrix."],
+    whenToUse: "Use PCA to reduce dimensionality or explore multivariate structure before modeling.",
+  },
+
+  efa: {
+    overview:
+      "Exploratory factor analysis models observed variables as linear combinations of latent factors plus unique variance. This tool uses principal-axis factoring with iterated communalities.",
+    howTo: [
+      "Paste observations × variables.",
+      "Optionally set the number of factors; leave blank to use Kaiser’s λ > 1 rule.",
+      "Inspect loadings, communalities, and the approximate KMO.",
+    ],
+    formulas: [
+      { label: "Factor model", latex: "x = \\Lambda f + \\varepsilon" },
+      { label: "Communality", latex: "h_i^{2}=\\sum_k \\lambda_{ik}^{2}" },
+      { label: "Reduced correlation", latex: "R^{*}=R-\\Psi\\text{ (diag replaced by }h^{2})" },
+    ],
+    interpretation: [
+      "|loading| ≳ 0.4 often marks a salient item–factor link (rule of thumb).",
+      "Low communality means the variable is poorly explained by the retained factors.",
+      "KMO near 1 supports factorability; values ≲ 0.5 are concerning.",
+    ],
+    tips: ["EFA is exploratory—confirm structure with CFA or theory before high-stakes use."],
+    whenToUse: "Use EFA when you want to discover latent dimensions among correlated items.",
+  },
+
+  cfa: {
+    overview:
+      "Confirmatory factor analysis tests a hypothesized factor structure. This calculator fits a one-factor least-squares model on the correlation matrix and reports residual fit.",
+    howTo: [
+      "Paste observations × variables (at least 3 variables).",
+      "Read estimated loadings, uniquenesses, RMSR, and residual χ².",
+    ],
+    formulas: [
+      { label: "One-factor model", latex: "R \\approx \\lambda\\lambda^{\\top}+\\Psi" },
+      { label: "RMSR", latex: "\\mathrm{RMSR}=\\sqrt{\\dfrac{2}{p(p-1)}\\sum_{i<j}(r_{ij}-\\hat{r}_{ij})^{2}}" },
+    ],
+    interpretation: [
+      "Small RMSR means the one-factor model reproduces correlations well.",
+      "A large residual χ² suggests misfit—consider more factors or different loadings.",
+    ],
+    tips: ["This is an educational one-factor CFA, not full SEM with arbitrary path diagrams."],
+    whenToUse: "Use when you want a quick confirmatory check that items load on a single common factor.",
+  },
+
+  lda: {
+    overview:
+      "Linear discriminant analysis finds linear combinations of predictors that best separate known groups (Fisher’s LDA).",
+    howTo: [
+      "Paste predictors in the first columns and a numeric group code in the last column.",
+      "Read discriminant weights, group mean vectors, and training-set classification accuracy.",
+    ],
+    formulas: [
+      { label: "Two-group direction", latex: "w \\propto S_W^{-1}(\\bar{x}_1-\\bar{x}_0)" },
+      { label: "Score", latex: "s_i = w^{\\top}x_i" },
+    ],
+    interpretation: [
+      "Weights show which predictors drive separation.",
+      "Training accuracy is optimistic—consider cross-validation for honest performance.",
+    ],
+    tips: ["Each group needs multiple rows; standardize predictors if scales differ wildly."],
+    whenToUse: "Use LDA when classes are known and you want a linear classification rule.",
+  },
+
+  cca: {
+    overview:
+      "Canonical correlation analysis finds paired linear combinations of two variable sets with maximum correlation.",
+    howTo: [
+      "Paste all variables in one matrix; set nX to the number of columns in set X (the rest are Y).",
+      "Read canonical correlations ρ, Wilks’ Λ, and Bartlett’s χ² test.",
+    ],
+    formulas: [
+      { label: "Canonical correlations", latex: "\\rho^{2}=\\mathrm{eig}\\!\\left(R_{xx}^{-1}R_{xy}R_{yy}^{-1}R_{yx}\\right)" },
+      { label: "Wilks", latex: "\\Lambda=\\prod_i(1-\\rho_i^{2})" },
+    ],
+    interpretation: [
+      "ρ near 1 means the two sets share a strong linear relationship along that canonical pair.",
+      "Bartlett’s test asks whether all canonical correlations are jointly zero.",
+    ],
+    tips: ["Need enough rows relative to |X|+|Y|; collinear sets make matrices singular."],
+    whenToUse: "Use CCA to relate two multivariate batteries (e.g., traits vs outcomes).",
+  },
+
+  tobit: {
+    overview:
+      "Tobit (Type I) regression models a continuous outcome that is left-censored at a known limit (often 0), estimating β and σ by maximum likelihood.",
+    howTo: [
+      "Paste rows as y, x1, x2, …",
+      "Set the left-censor limit (default 0).",
+      "Read coefficients, σ, log-likelihood, and how many rows were censored.",
+    ],
+    formulas: [
+      {
+        label: "Latent model",
+        latex: "y^{*}=x\\beta+u,\\quad u\\sim N(0,\\sigma^{2}),\\quad y=\\max(L,y^{*})",
+      },
+      {
+        label: "Likelihood contribution",
+        latex:
+          "\\text{uncensored: }\\phi((y-x\\beta)/\\sigma)/\\sigma;\\quad \\text{censored: }\\Phi((L-x\\beta)/\\sigma)",
+      },
+    ],
+    interpretation: [
+      "β has the usual linear interpretation for the latent y*.",
+      "A large share censored makes σ and intercepts harder to pin down.",
+    ],
+    tips: ["If nothing is censored, Tobit MLE behaves like Gaussian regression; if everything is censored, estimation fails."],
+    whenToUse: "Use Tobit for corner-solution or detection-limit outcomes (hours, spend, assay floors).",
+  },
 };

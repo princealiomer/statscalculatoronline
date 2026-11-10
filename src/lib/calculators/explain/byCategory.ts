@@ -40,6 +40,7 @@ export const categoryGuides: Record<
       "Plot residuals vs fitted values to check linearity and constant variance.",
       "Do not extrapolate far outside the observed predictor range.",
       "For logistic models, the outcome should be binary (0/1).",
+      "For Tobit, set the left-censor limit to match your floor (often 0) and check how many rows are censored.",
     ],
   },
   correlation: {
@@ -110,7 +111,12 @@ export const categoryGuides: Record<
   },
   "multivariate-analysis": {
     whenToUse: "Use multivariate tools when several outcomes or latent dimensions matter together.",
-    tips: ["Standardize variables before PCA/FA.", "Interpret loadings with subject-matter context."],
+    tips: [
+      "PCA/EFA/CFA expect rows = observations and columns = variables.",
+      "For LDA, put the numeric group code in the last column.",
+      "For CCA, set nX to the width of the first variable set; remaining columns are set Y.",
+      "Interpret loadings and canonical correlations with subject-matter context—not just magnitude.",
+    ],
   },
   "survival-analysis": {
     whenToUse: "Use survival methods for time-to-event data with possible censoring.",

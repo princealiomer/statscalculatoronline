@@ -165,16 +165,56 @@ export function fieldsForEngine(engine: string): FieldDef[] {
     return [{ name: "data", label: "x,y,z rows", type: "textarea", placeholder: "x,y,z per line" }];
   }
   if (["contingency", "chi-ind", "chi-gof", "fisher", "mcnemar", "cronbach", "friedman", "pca", "efa", "cfa", "lda", "cca", "mlr", "log-reg", "tobit", "chart-heatmap", "chart-radar"].includes(engine)) {
-    const extra =
-      engine === "chi-gof"
-        ? [{ name: "expected", label: "Expected (optional)", type: "textarea" as const }]
-        : [];
+    const extra: FieldDef[] = [];
+    if (engine === "chi-gof") {
+      extra.push({ name: "expected", label: "Expected (optional)", type: "textarea" });
+    }
+    if (engine === "efa") {
+      extra.push({
+        name: "nFactors",
+        label: "Factors (blank = Kaiser λ>1)",
+        type: "number",
+        placeholder: "auto",
+      });
+    }
+    if (engine === "cca") {
+      extra.push({
+        name: "nX",
+        label: "# columns in set X (rest = Y)",
+        type: "number",
+        defaultValue: "2",
+      });
+    }
+    if (engine === "tobit") {
+      extra.push({
+        name: "limit",
+        label: "Left-censor limit",
+        type: "number",
+        defaultValue: "0",
+      });
+    }
+    const placeholder =
+      engine === "lda"
+        ? "Predictors…, group  (last column = group code)\n1.2, 3.4, 0\n2.1, 2.8, 0\n4.5, 1.1, 1"
+        : engine === "cca"
+          ? "X cols then Y cols (set nX below)\n1,2, 5,6\n2,3, 6,7\n3,1, 4,8"
+          : engine === "tobit" || engine === "mlr" || engine === "log-reg"
+            ? "y, x1, x2, … per row\n0, 1, 0\n2.5, 1, 1\n0, 0, 1"
+            : engine === "efa" || engine === "cfa" || engine === "pca"
+              ? "Variables in columns, one observation per row\n1.2, 3.1, 2.0\n2.4, 2.8, 3.1\n3.0, 4.2, 2.5"
+              : "Rows of numbers (comma or space separated)";
+    const label =
+      engine === "lda"
+        ? "Data (last column = group)"
+        : engine === "tobit" || engine === "mlr" || engine === "log-reg"
+          ? "Rows: y, predictors"
+          : "Matrix / table";
     return [
       {
         name: "data",
-        label: "Matrix / table",
+        label,
         type: "textarea",
-        placeholder: "Rows of numbers (comma or space separated)",
+        placeholder,
       },
       ...extra,
     ];

@@ -404,7 +404,7 @@ export function runSoupAdvStats(engine: string, input: Input): CalcResult | null
       if (m.length < 2) throw new Error("Paste a numeric matrix.");
       const k = Math.min(m.length, Math.max(1, Math.floor(num(input, "k", 2))));
       const dim = m[0].length;
-      let cents = m.slice(0, k).map((r) => [...r]);
+      const cents = m.slice(0, k).map((r) => [...r]);
       let assign = Array(m.length).fill(0);
       for (let iter = 0; iter < 25; iter++) {
         assign = m.map((row) => {
@@ -862,7 +862,7 @@ export function runSoupAdvStats(engine: string, input: Input): CalcResult | null
       const p = num(input, "p", 0.5);
       const conf = num(input, "level", 0.95);
       const z = jStat.normal.inv(1 - (1 - conf) / 2, 0, 1);
-      let n0 = (z * z * p * (1 - p)) / (moe * moe);
+      const n0 = (z * z * p * (1 - p)) / (moe * moe);
       const fpc = n0 / (1 + (n0 - 1) / N);
       return ok(
         [
