@@ -1,9 +1,10 @@
 import type { CalculatorDef } from "@/lib/calculators/types";
 import { categoryGuides } from "./byCategory";
 import { engineGuides } from "./byEngine";
-import type { CalculatorGuideContent, FormulaBlock } from "./types";
+import { buildOutline } from "./outline";
+import type { CalculatorGuideContent, CalculatorOutline, FormulaBlock } from "./types";
 
-export type { CalculatorGuideContent, FormulaBlock } from "./types";
+export type { CalculatorGuideContent, CalculatorOutline, FormulaBlock } from "./types";
 
 /** Map real registry engine ids → keys in engineGuides. */
 const ENGINE_ALIASES: Record<string, string> = {
@@ -239,4 +240,9 @@ export function getCalculatorGuide(calc: CalculatorDef): CalculatorGuideContent 
     tips: merged.tips ?? fallback.tips,
     example: merged.example,
   };
+}
+
+/** Full Understanding & Using outline for every calculator page */
+export function getCalculatorOutline(calc: CalculatorDef): CalculatorOutline {
+  return buildOutline(calc, getCalculatorGuide(calc));
 }

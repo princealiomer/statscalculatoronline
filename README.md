@@ -1,6 +1,6 @@
-# StatsCalc
+# Stats Calculator Online
 
-Free online statistics calculators (Next.js + Vercel) with step-by-step results, APA-style reporting, and SEO-ready pages.
+Free online statistics calculators (Next.js + Vercel) for **statscalculatoronline.com** — step-by-step results, formulas, similar-tool widgets, APA-style reporting, and SEO-ready pages.
 
 ## Stack
 

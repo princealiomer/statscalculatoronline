@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { CalculatorDef } from "@/lib/calculators/types";
 import { getCategory } from "@/lib/calculators/registry";
-import { getCalculatorGuide } from "@/lib/calculators/explain";
+import { getCalculatorGuide, getCalculatorOutline } from "@/lib/calculators/explain";
 import { siteConfig } from "@/config/site";
 
 function truncate(text: string, max: number) {
@@ -29,20 +29,20 @@ export function calculatorKeywords(calc: CalculatorDef): string[] {
 
 export function calculatorMetaDescription(calc: CalculatorDef): string {
   const guide = getCalculatorGuide(calc);
-  const raw = `Free ${calc.title} calculator — ${calc.description}. ${guide.overview} Includes formulas, how-to steps, interpretation tips, and free APA/AMA/PDF exports.`;
-  return truncate(raw, 158);
+  const raw = `Free ${calc.title} calculator on Stats Calculator Online — ${calc.description}. ${guide.overview} Formulas, steps, FAQ, similar tools, and free APA/PDF exports.`;
+  return truncate(raw, 160);
 }
 
 export function buildCalculatorMetadata(calc: CalculatorDef): Metadata {
   const path = `/calculators/${calc.category}/${calc.slug}`;
-  const title = `${calc.title} Calculator — Free Online Formula & Steps`;
+  const title = `${calc.title} Calculator — Free Online Tool`;
   const description = calculatorMetaDescription(calc);
   const keywords = calculatorKeywords(calc);
 
   return {
     title,
     description,
-    keywords,
+    keywords: [...keywords, "Stats Calculator Online", siteConfig.domain],
     alternates: { canonical: path },
     robots: { index: true, follow: true },
     openGraph: {
@@ -64,6 +64,7 @@ export function buildCalculatorMetadata(calc: CalculatorDef): Metadata {
 
 export function buildCalculatorJsonLd(calc: CalculatorDef) {
   const guide = getCalculatorGuide(calc);
+  const outline = getCalculatorOutline(calc);
   const cat = getCategory(calc.category);
   const url = `${siteConfig.url}/calculators/${calc.category}/${calc.slug}`;
   const pageName = `${calc.title} Calculator`;
@@ -71,27 +72,13 @@ export function buildCalculatorJsonLd(calc: CalculatorDef) {
   const faqEntities = [
     {
       "@type": "Question",
-      name: `What is the ${calc.title} calculator?`,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: guide.overview,
-      },
+      name: `What is ${calc.title}?`,
+      acceptedAnswer: { "@type": "Answer", text: outline.whatIs.definition },
     },
     {
       "@type": "Question",
-      name: `When should I use the ${calc.title} calculator?`,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: guide.whenToUse ?? calc.description,
-      },
-    },
-    {
-      "@type": "Question",
-      name: `How do I use the free ${calc.title} calculator?`,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: guide.howTo.join(" "),
-      },
+      name: `Why does ${calc.title} matter?`,
+      acceptedAnswer: { "@type": "Answer", text: outline.why.value },
     },
     {
       "@type": "Question",
@@ -99,11 +86,18 @@ export function buildCalculatorJsonLd(calc: CalculatorDef) {
       acceptedAnswer: {
         "@type": "Answer",
         text:
-          guide.formulas.length > 0
-            ? guide.formulas.map((f) => `${f.label}: ${f.latex}${f.note ? ` (${f.note})` : ""}`).join("; ")
+          outline.formula.formulas.length > 0
+            ? outline.formula.formulas
+                .map((f) => `${f.label}: ${f.latex}${f.note ? ` (${f.note})` : ""}`)
+                .join("; ")
             : `See the formulas section on ${pageName}.`,
       },
     },
+    ...outline.troubleshooting.map((item) => ({
+      "@type": "Question" as const,
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer" as const, text: item.a },
+    })),
   ];
 
   return {
@@ -139,25 +133,32 @@ export function buildCalculatorJsonLd(calc: CalculatorDef) {
         url,
         isAccessibleForFree: true,
         featureList: [
-          "Step-by-step solutions",
+          "Understanding & Using outline",
           "Formulas with notation",
+          "Troubleshooting FAQ",
+          "Industry benchmark guidance",
           "Free APA/AMA report exports",
-          "PDF, Word, and CSV download",
-          "Mobile-friendly calculator",
+          "Similar calculator widgets",
         ],
         provider: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
       },
       {
         "@type": "HowTo",
-        name: `How to use the ${calc.title} calculator`,
-        description: guide.overview,
-        totalTime: "PT2M",
-        step: guide.howTo.map((text, i) => ({
-          "@type": "HowToStep",
-          position: i + 1,
-          name: `Step ${i + 1}`,
-          text,
-        })),
+        name: `How to act on ${calc.title} results`,
+        description: outline.whatIs.definition,
+        totalTime: "PT10M",
+        step: [
+          { "@type": "HowToStep", position: 1, name: "Audit", text: outline.workflow.audit },
+          { "@type": "HowToStep", position: 2, name: "Diagnose", text: outline.workflow.diagnose },
+          { "@type": "HowToStep", position: 3, name: "Execute", text: outline.workflow.execute },
+          { "@type": "HowToStep", position: 4, name: "Measure", text: outline.workflow.measure },
+          ...guide.howTo.map((text, i) => ({
+            "@type": "HowToStep" as const,
+            position: i + 5,
+            name: `Calculator step ${i + 1}`,
+            text,
+          })),
+        ],
       },
       {
         "@type": "FAQPage",

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Statistical Resources",
-  description: "Critical value tables and data tools to support StatsCalc calculators.",
+  description: "Critical value tables and data tools to support Stats Calculator Online calculators.",
 };
 
 const tables = [

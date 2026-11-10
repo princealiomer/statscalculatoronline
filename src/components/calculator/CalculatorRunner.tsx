@@ -14,7 +14,7 @@ const SAMPLE_DATA: Record<string, string> = {
   theoretical: "50",
   oddsFor: "3",
   oddsAgainst: "2",
-  text: "StatsCalc makes free reports easy. StatsCalc helps students write results.",
+  text: "Stats Calculator Online makes free reports easy. Stats Calculator Online helps students write results.",
   names: "Ada\nGrace\nAlan\nKatherine\nDorothy",
   current: "85",
   desired: "90",

@@ -1,6 +1,9 @@
 import type { CalculatorGuideContent } from "./types";
 
-export const categoryGuides: Record<string, Partial<CalculatorGuideContent>> = {
+export const categoryGuides: Record<
+  string,
+  Partial<CalculatorGuideContent> & { interpretation?: string[] }
+> = {
   "descriptive-statistics": {
     whenToUse: "Use descriptive tools to summarize a single sample before formal inference.",
     tips: [
