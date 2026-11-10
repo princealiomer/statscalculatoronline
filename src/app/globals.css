@@ -1,0 +1,77 @@
+@import "tailwindcss";
+@import "katex/dist/katex.min.css";
+
+:root {
+  --background: #eef7f4;
+  --foreground: #042f2e;
+  --accent: #0f766e;
+  --accent-dark: #115e59;
+  --surface: rgba(255, 255, 255, 0.72);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-dm-sans);
+  --font-display: var(--font-source-serif);
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #c7ebe3 0%, transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, #d7e7f2 0%, transparent 50%),
+    linear-gradient(180deg, #eef7f4 0%, #f7fbf9 40%, #eef5f8 100%);
+  color: var(--foreground);
+  font-family: var(--font-dm-sans), "Segoe UI", sans-serif;
+  min-height: 100vh;
+}
+
+.font-display {
+  font-family: var(--font-source-serif), Georgia, serif;
+}
+
+::selection {
+  background: #99f6e4;
+  color: #042f2e;
+}
+
+/* KaTeX: keep formulas readable and scrollable on narrow screens */
+.formula-katex .katex {
+  font-size: 1.05em;
+}
+
+.formula-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+@media (max-width: 640px) {
+  .formula-katex .katex {
+    font-size: 0.95em;
+  }
+
+  .formula-katex .katex-display {
+    margin: 0.35em 0;
+  }
+}
+
+/* Larger tap targets for native details/summary on mobile */
+details > summary {
+  touch-action: manipulation;
+}
+
+@media print {
+  header,
+  footer,
+  a[href="#main"] {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+}

@@ -1,0 +1,190 @@
+import { calculators, categories, apHub } from "../src/lib/calculators/registry.ts";
+
+const listed = `
+/calculators
+/tutorials
+/calculators/ap-statistics-calculators
+/calculators/descriptive-statistics
+/calculators/hypothesis-testing
+/calculators/regression-analysis
+/calculators/multivariate-analysis
+/calculators/probability
+/calculators/chart
+/calculators/confidence-interval
+/calculators/survival-analysis
+/calculators/causal-inference
+/calculators/experimental-design
+/calculators/descriptive-statistics/mean-median-mode-calculator
+/calculators/descriptive-statistics/process-capability-calculator
+/calculators/descriptive-statistics/coefficient-of-variation-calculator
+/calculators/descriptive-statistics/contingency-table-calculator
+/calculators/descriptive-statistics/correlation-coefficient-calculator
+/calculators/descriptive-statistics/covariance-calculator
+/calculators/descriptive-statistics/partial-correlation-calculator
+/calculators/descriptive-statistics/cronbach-alpha-calculator
+/calculators/descriptive-statistics/likert-scale-analysis-calculator
+/calculators/descriptive-statistics/survey-response-rate-calculator
+/calculators/descriptive-statistics/interrater-reliability-calculator
+/calculators/descriptive-statistics/descriptive-statistics-calculator
+/calculators/descriptive-statistics/five-number-summary-calculator
+/calculators/descriptive-statistics/frequency-table-calculator
+/calculators/descriptive-statistics/geometric-mean-calculator
+/calculators/descriptive-statistics/harmonic-mean-calculator
+/calculators/descriptive-statistics/kurtosis-calculator
+/calculators/descriptive-statistics/percentile-quartile-iqr-calculator
+/calculators/descriptive-statistics/range-variance-stddev-calculator
+/calculators/descriptive-statistics/mean-absolute-deviation-calculator
+/calculators/descriptive-statistics/median-absolute-deviation-calculator
+/calculators/descriptive-statistics/skewness-calculator
+/calculators/descriptive-statistics/z-score-calculator
+/calculators/hypothesis-testing/ancova-calculator
+/calculators/hypothesis-testing/chi-square-goodness-of-fit-test-calculator
+/calculators/hypothesis-testing/chi-square-test-of-independence-calculator
+/calculators/hypothesis-testing/dunnetts-test-calculator
+/calculators/hypothesis-testing/dunns-test-calculator
+/calculators/hypothesis-testing/effect-size-calculator
+/calculators/hypothesis-testing/fishers-exact-test-calculator
+/calculators/hypothesis-testing/mcnemars-test-calculator
+/calculators/hypothesis-testing/binomial-test-calculator
+/calculators/hypothesis-testing/friedman-test-calculator
+/calculators/hypothesis-testing/kruskal-wallis-test-calculator
+/calculators/hypothesis-testing/mann-whitney-u-test-calculator
+/calculators/hypothesis-testing/one-proportion-z-test-calculator
+/calculators/hypothesis-testing/one-sample-t-test-calculator
+/calculators/hypothesis-testing/one-sample-z-test-calculator
+/calculators/hypothesis-testing/one-way-anova-calculator
+/calculators/hypothesis-testing/welch-anova-calculator
+/calculators/hypothesis-testing/levenes-test-calculator
+/calculators/hypothesis-testing/repeated-measures-anova-calculator
+/calculators/hypothesis-testing/sample-size-and-power-analysis-calculator
+/calculators/hypothesis-testing/permutation-test-calculator
+/calculators/hypothesis-testing/three-way-anova-calculator
+/calculators/hypothesis-testing/manova-calculator
+/calculators/hypothesis-testing/tukeys-hsd-test-calculator
+/calculators/hypothesis-testing/games-howell-test-calculator
+/calculators/hypothesis-testing/scheffe-test-calculator
+/calculators/hypothesis-testing/two-proportion-z-test-calculator
+/calculators/hypothesis-testing/two-sample-paired-t-test-calculator
+/calculators/hypothesis-testing/two-sample-t-test-calculator
+/calculators/hypothesis-testing/two-sample-z-test-calculator
+/calculators/hypothesis-testing/two-way-anova-calculator
+/calculators/hypothesis-testing/wilcoxon-signed-rank-test-calculator
+/calculators/hypothesis-testing/p-value-calculator
+/calculators/hypothesis-testing/critical-value-calculator
+/calculators/hypothesis-testing/normality-test-calculator
+/calculators/hypothesis-testing/outlier-detection-calculator
+/calculators/hypothesis-testing/standard-error-calculator
+/calculators/hypothesis-testing/statistical-test-flow-chart
+/calculators/regression-analysis/simple-linear-regression-calculator
+/calculators/regression-analysis/multiple-linear-regression-calculator
+/calculators/regression-analysis/exponential-regression-calculator
+/calculators/regression-analysis/quadratic-regression-calculator
+/calculators/regression-analysis/logistic-regression-calculator
+/calculators/regression-analysis/polynomial-regression-calculator
+/calculators/regression-analysis/censored-regression-calculator
+/calculators/multivariate-analysis/principal-component-analysis-calculator
+/calculators/multivariate-analysis/exploratory-factor-analysis-calculator
+/calculators/multivariate-analysis/confirmatory-factor-analysis-calculator
+/calculators/multivariate-analysis/discriminant-analysis-calculator
+/calculators/multivariate-analysis/canonical-correlation-analysis-calculator
+/calculators/probability/basic-probability-calculator
+/calculators/probability/expected-value-calculator
+/calculators/probability/beta-distribution-calculator
+/calculators/probability/binomial-distribution-calculator
+/calculators/probability/chi-square-distribution-calculator
+/calculators/probability/exponential-distribution-calculator
+/calculators/probability/f-distribution-calculator
+/calculators/probability/gamma-distribution-calculator
+/calculators/probability/geometric-distribution-calculator
+/calculators/probability/hypergeometric-distribution-calculator
+/calculators/probability/negative-binomial-distribution-calculator
+/calculators/probability/normal-distribution-calculator
+/calculators/probability/log-normal-distribution-calculator
+/calculators/probability/inverse-normal-distribution-calculator
+/calculators/probability/logistic-distribution-calculator
+/calculators/probability/poisson-distribution-calculator
+/calculators/probability/students-t-distribution-calculator
+/calculators/probability/uniform-distribution-calculator
+/calculators/probability/weibull-distribution-calculator
+/calculators/probability/random-number-generator
+/calculators/chart/venn-diagram
+/calculators/chart/area-chart
+/calculators/chart/bar-chart
+/calculators/chart/box-plot
+/calculators/chart/bubble-chart
+/calculators/chart/funnel-chart
+/calculators/chart/heat-map
+/calculators/chart/histogram
+/calculators/chart/line-chart
+/calculators/chart/pie-chart
+/calculators/chart/qq-plot
+/calculators/chart/sankey-diagram
+/calculators/chart/scatter-plot
+/calculators/chart/slopegraph
+/calculators/chart/lollipop-chart
+/calculators/chart/tree-map
+/calculators/chart/violin-plot
+/calculators/chart/dot-plot
+/calculators/chart/stem-and-leaf-plot
+/calculators/chart/density-plot
+/calculators/chart/bell-curve-graph-generator
+/calculators/chart/waterfall-chart
+/calculators/chart/radar-chart
+/calculators/chart/pareto-chart
+/calculators/chart/forest-plot
+/calculators/chart/control-chart
+/calculators/chart/roc-curve
+/calculators/chart/bland-altman
+/calculators/chart/chart-builder
+/calculators/chart/chart-maker-with-ai
+/calculators/confidence-interval/mean-calculator
+/calculators/confidence-interval/proportion-calculator
+/calculators/confidence-interval/difference-in-means-calculator
+/calculators/confidence-interval/difference-in-proportions-calculator
+/calculators/confidence-interval/standard-deviation-calculator
+/calculators/confidence-interval/correlation-coefficient-calculator
+/calculators/confidence-interval/margin-of-error-calculator
+/calculators/survival-analysis/kaplan-meier-calculator
+/calculators/survival-analysis/log-rank-test-calculator
+/calculators/survival-analysis/cox-regression-calculator
+/calculators/causal-inference/difference-in-differences-calculator
+/calculators/causal-inference/fixed-random-effects-calculator
+/calculators/causal-inference/instrumental-variables-calculator
+/calculators/causal-inference/regression-discontinuity-calculator
+/calculators/credit-analysis/vintage-analysis-calculator
+/calculators/experimental-design/randomization-calculator
+/calculators/experimental-design/ab-testing-calculator
+/calculators/experimental-design/factorial-design-planner
+/calculators/experimental-design/crossover-design-calculator
+/calculators/experimental-design/survey-sample-size-calculator
+`
+  .trim()
+  .split(/\n+/)
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+const ours = new Set([
+  "/calculators",
+  `/calculators/${apHub.category}`,
+  ...categories.map((c) => `/calculators/${c.id}`),
+  ...calculators.map((c) => `/calculators/${c.category}/${c.slug}`),
+]);
+
+const missing = listed.filter((p) => !ours.has(p));
+const calcListed = listed.filter((p) => p.split("/").length >= 4);
+const presentCalcs = calcListed.filter((p) => ours.has(p));
+
+console.log(
+  JSON.stringify(
+    {
+      listedPaths: listed.length,
+      ourCalculators: calculators.length,
+      ourCategoryHubs: categories.length + 1,
+      listedCalculatorPages: calcListed.length,
+      presentCalculatorPages: presentCalcs.length,
+      missing,
+    },
+    null,
+    2,
+  ),
+);
