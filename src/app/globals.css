@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "katex/dist/katex.min.css";
 
 /*
   Stats Calculator Online — brand system
@@ -105,6 +104,13 @@ body {
 
 details > summary {
   touch-action: manipulation;
+}
+
+/* Defer paint/layout work for below-the-fold chrome */
+#site-widgets,
+#guide {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1200px;
 }
 
 @media print {

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
-import { categoriesInGroup, countInCategory, navGroups } from "@/config/nav";
+import { categoriesInGroup, navGroups } from "@/config/nav";
 import { siteConfig } from "@/config/site";
 
 export function Header() {
@@ -125,13 +125,10 @@ export function Header() {
                                 <li key={c.id}>
                                   <Link
                                     href={`/calculators/${c.id}`}
-                                    className="flex items-baseline justify-between gap-2 rounded-lg px-2 py-1.5 text-sm text-[var(--brand-ink)]/85 hover:bg-[var(--brand-paper)] hover:text-[var(--brand-ink)]"
+                                    className="block truncate rounded-lg px-2 py-1.5 text-sm text-[var(--brand-ink)]/85 hover:bg-[var(--brand-paper)] hover:text-[var(--brand-ink)]"
                                     onClick={() => setMegaOpen(false)}
                                   >
-                                    <span className="min-w-0 truncate">{c.name}</span>
-                                    <span className="shrink-0 text-[10px] font-semibold text-[var(--brand-ink)]/40">
-                                      {countInCategory(c.id)}
-                                    </span>
+                                    {c.name}
                                   </Link>
                                 </li>
                               ))}
@@ -242,12 +239,9 @@ export function Header() {
                             <Link
                               href={`/calculators/${c.id}`}
                               onClick={() => setMobileOpen(false)}
-                              className="flex min-h-11 items-center justify-between gap-2 rounded-lg px-2 text-sm text-[var(--brand-ink)]/80"
+                              className="flex min-h-11 items-center rounded-lg px-2 text-sm text-[var(--brand-ink)]/80"
                             >
-                              <span>{c.name}</span>
-                              <span className="text-[10px] font-semibold text-[var(--brand-ink)]/40">
-                                {countInCategory(c.id)}
-                              </span>
+                              {c.name}
                             </Link>
                           </li>
                         ))}

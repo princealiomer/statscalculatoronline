@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import { DM_Sans, Source_Serif_4 } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -10,11 +11,18 @@ import "./globals.css";
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 const sourceSerif = Source_Serif_4({
   variable: "--font-source-serif",
   subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  adjustFontFallback: true,
+  weight: ["400", "600"],
 });
 
 export const viewport: Viewport = {
@@ -109,7 +117,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <div id="site-widgets">
-          <SitePageWidgets />
+          <Suspense fallback={null}>
+            <SitePageWidgets />
+          </Suspense>
         </div>
         <Footer />
       </body>

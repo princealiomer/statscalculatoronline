@@ -8,7 +8,7 @@ import { siteConfig } from "@/config/site";
 /** Sitewide widgets: tidbits + explore hub + popular similar picks. Shown on every page. */
 export function SitePageWidgets({ pathKey = "site" }: { pathKey?: string }) {
   const tips = tidbitsForPath(pathKey, 3);
-  const popular = getPopularCalculators(8);
+  const popular = getPopularCalculators(6);
 
   return (
     <div className="border-t border-[var(--brand-border)] bg-[var(--brand-grey-deep)]/55">

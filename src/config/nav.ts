@@ -1,4 +1,4 @@
-import { categories, calculators } from "@/lib/calculators/registry";
+import { categories } from "@/lib/calculators/categories";
 
 export type NavGroup = {
   id: string;
@@ -7,7 +7,7 @@ export type NavGroup = {
   categoryIds: string[];
 };
 
-/** Mega-menu pillars for Stats Calculator Online */
+/** Mega-menu pillars for Stats Calculator Online (client-safe — no calculator catalog). */
 export const navGroups: NavGroup[] = [
   {
     id: "statistics",
@@ -76,10 +76,6 @@ export function categoriesInGroup(group: NavGroup) {
   return group.categoryIds
     .map((id) => categories.find((c) => c.id === id))
     .filter(Boolean) as typeof categories;
-}
-
-export function countInCategory(categoryId: string) {
-  return calculators.filter((c) => c.category === categoryId).length;
 }
 
 export const footerPopular = [

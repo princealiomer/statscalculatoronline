@@ -2,7 +2,7 @@ import Link from "next/link";
 import { BrandMark } from "@/components/BrandMark";
 import { siteConfig } from "@/config/site";
 import { footerPopular, navGroups, resourceLinks, categoriesInGroup } from "@/config/nav";
-import { categories } from "@/lib/calculators/registry";
+import { categories } from "@/lib/calculators/categories";
 
 export function Footer() {
   return (

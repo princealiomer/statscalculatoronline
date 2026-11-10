@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { CalculatorDef } from "@/lib/calculators/types";
 import { getCategory } from "@/lib/calculators/registry";
+import { fieldsForEngine } from "@/lib/calculators/fields";
 import { CalculatorRunner } from "@/components/calculator/CalculatorRunner";
 import { CalculatorGuide } from "@/components/calculator/CalculatorGuide";
 import { SimilarCalculatorsWidget } from "@/components/widgets/SimilarCalculatorsWidget";
@@ -12,6 +13,7 @@ import { resourceLinks } from "@/config/nav";
 
 export function CalculatorShell({ calculator }: { calculator: CalculatorDef }) {
   const category = getCategory(calculator.category);
+  const fields = fieldsForEngine(calculator.engine);
   const similar = getSimilarCalculators(calculator, 8);
   const tips = tidbitsForPath(`${calculator.category}/${calculator.slug}`, 3);
 
@@ -92,7 +94,7 @@ export function CalculatorShell({ calculator }: { calculator: CalculatorDef }) {
       </header>
 
       <div id="calculator" className="mt-6 scroll-mt-24 sm:mt-8">
-        <CalculatorRunner calculator={calculator} />
+        <CalculatorRunner calculator={calculator} fields={fields} />
       </div>
 
       <div className="mt-8">
