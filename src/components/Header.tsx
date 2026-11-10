@@ -42,7 +42,7 @@ export function Header() {
   }, [mobileOpen]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--brand-ink)]/10 bg-[color-mix(in_srgb,var(--brand-paper)_92%,white)]/95 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-[var(--brand-border)] bg-[color-mix(in_srgb,var(--brand-grey)_70%,white)]/92 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-3 py-2.5 sm:px-4 sm:py-3">
         <Link
           href="/"
@@ -182,7 +182,7 @@ export function Header() {
           </Link>
           <Link
             href="/contact"
-            className="inline-flex min-h-10 items-center rounded-full bg-[var(--brand-accent)] px-4 text-sm font-semibold text-white hover:brightness-110"
+            className="inline-flex min-h-10 items-center rounded-xl bg-[var(--brand-accent)] px-4 text-sm font-semibold text-white hover:bg-[var(--brand-accent-dark)]"
           >
             Contact
           </Link>

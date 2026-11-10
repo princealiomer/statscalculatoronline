@@ -17,7 +17,7 @@ export function SimilarCalculatorsWidget({
   return (
     <section
       aria-labelledby="similar-calculators-heading"
-      className="rounded-2xl border border-[var(--brand-ink)]/10 bg-white/80 p-4 shadow-sm sm:p-5"
+      className="rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-panel)] p-4 shadow-[var(--brand-shadow)] sm:p-5"
     >
       <div className="flex flex-wrap items-end justify-between gap-2">
         <div>

@@ -11,7 +11,7 @@ export function SitePageWidgets({ pathKey = "site" }: { pathKey?: string }) {
   const popular = getPopularCalculators(8);
 
   return (
-    <div className="border-t border-[var(--brand-ink)]/8 bg-[color-mix(in_srgb,var(--brand-paper)_70%,white)]">
+    <div className="border-t border-[var(--brand-border)] bg-[var(--brand-grey-deep)]/55">
       <div className="mx-auto max-w-6xl space-y-8 px-3 py-10 sm:px-4 sm:py-12">
         <div className="max-w-2xl">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--brand-accent)]">

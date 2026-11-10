@@ -10,7 +10,7 @@ export function PopularHubWidget() {
   return (
     <section
       aria-labelledby="explore-hub-heading"
-      className="rounded-2xl border border-[var(--brand-ink)]/10 bg-[var(--brand-ink)] p-4 text-white sm:p-5"
+      className="rounded-2xl border border-black/15 bg-[#161b27] p-4 text-white sm:p-5"
     >
       <h2 id="explore-hub-heading" className="font-display text-lg sm:text-xl">
         Explore Stats Calculator Online

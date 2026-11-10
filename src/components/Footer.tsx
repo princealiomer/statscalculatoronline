@@ -6,7 +6,7 @@ import { categories } from "@/lib/calculators/registry";
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-white/10 bg-[var(--brand-ink)] text-white">
+    <footer className="mt-auto border-t border-black/20 bg-[#161b27] text-white">
       <div className="mx-auto max-w-6xl px-3 py-12 sm:px-4 sm:py-14">
         <div className="grid gap-10 lg:grid-cols-[1.2fr_2fr]">
           <div>

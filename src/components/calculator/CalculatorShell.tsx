@@ -60,31 +60,31 @@ export function CalculatorShell({ calculator }: { calculator: CalculatorDef }) {
         <div className="mt-4 flex flex-wrap gap-2">
           <a
             href="#calculator"
-            className="inline-flex min-h-10 items-center justify-center rounded-full bg-[var(--brand-accent)] px-4 text-sm font-semibold text-white hover:brightness-110"
+            className="inline-flex min-h-10 items-center justify-center rounded-xl bg-[var(--brand-accent)] px-4 text-sm font-semibold text-white hover:bg-[var(--brand-accent-dark)]"
           >
             Open calculator
           </a>
           <a
             href="#guide"
-            className="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--brand-ink)]/15 bg-white/80 px-4 text-sm font-medium text-[var(--brand-ink)] hover:bg-white"
+            className="inline-flex min-h-10 items-center justify-center rounded-xl border border-[var(--brand-border)] bg-[var(--brand-panel)] px-4 text-sm font-medium text-[var(--brand-ink)] hover:bg-white"
           >
             Full guide outline
           </a>
           <a
             href="#formula"
-            className="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--brand-ink)]/15 bg-white/80 px-4 text-sm font-medium text-[var(--brand-ink)] hover:bg-white"
+            className="inline-flex min-h-10 items-center justify-center rounded-xl border border-[var(--brand-border)] bg-[var(--brand-panel)] px-4 text-sm font-medium text-[var(--brand-ink)] hover:bg-white"
           >
             Formula
           </a>
           <a
             href="#similar"
-            className="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--brand-ink)]/15 bg-white/80 px-4 text-sm font-medium text-[var(--brand-ink)] hover:bg-white"
+            className="inline-flex min-h-10 items-center justify-center rounded-xl border border-[var(--brand-border)] bg-[var(--brand-panel)] px-4 text-sm font-medium text-[var(--brand-ink)] hover:bg-white"
           >
             Similar tools
           </a>
           <a
             href="#faq"
-            className="inline-flex min-h-10 items-center justify-center rounded-full border border-[var(--brand-ink)]/15 bg-white/80 px-4 text-sm font-medium text-[var(--brand-ink)] hover:bg-white"
+            className="inline-flex min-h-10 items-center justify-center rounded-xl border border-[var(--brand-border)] bg-[var(--brand-panel)] px-4 text-sm font-medium text-[var(--brand-ink)] hover:bg-white"
           >
             FAQ
           </a>

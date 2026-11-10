@@ -19,7 +19,7 @@ export function TidbitsWidget({
         {items.map((t) => (
           <li
             key={t.id}
-            className="rounded-2xl border border-[var(--brand-ink)]/10 bg-white/75 p-4 shadow-sm"
+            className="rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-panel)] p-4 shadow-[var(--brand-shadow)]"
           >
             <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--brand-amber-ink)]">
               {t.eyebrow}

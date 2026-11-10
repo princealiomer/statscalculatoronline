@@ -68,7 +68,7 @@ export function CalculatorRunner({ calculator }: { calculator: CalculatorDef }) 
     <div className="grid gap-5 sm:gap-8 lg:grid-cols-[1.1fr_0.9fr]">
       <form
         onSubmit={onRun}
-        className="space-y-4 rounded-2xl border border-teal-900/10 bg-white/70 p-4 shadow-sm sm:p-5"
+        className="space-y-4 rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-panel)] p-4 shadow-[var(--brand-shadow)] sm:p-5"
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="font-display text-lg text-teal-950 sm:text-xl">Calculator</h2>
@@ -141,7 +141,7 @@ export function CalculatorRunner({ calculator }: { calculator: CalculatorDef }) 
         <div className="sticky bottom-3 z-10 -mx-1 bg-gradient-to-t from-white/95 via-white/90 to-transparent pt-3 sm:static sm:mx-0 sm:bg-none sm:pt-0">
           <button
             type="submit"
-            className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-teal-800 px-5 py-3 text-base font-semibold text-white shadow-md transition hover:bg-teal-700 sm:min-h-0 sm:w-auto sm:py-2.5 sm:text-sm sm:shadow-none"
+            className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-[var(--brand-accent)] px-5 py-3 text-base font-semibold text-white transition hover:bg-[var(--brand-accent-dark)] sm:min-h-0 sm:w-auto sm:py-2.5 sm:text-sm"
           >
             Calculate
           </button>
@@ -149,8 +149,8 @@ export function CalculatorRunner({ calculator }: { calculator: CalculatorDef }) 
       </form>
 
       <div id="results" className="space-y-4 scroll-mt-24">
-        <div className="rounded-2xl border border-teal-900/10 bg-white/70 p-4 shadow-sm sm:p-5">
-          <h2 className="font-display text-lg text-teal-950 sm:text-xl">Results</h2>
+        <div className="rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-panel)] p-4 shadow-[var(--brand-shadow)] sm:p-5">
+          <h2 className="font-display text-lg text-[var(--brand-ink)] sm:text-xl">Results</h2>
           {!result && (
             <p className="mt-3 text-sm text-teal-900/60">Results appear here after you run the calculator.</p>
           )}
