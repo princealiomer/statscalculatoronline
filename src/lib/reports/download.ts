@@ -1,86 +1,84 @@
-/** Trigger a file download from a Blob or string. */
+/** Keep Windows / phone download managers happy with a clean ASCII filename + forced extension. */
+export function safeFilename(name: string, extension: string) {
+  const ext = extension.replace(/^\./, "").toLowerCase();
+  const base = name
+    .replace(/\.[a-z0-9]{1,8}$/i, "")
+    .normalize("NFKD")
+    .replace(/[^\w\s-]+/g, "")
+    .trim()
+    .replace(/[\s_]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 80);
+  return `${base || "statscalc-report"}.${ext}`;
+}
+
+/** Trigger a file download from binary/text bytes with a reliable extension. */
 export function downloadBlob(filename: string, blob: Blob) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
   a.download = filename;
   a.rel = "noopener";
+  a.type = blob.type || "application/octet-stream";
   a.style.display = "none";
   document.body.appendChild(a);
-  a.click();
-  a.remove();
-  // Revoke after the browser has a chance to start the download
-  window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+  // Some mobile browsers need the element in-DOM + a real user-gesture click.
+  a.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+  window.setTimeout(() => {
+    a.remove();
+    URL.revokeObjectURL(url);
+  }, 4000);
+}
+
+function utf8Blob(text: string, mime: string) {
+  // Prefer string BlobPart — avoids TS DOM lib friction with Uint8Array generics.
+  return new Blob([text], { type: mime });
 }
 
 export function downloadText(filename: string, content: string, mime = "text/plain;charset=utf-8") {
-  downloadBlob(filename, new Blob([content], { type: mime }));
+  downloadBlob(filename, utf8Blob(content, mime));
 }
 
-/** CSV with UTF-8 BOM so Excel opens accented characters correctly. */
+/**
+ * CSV for Excel / Google Sheets / Numbers.
+ * Uses UTF-8 BOM + CRLF so Windows Excel recognizes encoding and opens cleanly.
+ */
 export function downloadCsv(filename: string, csv: string) {
-  const bom = "\uFEFF";
-  downloadBlob(filename, new Blob([bom + csv], { type: "text/csv;charset=utf-8" }));
+  const name = safeFilename(filename, "csv");
+  const normalized = `\uFEFF${csv.replace(/\r?\n/g, "\r\n")}`;
+  // application/octet-stream + .csv extension is the most reliable way to force the extension
+  // on Windows when browsers ignore text/csv for blob downloads.
+  downloadBlob(name, utf8Blob(normalized, "application/octet-stream"));
 }
 
-/** HTML Word doc — opens cleanly in Microsoft Word / Google Docs / LibreOffice. */
+/** Plain-text report — opens in Notepad, phones, and screen readers. */
+export function downloadTxt(filename: string, text: string) {
+  const name = safeFilename(filename, "txt");
+  const normalized = text.replace(/\r?\n/g, "\r\n");
+  downloadBlob(name, utf8Blob(normalized, "text/plain;charset=utf-8"));
+}
+
+/**
+ * RTF report for Microsoft Word / WordPad / LibreOffice / Google Docs (upload).
+ * Real RTF — not HTML renamed as .doc (which modern Word often marks corrupt).
+ */
+export function downloadRtf(filename: string, rtf: string) {
+  const name = safeFilename(filename, "rtf");
+  downloadBlob(name, utf8Blob(rtf, "application/rtf"));
+}
+
+/** @deprecated Prefer downloadRtf — kept for any older callers. */
 export function downloadDoc(filename: string, htmlBody: string, title: string) {
-  const html = `<!DOCTYPE html>
-<html xmlns:o="urn:schemas-microsoft-com:office:office"
-      xmlns:w="urn:schemas-microsoft-com:office:word"
-      xmlns="http://www.w3.org/TR/REC-html40">
-<head>
-  <meta charset="utf-8" />
-  <meta name="ProgId" content="Word.Document" />
-  <meta name="Generator" content="Stats Calculator Online" />
-  <title>${escapeHtml(title)}</title>
-  <!--[if gte mso 9]><xml>
-    <w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument>
-  </xml><![endif]-->
-  <style>
-    body { font-family: Calibri, Arial, sans-serif; color: #1a1f2c; margin: 36px; line-height: 1.5; font-size: 12pt; }
-    .brand-banner { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: #1a1f2c; color: #fff; margin: -36px -36px 18px; }
-    .brand-mark { width: 36px; height: 36px; background: #0d7377; color: #f5d78e; font-weight: 700; font-family: Georgia, serif; display: flex; align-items: center; justify-content: center; font-size: 11pt; }
-    .brand-name { margin: 0; font-size: 14pt; font-weight: 700; }
-    .brand-tag { margin: 2px 0 0; font-size: 9pt; opacity: 0.85; }
-    .report-kicker { color: #0d7377; font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 6px; }
-    h1 { font-size: 20pt; color: #0d7377; margin: 0 0 6px; }
-    h2 { font-size: 13pt; color: #1a1f2c; margin-top: 20px; border-bottom: 1px solid #d8dce3; padding-bottom: 4px; }
-    .sec { display: inline-block; min-width: 1.4em; color: #0d7377; }
-    table { border-collapse: collapse; width: 100%; margin-top: 8px; }
-    th, td { border: 1px solid #c5cad3; padding: 6px 8px; text-align: left; font-size: 11pt; vertical-align: top; }
-    th { background: #f3f4f6; width: 34%; }
-    .meta { color: #4b5568; font-size: 10pt; margin-bottom: 12px; }
-    .mono { font-family: Consolas, "Courier New", monospace; }
-    .toc { background: #f3f4f6; padding: 10px 14px; margin: 14px 0; border-left: 4px solid #0d7377; }
-    .formula-card { border: 1px solid #d8dce3; padding: 8px 10px; margin: 8px 0; }
-    .formula-label { font-weight: 700; margin: 0 0 4px; }
-    .formula-math { margin: 0; background: #f8faf9; padding: 6px; }
-    .formula-note { margin: 4px 0 0; color: #4b5568; font-size: 10pt; }
-    .work-list { list-style: none; padding: 0; }
-    .work-item { display: flex; gap: 10px; margin: 8px 0; }
-    .work-num { background: #0d7377; color: #fff; width: 22px; height: 22px; text-align: center; border-radius: 4px; font-size: 10pt; line-height: 22px; flex-shrink: 0; }
-    .work-title { margin: 0; font-weight: 700; }
-    .work-detail { margin: 2px 0 0; color: #4b5568; }
-    .result-value { font-weight: 700; }
-    .brand-footer { margin-top: 28px; padding-top: 12px; border-top: 2px solid #0d7377; color: #4b5568; font-size: 9pt; }
-    ul, ol { padding-left: 22px; }
-  </style>
-</head>
-<body>
-${htmlBody}
-</body>
-</html>`;
-  // .doc HTML is widely supported; .docx would need a binary package.
-  const safeName = filename.endsWith(".doc") ? filename : `${filename.replace(/\.docx?$/i, "")}.doc`;
-  downloadBlob(safeName, new Blob([html], { type: "application/msword;charset=utf-8" }));
+  // Serve as .html so the file is never a fake binary .doc
+  downloadPrintableHtml(filename.replace(/\.docx?$/i, ".html"), title, htmlBody);
 }
 
-/** Download a self-contained printable HTML report (PDF fallback when pop-ups are blocked). */
+/** Download a self-contained printable HTML report (PDF fallback / open in browser). */
 export function downloadPrintableHtml(filename: string, title: string, htmlBody: string) {
+  const name = safeFilename(filename, "html");
   const html = printableDocument(title, htmlBody, { autoPrint: false });
-  const safeName = filename.endsWith(".html") ? filename : `${filename}.html`;
-  downloadBlob(safeName, new Blob([html], { type: "text/html;charset=utf-8" }));
+  downloadBlob(name, utf8Blob(html, "text/html;charset=utf-8"));
 }
 
 /**

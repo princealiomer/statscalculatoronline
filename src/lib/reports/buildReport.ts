@@ -131,7 +131,82 @@ function toCsv(ctx: ReportContext) {
   if (ctx.result.apa) {
     lines.push(`Citation,APA,${csvCell(ctx.result.apa)}`);
   }
-  return lines.join("\n");
+  return lines.join("\r\n");
+}
+
+/** Escape text for RTF (ASCII-safe with Unicode escapes). */
+function rtfEscape(s: string) {
+  return s
+    .replace(/\\/g, "\\\\")
+    .replace(/\{/g, "\\{")
+    .replace(/\}/g, "\\}")
+    .replace(/\r?\n/g, "\\par ")
+    .replace(/[^\x00-\x7F]/g, (ch) => `\\u${ch.charCodeAt(0)}?`);
+}
+
+function rtfPara(text: string, opts?: { bold?: boolean; size?: number }) {
+  const size = opts?.size ? `\\fs${opts.size}` : "\\fs22";
+  const bold = opts?.bold ? "\\b " : "";
+  const boldOff = opts?.bold ? "\\b0 " : "";
+  return `{\\pard ${size}${bold}${rtfEscape(text)}${boldOff}\\par}\n`;
+}
+
+/** Build a real .rtf Word document (opens in Word / WordPad / LibreOffice). */
+export function buildRtfReport(ctx: ReportContext, style: ReportStyle = "apa"): string {
+  const report = buildReport(ctx, style);
+  const url = pageUrl(ctx);
+  const parts: string[] = [];
+  parts.push("{\\rtf1\\ansi\\deff0");
+  parts.push("{\\fonttbl{\\f0 Calibri;}{\\f1 Consolas;}}");
+  parts.push("\\f0\\fs22\n");
+  parts.push(rtfPara(siteConfig.name, { bold: true, size: 28 }));
+  parts.push(rtfPara(siteConfig.tagline, { size: 18 }));
+  parts.push(rtfPara(""));
+  parts.push(rtfPara(`Complete calculation report (${style.toUpperCase()})`, { bold: true, size: 24 }));
+  parts.push(rtfPara(`${ctx.title} Calculator`, { bold: true, size: 32 }));
+  parts.push(rtfPara(`Category: ${ctx.categoryName ?? ctx.category}`));
+  parts.push(rtfPara(`Generated: ${report.generatedAt}`));
+  parts.push(rtfPara(`Source: ${url}`));
+  parts.push(rtfPara(ctx.description));
+  parts.push(rtfPara(""));
+
+  parts.push(rtfPara("1. WHAT WAS ENTERED (INPUTS)", { bold: true, size: 26 }));
+  const inputs = inputEntries(ctx);
+  if (!inputs.length) parts.push(rtfPara("(No inputs recorded.)"));
+  else for (const [k, v] of inputs) parts.push(rtfPara(`${inputLabel(ctx, k)}: ${truncate(v, 1500)}`));
+  parts.push(rtfPara(""));
+
+  parts.push(rtfPara("2. FORMULAS APPLIED", { bold: true, size: 26 }));
+  if (!ctx.formulas?.length) parts.push(rtfPara("(See calculator page for textbook formulas.)"));
+  else {
+    for (const f of ctx.formulas) {
+      parts.push(rtfPara(f.label, { bold: true }));
+      parts.push(`{\\pard\\f1\\fs20 ${rtfEscape(f.latex)}\\par}\n`);
+      if (f.note) parts.push(rtfPara(`Note: ${f.note}`));
+    }
+  }
+  parts.push(rtfPara(""));
+
+  parts.push(rtfPara("3. WHAT WAS DONE (WORKED STEPS)", { bold: true, size: 26 }));
+  if (!ctx.result.steps.length) parts.push(rtfPara("(No intermediate steps were emitted for this run.)"));
+  else ctx.result.steps.forEach((s, i) => parts.push(rtfPara(`${i + 1}. ${s.title} — ${s.detail}`)));
+  parts.push(rtfPara(""));
+
+  parts.push(rtfPara("4. END RESULTS", { bold: true, size: 26 }));
+  for (const f of ctx.result.fields) parts.push(rtfPara(`${f.label}: ${f.value}`, { bold: true }));
+  parts.push(rtfPara(""));
+
+  parts.push(rtfPara("5. WRITE-UP / CITATION", { bold: true, size: 26 }));
+  parts.push(rtfPara(report.writeUp));
+  if (ctx.result.apa) parts.push(rtfPara(`APA: ${ctx.result.apa}`));
+  parts.push(rtfPara(""));
+
+  parts.push(rtfPara("6. ASSUMPTIONS", { bold: true, size: 26 }));
+  for (const a of report.assumptions) parts.push(rtfPara(`- ${a}`));
+  parts.push(rtfPara(""));
+  parts.push(rtfPara(`Free branded report from ${siteConfig.name} (${siteConfig.domain})`));
+  parts.push("}");
+  return parts.join("");
 }
 
 function breakdownText(ctx: ReportContext, style: ReportStyle, report: Omit<BuiltReport, "breakdown" | "csv" | "latex" | "generatedAt" | "assumptions"> & { assumptions: string[]; generatedAt: string }) {

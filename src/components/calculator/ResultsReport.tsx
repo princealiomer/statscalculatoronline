@@ -6,13 +6,19 @@ import type { FieldDef } from "@/lib/calculators/fields";
 import type { CalcResult } from "@/lib/stats/format";
 import { getCalculatorGuide } from "@/lib/calculators/explain";
 import { getCategory } from "@/lib/calculators/registry";
-import { buildReport, reportHtmlBody, slugifyFilename } from "@/lib/reports/buildReport";
+import {
+  buildReport,
+  buildRtfReport,
+  reportHtmlBody,
+  slugifyFilename,
+} from "@/lib/reports/buildReport";
 import type { ReportStyle } from "@/lib/reports/types";
 import {
   copyText,
   downloadCsv,
-  downloadDoc,
   downloadPrintableHtml,
+  downloadRtf,
+  downloadTxt,
   printPdfHtml,
 } from "@/lib/reports/download";
 
@@ -161,39 +167,50 @@ export function ResultsReport({
         </ol>
       </div>
 
-      <div className="mt-4 grid gap-2 sm:grid-cols-3">
+      <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
         <PrimaryAction
           busy={busy === "pdf"}
           onClick={() =>
             runAction("pdf", "Print dialog opened — choose Save as PDF for a branded PDF", exportPdf)
           }
         >
-          Save branded PDF
+          Save PDF
         </PrimaryAction>
         <PrimaryAction
           busy={busy === "word"}
           onClick={() =>
-            runAction("word", "Word report downloaded (full breakdown)", () =>
-              downloadDoc(`${baseName}-report.doc`, reportHtmlBody(ctx, style), calculator.title),
+            runAction("word", "Word file downloaded (.rtf — opens in Microsoft Word)", () =>
+              downloadRtf(`${baseName}-report.rtf`, buildRtfReport(ctx, style)),
             )
           }
         >
-          Download Word
+          Word (.rtf)
         </PrimaryAction>
         <PrimaryAction
           busy={busy === "csv"}
           onClick={() =>
-            runAction("csv", "CSV downloaded (inputs, formulas, steps, results)", () =>
+            runAction("csv", "CSV downloaded (.csv — opens in Excel)", () =>
               downloadCsv(`${baseName}-results.csv`, report.csv),
             )
           }
         >
-          Download CSV
+          Excel CSV
+        </PrimaryAction>
+        <PrimaryAction
+          busy={busy === "txt"}
+          onClick={() =>
+            runAction("txt", "Text report downloaded (.txt)", () =>
+              downloadTxt(`${baseName}-report.txt`, report.breakdown),
+            )
+          }
+        >
+          Text (.txt)
         </PrimaryAction>
       </div>
       <p className="mt-2 text-xs text-[var(--brand-ink-soft)]">
-        PDF uses your browser print dialog (Save as PDF). Files include the SCO brand header, inputs,
-        formulas, worked steps, and end results.
+        Files save with clear extensions: <strong>.pdf</strong> (via print), <strong>.rtf</strong> for
+        Word, <strong>.csv</strong> for Excel/Sheets, and <strong>.txt</strong> for any device. Each
+        includes inputs, formulas, steps, and results.
       </p>
 
       <details className="mt-4 rounded-xl border border-[var(--brand-border)] bg-white px-3 py-2 open:pb-3">
