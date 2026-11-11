@@ -4,8 +4,12 @@ import { calculators, categories } from "@/lib/calculators/registry";
 const nodes = [
   { label: "Paste data", detail: "Lists, tables, or summaries", href: "/calculators/descriptive-statistics" },
   { label: "Pick a method", detail: "Tests, models, or math tools", href: "/calculators/hypothesis-testing" },
-  { label: "See formulas", detail: "KaTeX equations + assumptions", href: "/calculators" },
-  { label: "Export free", detail: "APA · PDF · Word · CSV", href: "/resources" },
+  { label: "See formulas & steps", detail: "Textbook formulas + show-work", href: "/calculators" },
+  {
+    label: "Export branded PDF",
+    detail: "Inputs · formulas · steps · results",
+    href: "/calculators",
+  },
 ];
 
 export function BrandInfographic() {
@@ -34,7 +38,7 @@ export function BrandInfographic() {
           <StatChip value={`${calcCount}+`} label="Working calculators" />
           <StatChip value={`${catCount}`} label="Topic categories" />
           <StatChip value="APA" label="Free write-ups" />
-          <StatChip value="PDF" label="Word · CSV exports" />
+          <StatChip value="PDF" label="Full breakdown exports" />
         </div>
 
         <ol className="relative mt-6 space-y-0">

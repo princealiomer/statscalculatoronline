@@ -4,9 +4,9 @@ export const siteConfig = {
   /** Compact mark for tight UI only (logo glyph / abbreviated labels) */
   shortName: "SCO",
   domain: "statscalculatoronline.com",
-  tagline: "Free online statistics calculators with clear formulas and steps",
+  tagline: "Free online statistics calculators with clear formulas, steps, and branded PDF reports",
   description:
-    "Stats Calculator Online is a free library of statistics and math calculators with step-by-step solutions, textbook formulas, APA write-ups, and free PDF/Word/CSV exports. Hypothesis tests, descriptive statistics, probability, regression, algebra, finance, and more.",
+    "Stats Calculator Online is a free library of statistics and math calculators with step-by-step solutions, textbook formulas, APA write-ups, and free branded PDF reports that include your inputs, formulas applied, worked steps, and final results (plus Word/CSV). Hypothesis tests, descriptive statistics, probability, regression, algebra, finance, and more.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://statscalculatoronline.com",
   locale: "en_US",
   author: "Stats Calculator Online",

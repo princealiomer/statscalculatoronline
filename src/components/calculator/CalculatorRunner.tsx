@@ -199,6 +199,15 @@ export function CalculatorRunner({
               {result.apa}
             </p>
           )}
+          {result && !result.error && (
+            <p className="mt-4 text-sm text-[var(--brand-ink-soft)]">
+              Need a complete write-up?{" "}
+              <a href="#exports" className="font-semibold text-[var(--brand-accent)] hover:underline">
+                Download a branded PDF
+              </a>{" "}
+              with inputs, formulas, worked steps, and final results.
+            </p>
+          )}
         </div>
 
         {result && !result.error && result.steps.length > 0 && (
@@ -218,7 +227,7 @@ export function CalculatorRunner({
         )}
 
         {result && !result.error && (
-          <ResultsReport calculator={calculator} result={result} values={values} />
+          <ResultsReport calculator={calculator} result={result} values={values} fields={fields} />
         )}
 
         {calculator.engine.startsWith("chart-") && (

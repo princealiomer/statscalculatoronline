@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Statistical Resources",
-  description: "Critical value tables and data tools to support Stats Calculator Online calculators.",
+  description:
+    "Critical value tables plus free branded PDF reports (inputs, formulas, steps, results) on Stats Calculator Online.",
 };
 
 const tables = [
@@ -16,20 +17,36 @@ const tables = [
 export default function ResourcesPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="font-display text-4xl text-teal-950">Resources</h1>
-      <p className="mt-2 text-teal-900/70">
+      <h1 className="font-display text-4xl text-[var(--brand-ink)]">Resources</h1>
+      <p className="mt-2 text-[var(--brand-ink-soft)]">
         Distribution tables and reference tools for classroom and research work.
       </p>
-      <h2 className="mt-10 font-display text-2xl text-teal-950">Statistical tables</h2>
+
+      <aside className="mt-8 rounded-2xl border border-[var(--brand-accent)]/25 bg-[var(--brand-paper)] p-5">
+        <h2 className="font-display text-xl text-[var(--brand-ink)]">Free branded PDF reports</h2>
+        <p className="mt-2 text-sm leading-relaxed text-[var(--brand-ink-soft)]">
+          Every calculator on Stats Calculator Online can export a PDF (and Word / CSV) that shows the
+          complete breakdown: what you entered, which formulas were applied, the worked steps, and the
+          end results — with our branding so you can attach it to homework or drafts.
+        </p>
+        <Link
+          href="/calculators"
+          className="mt-3 inline-flex min-h-10 items-center text-sm font-semibold text-[var(--brand-accent)] hover:underline"
+        >
+          Open a calculator and export →
+        </Link>
+      </aside>
+
+      <h2 className="mt-10 font-display text-2xl text-[var(--brand-ink)]">Statistical tables</h2>
       <ul className="mt-4 grid gap-3 sm:grid-cols-2">
         {tables.map((t) => (
           <li key={t.href}>
             <Link
               href={t.href}
-              className="block rounded-xl border border-teal-900/10 bg-white/65 px-4 py-3 hover:border-teal-700/30"
+              className="block rounded-xl border border-[var(--brand-border)] bg-[var(--brand-panel)] px-4 py-3 shadow-[var(--brand-shadow)] hover:border-[var(--brand-accent)]/35"
             >
-              <span className="font-medium text-teal-950">{t.title}</span>
-              <span className="mt-1 block text-sm text-teal-900/65">{t.desc}</span>
+              <span className="font-medium text-[var(--brand-ink)]">{t.title}</span>
+              <span className="mt-1 block text-sm text-[var(--brand-ink-soft)]">{t.desc}</span>
             </Link>
           </li>
         ))}

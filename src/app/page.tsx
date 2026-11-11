@@ -19,7 +19,7 @@ export default function HomePage() {
               Stats Calculator Online
             </p>
             <h1 className="mt-5 max-w-xl text-xl font-medium leading-snug text-[var(--brand-ink)] md:text-2xl">
-              Free statistics calculators with formulas, steps, and reports you can cite
+              Free statistics calculators with formulas, steps, and branded PDF reports you can cite
             </h1>
             <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[var(--brand-ink-soft)] md:text-base">
               {siteConfig.description}

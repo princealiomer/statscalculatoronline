@@ -56,8 +56,14 @@ export function CalculatorShell({ calculator }: { calculator: CalculatorDef }) {
         </h1>
         <p className="mt-3 text-[15px] leading-relaxed text-[var(--brand-ink)]/75 sm:text-base md:text-lg">
           Free online {calculator.title} calculator on Stats Calculator Online — {calculator.description}.
-          Includes formulas, step-by-step guidance, interpretation tips, and free APA/AMA write-ups with
-          PDF / Word / CSV exports.
+          Includes formulas, step-by-step guidance, interpretation tips, and a free branded PDF report with
+          your inputs, formulas applied, worked steps, and end results (plus Word / CSV).
+        </p>
+        <p className="mt-3 rounded-xl border border-[var(--brand-accent)]/20 bg-[var(--brand-paper)] px-3.5 py-3 text-sm text-[var(--brand-ink)]">
+          <span className="font-semibold text-[var(--brand-accent)]">Free PDF reports: </span>
+          After you calculate, export a Stats Calculator Online–branded PDF that shows what was entered,
+          which formulas were used, what was computed step-by-step, and the final answers — ready for
+          homework, lab notebooks, or drafts.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <a
@@ -77,6 +83,12 @@ export function CalculatorShell({ calculator }: { calculator: CalculatorDef }) {
             className="inline-flex min-h-10 items-center justify-center rounded-xl border border-[var(--brand-border)] bg-[var(--brand-panel)] px-4 text-sm font-medium text-[var(--brand-ink)] hover:bg-white"
           >
             Formula
+          </a>
+          <a
+            href="#exports"
+            className="inline-flex min-h-10 items-center justify-center rounded-xl border border-[var(--brand-border)] bg-[var(--brand-panel)] px-4 text-sm font-medium text-[var(--brand-ink)] hover:bg-white"
+          >
+            PDF / Word / CSV
           </a>
           <a
             href="#similar"
