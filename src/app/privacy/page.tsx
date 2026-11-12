@@ -1,15 +1,29 @@
 import type { Metadata } from "next";
+import { siteConfig } from "@/config/site";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
-export const metadata: Metadata = { title: "Privacy Policy" };
+export const metadata: Metadata = buildPageMetadata({
+  title: "Privacy Policy",
+  description: `Privacy policy for ${siteConfig.name}. Calculations run in your browser; we describe cookies, analytics, and advertising practices clearly.`,
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="font-display text-4xl text-teal-950">Privacy Policy</h1>
-      <p className="mt-4 leading-relaxed text-teal-900/80">
-        Calculator inputs are processed in your browser and are not uploaded to our servers
-        by default. We may collect anonymous traffic analytics if enabled on the deployed
-        site. Do not paste sensitive personal data into calculators.
+      <h1 className="font-display text-4xl text-[var(--brand-ink)]">Privacy Policy</h1>
+      <p className="mt-4 leading-relaxed text-[var(--brand-ink-soft)]">
+        Stats Calculator Online runs calculations in your browser. We do not require an account to use
+        calculators. Aggregated analytics (for example via Google Tag Manager) and advertising partners
+        such as Google AdSense may use cookies or similar technologies as described in their policies.
+        Do not paste confidential or regulated data into public tools.
+      </p>
+      <p className="mt-4 leading-relaxed text-[var(--brand-ink-soft)]">
+        Contact{" "}
+        <a className="underline" href={`mailto:${siteConfig.contactEmail}`}>
+          {siteConfig.contactEmail}
+        </a>{" "}
+        with privacy questions.
       </p>
     </div>
   );

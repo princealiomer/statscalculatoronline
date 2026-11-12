@@ -1,11 +1,14 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Statistical Resources",
   description:
-    "Critical value tables plus free branded PDF reports (inputs, formulas, steps, results) on Stats Calculator Online.",
-};
+    "Critical value tables (Z, t, χ², F) plus free branded PDF calculator reports with inputs, formulas, steps, and results.",
+  path: "/resources",
+  keywords: ["statistical tables", "z table", "resources"],
+});
 
 const tables = [
   { href: "/resources/statistical-tables/z-table", title: "Z-Table", desc: "Standard normal critical values" },

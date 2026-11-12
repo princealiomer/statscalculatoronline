@@ -2,8 +2,9 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { apHub, calculators, categories } from "@/lib/calculators/registry";
 
+/** Only canonical, indexable HTML URLs — no redirects, no plain-text assets. */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = siteConfig.url;
+  const base = siteConfig.url.replace(/\/$/, "");
   const now = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -46,20 +47,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${base}/accessibility`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${base}/sitemap`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${base}/llms.txt`, lastModified: now, changeFrequency: "weekly", priority: 0.4 },
   ];
 
   const cats: MetadataRoute.Sitemap = [...categories.map((c) => c.id), apHub.category].map((id) => ({
     url: `${base}/calculators/${id}`,
     lastModified: now,
-    changeFrequency: "weekly",
+    changeFrequency: "weekly" as const,
     priority: 0.85,
   }));
 
   const calcs: MetadataRoute.Sitemap = calculators.map((c) => ({
     url: `${base}/calculators/${c.category}/${c.slug}`,
     lastModified: now,
-    changeFrequency: "monthly",
+    changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
 

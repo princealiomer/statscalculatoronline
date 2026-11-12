@@ -1,8 +1,17 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { categories, calculators } from "@/lib/calculators/registry";
 import { siteConfig } from "@/config/site";
 import { BrandInfographic } from "@/components/BrandInfographic";
 import { getPopularCalculators, calcHref } from "@/lib/calculators/related";
+import { buildPageMetadata } from "@/lib/seo/meta";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "Free Statistics & Math Calculators",
+  description: siteConfig.metaDescription,
+  path: "/",
+  keywords: [...siteConfig.keywords],
+});
 
 export default function HomePage() {
   const featured = getPopularCalculators(6);

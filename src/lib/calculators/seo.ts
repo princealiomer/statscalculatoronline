@@ -3,12 +3,7 @@ import type { CalculatorDef } from "@/lib/calculators/types";
 import { getCategory } from "@/lib/calculators/registry";
 import { getCalculatorGuide, getCalculatorOutline } from "@/lib/calculators/explain";
 import { siteConfig } from "@/config/site";
-
-function truncate(text: string, max: number) {
-  const clean = text.replace(/\s+/g, " ").trim();
-  if (clean.length <= max) return clean;
-  return `${clean.slice(0, max - 1).trimEnd()}…`;
-}
+import { buildPageMetadata, seoDescription } from "@/lib/seo/meta";
 
 export function calculatorKeywords(calc: CalculatorDef): string[] {
   const cat = getCategory(calc.category);
@@ -29,37 +24,19 @@ export function calculatorKeywords(calc: CalculatorDef): string[] {
 
 export function calculatorMetaDescription(calc: CalculatorDef): string {
   const guide = getCalculatorGuide(calc);
-  const raw = `Free ${calc.title} calculator on Stats Calculator Online — ${calc.description}. ${guide.overview} Formulas, steps, FAQ, similar tools, and free APA/PDF exports.`;
-  return truncate(raw, 160);
+  const raw = `Free ${calc.title} calculator — ${calc.description}. ${guide.overview} Formulas, steps, and PDF exports on ${siteConfig.name}.`;
+  return seoDescription(raw);
 }
 
 export function buildCalculatorMetadata(calc: CalculatorDef): Metadata {
   const path = `/calculators/${calc.category}/${calc.slug}`;
-  const title = `${calc.title} Calculator — Free Online Tool`;
-  const description = calculatorMetaDescription(calc);
-  const keywords = calculatorKeywords(calc);
-
-  return {
-    title,
-    description,
-    keywords: [...keywords, "Stats Calculator Online", siteConfig.domain],
-    alternates: { canonical: path },
-    robots: { index: true, follow: true },
-    openGraph: {
-      type: "article",
-      title,
-      description,
-      url: path,
-      siteName: siteConfig.name,
-      locale: siteConfig.locale,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-    category: getCategory(calc.category)?.name,
-  };
+  return buildPageMetadata({
+    title: `${calc.title} Calculator`,
+    description: calculatorMetaDescription(calc),
+    path,
+    keywords: [...calculatorKeywords(calc), siteConfig.domain],
+    type: "article",
+  });
 }
 
 export function buildCalculatorJsonLd(calc: CalculatorDef) {

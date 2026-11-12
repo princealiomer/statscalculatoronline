@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import { fCriticalTable } from "@/lib/stats/tables";
 import { TablePage } from "@/components/TablePage";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "F-Table",
-  description: "F critical values at α = 0.05.",
-};
+  description:
+    "F distribution critical values at α = 0.05 for ANOVA and variance ratio tests. Free table on Stats Calculator Online.",
+  path: "/resources/statistical-tables/f-table",
+  keywords: ["f table", "f critical value", "anova table"],
+});
 
 export default function FTablePage() {
   const rows = fCriticalTable(0.05);

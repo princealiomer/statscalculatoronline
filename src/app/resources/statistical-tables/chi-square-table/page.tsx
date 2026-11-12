@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import { chiCriticalTable } from "@/lib/stats/tables";
 import { TablePage } from "@/components/TablePage";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Chi-Square Table",
-  description: "Chi-square critical values by degrees of freedom.",
-};
+  description:
+    "Chi-square (χ²) critical values by degrees of freedom across common α levels. Free reference on Stats Calculator Online.",
+  path: "/resources/statistical-tables/chi-square-table",
+  keywords: ["chi square table", "chi-square critical value"],
+});
 
 export default function ChiTablePage() {
   const rows = chiCriticalTable();

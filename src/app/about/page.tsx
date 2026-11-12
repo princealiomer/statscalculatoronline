@@ -3,12 +3,13 @@ import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { TidbitsWidget } from "@/components/widgets/TidbitsWidget";
 import { tidbitsForPath } from "@/lib/content/tidbits";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
-export const metadata: Metadata = {
-  title: "About Stats Calculator Online",
-  description: `About Stats Calculator Online — free online statistics calculators with formulas, steps, similar-tool widgets, and free APA/PDF exports.`,
-  alternates: { canonical: "/about" },
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: "About",
+  description: `About ${siteConfig.name}: free statistics calculators with formulas, steps, similar-tool widgets, and branded PDF exports.`,
+  path: "/about",
+});
 
 export default function AboutPage() {
   const tips = tidbitsForPath("about", 3);
@@ -47,7 +48,7 @@ export default function AboutPage() {
         </li>
       </ul>
       <div className="mt-10">
-        <TidbitsWidget items={tips} />
+        <TidbitsWidget items={tips} title="Tidbits from Stats Calculator Online" />
       </div>
     </div>
   );

@@ -8,13 +8,14 @@ import { SimilarCalculatorsWidget } from "@/components/widgets/SimilarCalculator
 import { tidbitsForPath } from "@/lib/content/tidbits";
 import { getPopularCalculators } from "@/lib/calculators/related";
 import { siteConfig } from "@/config/site";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "All Statistics Calculators",
-  description: `Browse the full Stats Calculator Online catalog: ${calculators.length}+ free tools for hypothesis tests, descriptive statistics, probability, regression, math, finance, and more.`,
-  alternates: { canonical: "/calculators" },
+  description: `Browse ${calculators.length}+ free tools for hypothesis tests, descriptive stats, probability, regression, math, and finance.`,
+  path: "/calculators",
   keywords: [...siteConfig.keywords, "all statistics calculators"],
-};
+});
 
 export default function CalculatorsIndexPage() {
   const tips = tidbitsForPath("calculators-index", 3);

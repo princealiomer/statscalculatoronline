@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import { tCriticalTable } from "@/lib/stats/tables";
 import { TablePage } from "@/components/TablePage";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "t-Table",
-  description: "Student t critical values by degrees of freedom.",
-};
+  description:
+    "Student’s t critical value table by degrees of freedom for common significance levels. Free reference on Stats Calculator Online.",
+  path: "/resources/statistical-tables/t-table",
+  keywords: ["t table", "student t", "critical value"],
+});
 
 export default function TTablePage() {
   const rows = tCriticalTable();

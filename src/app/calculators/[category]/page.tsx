@@ -13,6 +13,7 @@ import { TidbitsWidget } from "@/components/widgets/TidbitsWidget";
 import { tidbitsForPath } from "@/lib/content/tidbits";
 import { siteConfig } from "@/config/site";
 import { getPopularCalculators } from "@/lib/calculators/related";
+import { buildPageMetadata } from "@/lib/seo/meta";
 
 export function generateStaticParams() {
   return [
@@ -28,27 +29,21 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { category } = await params;
   if (category === apHub.category) {
-    const title = `${apHub.title} — Free Online Tools`;
-    const description = `${apHub.description} On Stats Calculator Online with formulas, steps, and free exports.`;
-    return {
-      title,
-      description,
-      alternates: { canonical: `/calculators/${category}` },
-      openGraph: { title, description, url: `/calculators/${category}` },
-    };
+    return buildPageMetadata({
+      title: apHub.title,
+      description: `${apHub.description} Formulas, steps, and free PDF exports on ${siteConfig.name}.`,
+      path: `/calculators/${category}`,
+      keywords: [apHub.title, "AP Statistics", siteConfig.name, siteConfig.domain],
+    });
   }
   const cat = getCategory(category);
   if (!cat) return {};
-  const title = `${cat.name} Calculators — Free Online Tools`;
-  const description = `${cat.description} Browse free ${cat.name.toLowerCase()} calculators on Stats Calculator Online with formulas, similar-tool widgets, and free report exports.`;
-  return {
-    title,
-    description,
-    keywords: [cat.name, `${cat.name} calculator`, "Stats Calculator Online", siteConfig.domain],
-    alternates: { canonical: `/calculators/${category}` },
-    openGraph: { title, description, url: `/calculators/${category}` },
-    twitter: { card: "summary_large_image", title, description },
-  };
+  return buildPageMetadata({
+    title: `${cat.name} Calculators`,
+    description: `${cat.description} Free ${cat.name.toLowerCase()} calculators with formulas, steps, and PDF exports.`,
+    path: `/calculators/${category}`,
+    keywords: [cat.name, `${cat.name} calculator`, siteConfig.name, siteConfig.domain],
+  });
 }
 
 export default async function CategoryPage({

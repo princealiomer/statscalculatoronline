@@ -5,8 +5,12 @@ export const siteConfig = {
   shortName: "SCO",
   domain: "statscalculatoronline.com",
   tagline: "Free online statistics calculators with clear formulas, steps, and branded PDF reports",
+  /** Long marketing blurb (pages, JSON-LD). Prefer metaDescription for <meta> tags. */
   description:
     "Stats Calculator Online is a free library of statistics and math calculators with step-by-step solutions, textbook formulas, APA write-ups, and free branded PDF reports that include your inputs, formulas applied, worked steps, and final results (plus Word/CSV). Hypothesis tests, descriptive statistics, probability, regression, algebra, finance, and more.",
+  /** Keep ≤155 chars for SEO crawlers */
+  metaDescription:
+    "Free statistics & math calculators with formulas, step-by-step work, APA write-ups, and branded PDF/CSV exports. t-tests, probability, regression, and more.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://statscalculatoronline.com",
   locale: "en_US",
   author: "Stats Calculator Online",

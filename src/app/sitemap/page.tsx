@@ -4,17 +4,19 @@ import { apHub, calculators, categories, getByCategory } from "@/lib/calculators
 import { navGroups, categoriesInGroup, resourceLinks } from "@/config/nav";
 import { siteConfig } from "@/config/site";
 
-export const metadata: Metadata = {
-  title: "HTML Sitemap — All Calculators",
-  description: `Complete HTML sitemap for Stats Calculator Online with every calculator, category, and resource page linked for easy access. ${calculators.length}+ tools listed.`,
-  alternates: { canonical: "/sitemap" },
+import { buildPageMetadata } from "@/lib/seo/meta";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "HTML Sitemap",
+  description: `Complete HTML sitemap for Stats Calculator Online with every calculator and resource linked. ${calculators.length}+ tools listed.`,
+  path: "/sitemap",
   keywords: [
     "Stats Calculator Online sitemap",
     "all statistics calculators",
     "calculator directory",
     siteConfig.domain,
   ],
-};
+});
 
 const staticPages = [
   { href: "/", title: "Home" },
