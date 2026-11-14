@@ -14,6 +14,13 @@ import { tidbitsForPath } from "@/lib/content/tidbits";
 import { siteConfig } from "@/config/site";
 import { getPopularCalculators } from "@/lib/calculators/related";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import { ContentPage } from "@/components/ContentPage";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export function generateStaticParams() {
   return [
@@ -106,45 +113,37 @@ function CategoryView({
   const more = getPopularCalculators(6).filter((c) => c.category !== categoryId);
 
   return (
-    <div className="mx-auto max-w-6xl px-3 py-8 sm:px-4 sm:py-10">
-      <nav className="text-xs text-[var(--brand-ink)]/55 sm:text-sm" aria-label="Breadcrumb">
-        <Link href="/" className="hover:text-[var(--brand-accent)]">
-          Home
-        </Link>
-        <span aria-hidden> / </span>
-        <Link href="/calculators" className="hover:text-[var(--brand-accent)]">
-          Calculators
-        </Link>
-        <span aria-hidden> / </span>
-        <span className="text-[var(--brand-ink)]">{title}</span>
-      </nav>
-      <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-accent)]">
-        Stats Calculator Online
-      </p>
-      <h1 className="mt-2 font-display text-3xl leading-tight text-[var(--brand-ink)] sm:text-4xl">
-        {heading}
-      </h1>
-      <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-[var(--brand-ink)]/70 sm:text-base">
-        {description} Free tools on Stats Calculator Online with formulas, how-to steps, similar
-        calculator widgets, tidbits, and exportable reports.
-      </p>
-      <ul className="mt-6 grid gap-3 sm:mt-8 sm:grid-cols-2">
+    <ContentPage
+      wide
+      title={heading}
+      crumbs={[
+        { href: "/", label: "Home" },
+        { href: "/calculators", label: "Calculators" },
+        { label: title },
+      ]}
+      description={
+        <>
+          {description} Free tools on Stats Calculator Online with formulas, how-to steps, similar
+          calculator widgets, tidbits, and exportable reports.
+        </>
+      }
+    >
+      <ul className="grid gap-3 sm:grid-cols-2">
         {items.map((c) => (
           <li key={c.slug}>
-            <Link
-              href={`/calculators/${c.category}/${c.slug}`}
-              className="block min-h-[3.25rem] rounded-xl border border-[var(--brand-ink)]/10 bg-white/65 px-4 py-3 hover:border-[var(--brand-accent)]/30"
-            >
-              <span className="font-medium text-[var(--brand-ink)]">{c.title} Calculator</span>
-              <span className="mt-1 block text-sm leading-snug text-[var(--brand-ink)]/65">
-                {c.description}
-              </span>
+            <Link href={`/calculators/${c.category}/${c.slug}`} className="block h-full">
+              <Card className="h-full min-h-14 transition hover:ring-primary/30">
+                <CardHeader>
+                  <CardTitle className="text-base">{c.title} Calculator</CardTitle>
+                  <CardDescription className="text-sm leading-snug">{c.description}</CardDescription>
+                </CardHeader>
+              </Card>
             </Link>
           </li>
         ))}
       </ul>
 
-      <div className="mt-10 space-y-8">
+      <div className="flex flex-col gap-8">
         <TidbitsWidget items={tips} />
         <SimilarCalculatorsWidget
           items={more}
@@ -152,6 +151,6 @@ function CategoryView({
           subtitle="Cross-topic picks from Stats Calculator Online"
         />
       </div>
-    </div>
+    </ContentPage>
   );
 }

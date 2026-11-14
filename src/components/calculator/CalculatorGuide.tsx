@@ -3,6 +3,17 @@ import type { CalculatorDef } from "@/lib/calculators/types";
 import { getCalculatorOutline } from "@/lib/calculators/explain";
 import { Formula } from "@/components/calculator/Formula";
 import { siteConfig } from "@/config/site";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
 
 function SectionNav({ tool }: { tool: string }) {
   const items = [
@@ -18,15 +29,18 @@ function SectionNav({ tool }: { tool: string }) {
     { href: "#integrations", label: "Integrations" },
   ];
   return (
-    <nav aria-label={`${tool} guide sections`} className="mt-4 flex flex-wrap gap-2">
+    <nav aria-label={`${tool} guide sections`} className="flex flex-wrap gap-2">
       {items.map((item) => (
-        <a
+        <Button
           key={item.href}
-          href={item.href}
-          className="inline-flex min-h-8 items-center rounded-full border border-[var(--brand-ink)]/10 bg-white/80 px-2.5 text-[11px] font-semibold text-[var(--brand-ink)]/80 hover:border-[var(--brand-accent)]/30"
+          size="sm"
+          variant="outline"
+          className="bg-card"
+          render={<a href={item.href} />}
+          nativeButton={false}
         >
           {item.label}
-        </a>
+        </Button>
       ))}
     </nav>
   );
@@ -39,20 +53,18 @@ export function CalculatorGuide({ calculator }: { calculator: CalculatorDef }) {
   return (
     <section
       id="guide"
-      className="mt-10 space-y-10 scroll-mt-24 sm:mt-12 sm:space-y-12"
+      className="mt-10 flex scroll-mt-24 flex-col gap-10 sm:mt-12 sm:gap-12"
       aria-labelledby="guide-heading"
     >
-      <header>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-accent)]">
-          {siteConfig.name} guide
-        </p>
+      <header className="flex flex-col gap-3">
+        <Badge variant="secondary">{siteConfig.name} guide</Badge>
         <h2
           id="guide-heading"
-          className="mt-2 font-display text-2xl leading-tight text-[var(--brand-ink)] sm:text-3xl"
+          className="font-display text-2xl leading-tight text-foreground sm:text-3xl"
         >
           Understanding &amp; Using {tool}
         </h2>
-        <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-[var(--brand-ink)]/75 sm:text-base">
+        <p className="max-w-3xl text-[15px] leading-relaxed text-muted-foreground sm:text-base">
           A complete outline for the free {tool} calculator: definition, purpose, practical uses,
           formulas, how to read results, action workflow, troubleshooting, benchmarks, and how this
           metric connects to the rest of your stack.
@@ -60,30 +72,31 @@ export function CalculatorGuide({ calculator }: { calculator: CalculatorDef }) {
         <SectionNav tool={tool} />
       </header>
 
-      {/* 1. What Is That */}
-      <section id="what-is" className="scroll-mt-24 space-y-4">
-        <h3 className="font-display text-xl text-[var(--brand-ink)] sm:text-2xl">
+      <section id="what-is" className="flex scroll-mt-24 flex-col gap-4">
+        <h3 className="font-display text-xl text-foreground sm:text-2xl">
           1. What Is {tool}? (Definition &amp; Core Concept)
         </h3>
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-2xl border border-[var(--brand-ink)]/10 bg-white/75 p-4 sm:p-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-amber-ink)]">
-              High-level definition
-            </p>
-            <p className="mt-2 text-[15px] leading-relaxed text-[var(--brand-ink)]/80">{o.whatIs.definition}</p>
-          </div>
-          <div className="rounded-2xl border border-[var(--brand-ink)]/10 bg-white/75 p-4 sm:p-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-amber-ink)]">
-              What problem it solves
-            </p>
-            <p className="mt-2 text-[15px] leading-relaxed text-[var(--brand-ink)]/80">
-              {o.whatIs.problemSolved}
-            </p>
-          </div>
+          <Card>
+            <CardHeader>
+              <Badge variant="outline">High-level definition</Badge>
+              <CardDescription className="text-[15px] leading-relaxed text-foreground/80">
+                {o.whatIs.definition}
+              </CardDescription>
+            </CardHeader>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Badge variant="outline">What problem it solves</Badge>
+              <CardDescription className="text-[15px] leading-relaxed text-foreground/80">
+                {o.whatIs.problemSolved}
+              </CardDescription>
+            </CardHeader>
+          </Card>
         </div>
-        <div>
-          <h4 className="text-sm font-semibold text-[var(--brand-ink)]">Key components</h4>
-          <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-[var(--brand-ink)]/75">
+        <div className="flex flex-col gap-2">
+          <h4 className="text-sm font-semibold text-foreground">Key components</h4>
+          <ul className="list-disc pl-5 text-sm leading-relaxed text-muted-foreground">
             {o.whatIs.keyComponents.map((c) => (
               <li key={c}>{c}</li>
             ))}
@@ -91,142 +104,147 @@ export function CalculatorGuide({ calculator }: { calculator: CalculatorDef }) {
         </div>
       </section>
 
-      {/* 2. Why */}
-      <section id="why" className="scroll-mt-24 space-y-4">
-        <h3 className="font-display text-xl text-[var(--brand-ink)] sm:text-2xl">
+      <section id="why" className="flex scroll-mt-24 flex-col gap-4">
+        <h3 className="font-display text-xl text-foreground sm:text-2xl">
           2. Why Is {tool}? (Purpose &amp; Importance)
         </h3>
-        <div className="space-y-3 text-[15px] leading-relaxed text-[var(--brand-ink)]/80">
-          <p>
-            <span className="font-semibold text-[var(--brand-ink)]">Business &amp; SEO value: </span>
-            {o.why.value}
-          </p>
-          <p>
-            <span className="font-semibold text-[var(--brand-ink)]">What happens without it: </span>
-            {o.why.withoutIt}
-          </p>
-          <p>
-            <span className="font-semibold text-[var(--brand-ink)]">When to rely on it: </span>
-            {o.why.whenToRely}
-          </p>
-        </div>
+        <Card>
+          <CardContent className="flex flex-col gap-3 pt-(--card-spacing) text-[15px] leading-relaxed text-muted-foreground">
+            <p>
+              <span className="font-semibold text-foreground">Business &amp; SEO value: </span>
+              {o.why.value}
+            </p>
+            <p>
+              <span className="font-semibold text-foreground">What happens without it: </span>
+              {o.why.withoutIt}
+            </p>
+            <p>
+              <span className="font-semibold text-foreground">When to rely on it: </span>
+              {o.why.whenToRely}
+            </p>
+          </CardContent>
+        </Card>
       </section>
 
-      {/* 3. How used */}
-      <section id="how-used" className="scroll-mt-24 space-y-4">
-        <h3 className="font-display text-xl text-[var(--brand-ink)] sm:text-2xl">
+      <section id="how-used" className="flex scroll-mt-24 flex-col gap-4">
+        <h3 className="font-display text-xl text-foreground sm:text-2xl">
           3. How Is {tool} Used? (Context &amp; Practical Applications)
         </h3>
         <div className="grid gap-3 md:grid-cols-3">
           {o.howUsed.roles.map((r) => (
-            <div
-              key={r.role}
-              className="rounded-2xl border border-[var(--brand-ink)]/10 bg-white/75 p-4"
-            >
-              <p className="text-sm font-semibold text-[var(--brand-ink)]">{r.role}</p>
-              <ul className="mt-2 list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-[var(--brand-ink)]/70">
-                {r.uses.map((u) => (
-                  <li key={u}>{u}</li>
-                ))}
-              </ul>
-            </div>
+            <Card key={r.role}>
+              <CardHeader>
+                <CardTitle className="text-sm">{r.role}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="list-disc pl-4 text-xs leading-relaxed text-muted-foreground">
+                  {r.uses.map((u) => (
+                    <li key={u}>{u}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
           ))}
         </div>
-        <div className="rounded-2xl border border-[var(--brand-ink)]/10 bg-[var(--brand-paper)]/80 px-4 py-4 sm:px-5">
-          <h4 className="text-sm font-semibold text-[var(--brand-ink)]">Real-world scenario</h4>
-          <p className="mt-2 text-sm leading-relaxed text-[var(--brand-ink)]/75">{o.howUsed.scenario}</p>
-        </div>
+        <Alert>
+          <AlertTitle>Real-world scenario</AlertTitle>
+          <AlertDescription>{o.howUsed.scenario}</AlertDescription>
+        </Alert>
       </section>
 
-      {/* 4. Formula */}
-      <section id="formula" className="scroll-mt-24 space-y-4">
-        <h3 className="font-display text-xl text-[var(--brand-ink)] sm:text-2xl">
+      <section id="formula" className="flex scroll-mt-24 flex-col gap-4">
+        <h3 className="font-display text-xl text-foreground sm:text-2xl">
           4. What Is the Formula? (The Mechanics Behind {tool})
         </h3>
-        <p className="text-sm text-[var(--brand-ink)]/65">{o.formula.intro}</p>
+        <p className="text-sm text-muted-foreground">{o.formula.intro}</p>
         {o.formula.formulas.length > 0 && (
           <ul className="grid gap-3 sm:grid-cols-2 sm:gap-4">
             {o.formula.formulas.map((f) => (
-              <li
-                key={f.label + f.latex}
-                className="min-w-0 rounded-xl border border-[var(--brand-ink)]/10 bg-white/70 px-3 py-3 sm:px-4"
-              >
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--brand-accent)]">
-                  {f.label}
-                </p>
-                <div className="formula-scroll mt-2 min-h-[2.25rem] max-w-full overflow-x-auto">
-                  <Formula latex={f.latex} />
-                </div>
-                {f.note && <p className="mt-2 text-xs text-[var(--brand-ink)]/60">{f.note}</p>}
-                <p className="sr-only">
-                  {f.label}: {f.latex}
-                </p>
+              <li key={f.label + f.latex}>
+                <Card className="min-w-0">
+                  <CardHeader>
+                    <Badge variant="secondary">{f.label}</Badge>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="formula-scroll min-h-9 max-w-full overflow-x-auto">
+                      <Formula latex={f.latex} />
+                    </div>
+                    {f.note ? <p className="mt-2 text-xs text-muted-foreground">{f.note}</p> : null}
+                    <p className="sr-only">
+                      {f.label}: {f.latex}
+                    </p>
+                  </CardContent>
+                </Card>
               </li>
             ))}
           </ul>
         )}
-        <div>
-          <h4 className="text-sm font-semibold text-[var(--brand-ink)]">Variable breakdown</h4>
-          <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-[var(--brand-ink)]/75">
+        <div className="flex flex-col gap-2">
+          <h4 className="text-sm font-semibold text-foreground">Variable breakdown</h4>
+          <ul className="list-disc pl-5 text-sm text-muted-foreground">
             {o.formula.variableBreakdown.map((v) => (
               <li key={v}>{v}</li>
             ))}
           </ul>
         </div>
-        <div className="rounded-xl border border-[var(--brand-ink)]/10 bg-white/70 px-4 py-4">
-          <h4 className="text-sm font-semibold text-[var(--brand-ink)]">Sample calculation</h4>
-          <p className="mt-2 text-sm leading-relaxed text-[var(--brand-ink)]/75">
-            {o.formula.sampleCalculation}
-          </p>
-          <p className="mt-3 text-xs text-[var(--brand-ink)]/55">
-            Tip: use the live calculator above as your interactive mini-worksheet—enter your own
-            numbers to regenerate the result instantly.
-          </p>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm">Sample calculation</CardTitle>
+            <CardDescription className="text-sm leading-relaxed">
+              {o.formula.sampleCalculation}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-muted-foreground">
+              Tip: use the live calculator above as your interactive mini-worksheet—enter your own
+              numbers to regenerate the result instantly.
+            </p>
+          </CardContent>
+        </Card>
       </section>
 
-      {/* 5. Results */}
-      <section id="results-guide" className="scroll-mt-24 space-y-4">
-        <h3 className="font-display text-xl text-[var(--brand-ink)] sm:text-2xl">
+      <section id="results-guide" className="flex scroll-mt-24 flex-col gap-4">
+        <h3 className="font-display text-xl text-foreground sm:text-2xl">
           5. What Are the Results? (Interpreting Outputs &amp; Benchmarks)
         </h3>
-        <div>
-          <h4 className="text-sm font-semibold text-[var(--brand-ink)]">Decoding the numbers</h4>
-          <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-[var(--brand-ink)]/75">
+        <div className="flex flex-col gap-2">
+          <h4 className="text-sm font-semibold text-foreground">Decoding the numbers</h4>
+          <ul className="list-disc pl-5 text-sm text-muted-foreground">
             {o.results.decoding.map((d) => (
               <li key={d}>{d}</li>
             ))}
           </ul>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-2xl border border-rose-900/10 bg-rose-50/50 p-4">
-            <h4 className="text-sm font-semibold text-[var(--brand-ink)]">
-              Common patterns &amp; red flags
-            </h4>
-            <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-[var(--brand-ink)]/75">
-              {o.results.redFlags.map((r) => (
-                <li key={r}>{r}</li>
-              ))}
-            </ul>
-          </div>
-          <div className="rounded-2xl border border-[var(--brand-accent)]/15 bg-teal-50/40 p-4">
-            <h4 className="text-sm font-semibold text-[var(--brand-ink)]">Hidden wins</h4>
-            <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-[var(--brand-ink)]/75">
-              {o.results.hiddenWins.map((h) => (
-                <li key={h}>{h}</li>
-              ))}
-            </ul>
-          </div>
+          <Alert variant="destructive">
+            <AlertTitle>Common patterns &amp; red flags</AlertTitle>
+            <AlertDescription>
+              <ul className="mt-2 list-disc pl-5">
+                {o.results.redFlags.map((r) => (
+                  <li key={r}>{r}</li>
+                ))}
+              </ul>
+            </AlertDescription>
+          </Alert>
+          <Alert>
+            <AlertTitle>Hidden wins</AlertTitle>
+            <AlertDescription>
+              <ul className="mt-2 list-disc pl-5">
+                {o.results.hiddenWins.map((h) => (
+                  <li key={h}>{h}</li>
+                ))}
+              </ul>
+            </AlertDescription>
+          </Alert>
         </div>
-        <p className="text-sm leading-relaxed text-[var(--brand-ink)]/75">
-          <span className="font-semibold text-[var(--brand-ink)]">Impact assessment: </span>
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          <span className="font-semibold text-foreground">Impact assessment: </span>
           {o.results.impact}
         </p>
       </section>
 
-      {/* 6. Workflow */}
-      <section id="workflow" className="scroll-mt-24 space-y-4">
-        <h3 className="font-display text-xl text-[var(--brand-ink)] sm:text-2xl">
+      <section id="workflow" className="flex scroll-mt-24 flex-col gap-4">
+        <h3 className="font-display text-xl text-foreground sm:text-2xl">
           6. How to Use {tool}? (Actionable Implementation Guide)
         </h3>
         <ol className="grid gap-3 sm:grid-cols-2">
@@ -238,99 +256,96 @@ export function CalculatorGuide({ calculator }: { calculator: CalculatorDef }) {
               ["Measure", o.workflow.measure],
             ] as const
           ).map(([label, text], i) => (
-            <li
-              key={label}
-              className="rounded-2xl border border-[var(--brand-ink)]/10 bg-white/75 p-4"
-            >
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-accent)]">
-                Step {i + 1} · {label}
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--brand-ink)]/75">{text}</p>
+            <li key={label}>
+              <Card>
+                <CardHeader>
+                  <Badge variant="secondary">
+                    Step {i + 1} · {label}
+                  </Badge>
+                  <CardDescription className="text-sm leading-relaxed">{text}</CardDescription>
+                </CardHeader>
+              </Card>
             </li>
           ))}
         </ol>
       </section>
 
-      {/* Visual / UI */}
-      <section id="ui-tips" className="scroll-mt-24 space-y-3">
-        <h3 className="font-display text-xl text-[var(--brand-ink)] sm:text-2xl">
+      <section id="ui-tips" className="flex scroll-mt-24 flex-col gap-3">
+        <h3 className="font-display text-xl text-foreground sm:text-2xl">
           Visual &amp; interactive enhancements on this page
         </h3>
-        <p className="text-sm text-[var(--brand-ink)]/65">
+        <p className="text-sm text-muted-foreground">
           Annotated path through the Stats Calculator Online {tool} interface—no separate dashboard
           login required.
         </p>
-        <ol className="mt-2 list-decimal space-y-2 pl-5 text-sm text-[var(--brand-ink)]/75">
+        <ol className="list-decimal pl-5 text-sm text-muted-foreground">
           {o.uiTips.map((t) => (
             <li key={t}>{t}</li>
           ))}
         </ol>
-        <p className="text-sm">
-          <a href="#calculator" className="font-semibold text-[var(--brand-accent)] hover:underline">
+        <div className="flex flex-wrap gap-2">
+          <Button variant="link" className="h-auto px-0" render={<a href="#calculator" />} nativeButton={false}>
             ↑ Jump to the live {tool} calculator
-          </a>
-          {" · "}
-          <Link href="/sitemap" className="font-semibold text-[var(--brand-accent)] hover:underline">
+          </Button>
+          <Button
+            variant="link"
+            className="h-auto px-0"
+            render={<Link href="/sitemap" />}
+            nativeButton={false}
+          >
             Browse all calculators in the HTML sitemap
-          </Link>
-        </p>
-      </section>
-
-      {/* FAQ / Troubleshooting */}
-      <section id="faq" className="scroll-mt-24 space-y-3">
-        <h3 className="font-display text-xl text-[var(--brand-ink)] sm:text-2xl">
-          Troubleshooting &amp; FAQ
-        </h3>
-        <div className="space-y-2">
-          {o.troubleshooting.map((item) => (
-            <details
-              key={item.q}
-              className="group rounded-xl border border-[var(--brand-ink)]/10 bg-white/70 px-3 py-1 open:bg-white sm:px-4"
-            >
-              <summary className="cursor-pointer list-none py-3 text-[15px] font-medium text-[var(--brand-ink)] marker:content-none [&::-webkit-details-marker]:hidden">
-                <span className="flex items-start justify-between gap-3">
-                  <span className="min-w-0 flex-1 leading-snug">{item.q}</span>
-                  <span aria-hidden className="mt-0.5 shrink-0 text-[var(--brand-accent)] transition group-open:rotate-45">
-                    +
-                  </span>
-                </span>
-              </summary>
-              <p className="border-t border-[var(--brand-ink)]/5 pb-3 pt-2 text-[15px] leading-relaxed text-[var(--brand-ink)]/75 sm:text-sm">
-                {item.a}
-              </p>
-            </details>
-          ))}
+          </Button>
         </div>
       </section>
 
-      {/* Benchmarks */}
-      <section id="benchmarks" className="scroll-mt-24 space-y-3">
-        <h3 className="font-display text-xl text-[var(--brand-ink)] sm:text-2xl">
+      <section id="faq" className="flex scroll-mt-24 flex-col gap-3">
+        <h3 className="font-display text-xl text-foreground sm:text-2xl">
+          Troubleshooting &amp; FAQ
+        </h3>
+        {/* Visible Q&A (not accordion-only) so crawlers and AI agents can extract answers from HTML */}
+        <dl className="flex flex-col gap-3">
+          {o.troubleshooting.map((item) => (
+            <div
+              key={item.q}
+              className="rounded-md border bg-card px-3 py-3 sm:px-4"
+            >
+              <dt className="text-[15px] font-medium text-foreground">{item.q}</dt>
+              <dd className="mt-2 text-[15px] leading-relaxed text-muted-foreground sm:text-sm">
+                {item.a}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <section id="benchmarks" className="flex scroll-mt-24 flex-col gap-3">
+        <h3 className="font-display text-xl text-foreground sm:text-2xl">
           Industry benchmarks &amp; segment variations
         </h3>
-        <p className="text-sm text-[var(--brand-ink)]/65">
+        <p className="text-sm text-muted-foreground">
           Acceptable thresholds for {tool} shift by business model and channel—use these as starting
           guidance, not universal law.
         </p>
         <ul className="grid gap-3 sm:grid-cols-2">
           {o.benchmarks.map((b) => (
-            <li
-              key={b.segment}
-              className="rounded-2xl border border-[var(--brand-ink)]/10 bg-white/75 p-4"
-            >
-              <p className="text-sm font-semibold text-[var(--brand-ink)]">{b.segment}</p>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--brand-ink)]/70">{b.guidance}</p>
+            <li key={b.segment}>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">{b.segment}</CardTitle>
+                  <CardDescription className="text-sm leading-relaxed">{b.guidance}</CardDescription>
+                </CardHeader>
+              </Card>
             </li>
           ))}
         </ul>
       </section>
 
-      {/* Integrations */}
-      <section id="integrations" className="scroll-mt-24 space-y-3">
-        <h3 className="font-display text-xl text-[var(--brand-ink)] sm:text-2xl">
+      <section id="integrations" className="flex scroll-mt-24 flex-col gap-3">
+        <h3 className="font-display text-xl text-foreground sm:text-2xl">
           Integration with other metrics (the holistic view)
         </h3>
-        <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-[var(--brand-ink)]/75">
+        <Separator />
+        <ul className="list-disc pl-5 text-sm leading-relaxed text-muted-foreground">
           {o.integrations.map((i) => (
             <li key={i}>{i}</li>
           ))}

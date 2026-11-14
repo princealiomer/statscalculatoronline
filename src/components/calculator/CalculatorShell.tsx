@@ -8,100 +8,125 @@ import { SimilarCalculatorsWidget } from "@/components/widgets/SimilarCalculator
 import { TidbitsWidget } from "@/components/widgets/TidbitsWidget";
 import { getSimilarCalculators } from "@/lib/calculators/related";
 import { tidbitsForPath } from "@/lib/content/tidbits";
+import { calculatorAnswerBlock } from "@/lib/calculators/seo";
 import { siteConfig } from "@/config/site";
 import { resourceLinks } from "@/config/nav";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function CalculatorShell({ calculator }: { calculator: CalculatorDef }) {
   const category = getCategory(calculator.category);
   const fields = fieldsForEngine(calculator.engine);
   const similar = getSimilarCalculators(calculator, 8);
   const tips = tidbitsForPath(`${calculator.category}/${calculator.slug}`, 3);
+  const answerBlock = calculatorAnswerBlock(calculator);
 
   return (
     <article className="mx-auto max-w-6xl px-3 py-6 sm:px-4 sm:py-8">
-      <nav aria-label="Breadcrumb" className="text-xs text-[var(--brand-ink)]/55 sm:text-sm">
-        <ol className="flex flex-wrap items-center gap-x-1 gap-y-1">
-          <li>
-            <Link href="/" className="hover:text-[var(--brand-accent)]">
-              Home
-            </Link>
-          </li>
-          <li aria-hidden>/</li>
-          <li>
-            <Link href="/calculators" className="hover:text-[var(--brand-accent)]">
-              Calculators
-            </Link>
-          </li>
-          <li aria-hidden>/</li>
-          <li className="min-w-0">
-            <Link
-              href={`/calculators/${calculator.category}`}
-              className="break-words hover:text-[var(--brand-accent)]"
-            >
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink render={<Link href="/" />}>Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink render={<Link href="/calculators" />}>Calculators</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink render={<Link href={`/calculators/${calculator.category}`} />}>
               {category?.name ?? calculator.category}
-            </Link>
-          </li>
-          <li aria-hidden>/</li>
-          <li className="min-w-0 break-words text-[var(--brand-ink)]">{calculator.title}</li>
-        </ol>
-      </nav>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{calculator.title}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
 
-      <header className="mt-5 max-w-3xl sm:mt-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-accent)]">
+      <header className="mt-5 flex max-w-3xl flex-col gap-4 sm:mt-6">
+        <Badge variant="secondary">
           {siteConfig.name}
           {category ? ` · ${category.name}` : ""}
-        </p>
-        <h1 className="mt-2 font-display text-[1.75rem] font-semibold leading-tight tracking-tight text-[var(--brand-ink)] sm:text-3xl md:text-4xl">
+        </Badge>
+        <h1 className="font-display text-[1.75rem] font-semibold leading-tight tracking-tight text-foreground sm:text-3xl md:text-4xl">
           {calculator.title} Calculator
         </h1>
-        <p className="mt-3 text-[15px] leading-relaxed text-[var(--brand-ink)]/75 sm:text-base md:text-lg">
-          Free online {calculator.title} calculator on Stats Calculator Online — {calculator.description}.
-          Includes formulas, step-by-step guidance, interpretation tips, and a free branded PDF report with
-          your inputs, formulas applied, worked steps, and end results (plus Word / CSV).
+        <p className="text-[15px] leading-relaxed text-muted-foreground sm:text-base md:text-lg">
+          {answerBlock}
         </p>
-        <p className="mt-3 rounded-xl border border-[var(--brand-accent)]/20 bg-[var(--brand-paper)] px-3.5 py-3 text-sm text-[var(--brand-ink)]">
-          <span className="font-semibold text-[var(--brand-accent)]">Free PDF reports: </span>
-          After you calculate, export a Stats Calculator Online–branded PDF that shows what was entered,
-          which formulas were used, what was computed step-by-step, and the final answers — ready for
-          homework, lab notebooks, or drafts.
+        <p className="text-xs text-muted-foreground">
+          Free on Stats Calculator Online · Last updated {siteConfig.contentUpdated} · Formulas,
+          steps, FAQ, and PDF / Word / CSV exports included
         </p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          <a
-            href="#calculator"
-            className="inline-flex min-h-10 items-center justify-center rounded-xl bg-[var(--brand-accent)] px-4 text-sm font-semibold text-white hover:bg-[var(--brand-accent-dark)]"
-          >
+        <Alert>
+          <AlertTitle>Free PDF reports</AlertTitle>
+          <AlertDescription>
+            After you calculate, export a Stats Calculator Online–branded PDF that shows what was
+            entered, which formulas were used, what was computed step-by-step, and the final answers
+            — ready for homework, lab notebooks, or drafts.
+          </AlertDescription>
+        </Alert>
+        <div className="flex flex-wrap gap-2">
+          <Button size="lg" className="min-h-10" render={<a href="#calculator" />} nativeButton={false}>
             Open calculator
-          </a>
-          <a
-            href="#guide"
-            className="inline-flex min-h-10 items-center justify-center rounded-xl border border-[var(--brand-border)] bg-[var(--brand-panel)] px-4 text-sm font-medium text-[var(--brand-ink)] hover:bg-white"
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="min-h-10 bg-card"
+            render={<a href="#guide" />}
+            nativeButton={false}
           >
             Full guide outline
-          </a>
-          <a
-            href="#formula"
-            className="inline-flex min-h-10 items-center justify-center rounded-xl border border-[var(--brand-border)] bg-[var(--brand-panel)] px-4 text-sm font-medium text-[var(--brand-ink)] hover:bg-white"
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="min-h-10 bg-card"
+            render={<a href="#formula" />}
+            nativeButton={false}
           >
             Formula
-          </a>
-          <a
-            href="#exports"
-            className="inline-flex min-h-10 items-center justify-center rounded-xl border border-[var(--brand-border)] bg-[var(--brand-panel)] px-4 text-sm font-medium text-[var(--brand-ink)] hover:bg-white"
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="min-h-10 bg-card"
+            render={<a href="#exports" />}
+            nativeButton={false}
           >
             PDF / Word / CSV
-          </a>
-          <a
-            href="#similar"
-            className="inline-flex min-h-10 items-center justify-center rounded-xl border border-[var(--brand-border)] bg-[var(--brand-panel)] px-4 text-sm font-medium text-[var(--brand-ink)] hover:bg-white"
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="min-h-10 bg-card"
+            render={<a href="#similar" />}
+            nativeButton={false}
           >
             Similar tools
-          </a>
-          <a
-            href="#faq"
-            className="inline-flex min-h-10 items-center justify-center rounded-xl border border-[var(--brand-border)] bg-[var(--brand-panel)] px-4 text-sm font-medium text-[var(--brand-ink)] hover:bg-white"
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="min-h-10 bg-card"
+            render={<a href="#faq" />}
+            nativeButton={false}
           >
             FAQ
-          </a>
+          </Button>
         </div>
       </header>
 
@@ -115,48 +140,60 @@ export function CalculatorShell({ calculator }: { calculator: CalculatorDef }) {
 
       <CalculatorGuide calculator={calculator} />
 
-      <div id="similar" className="mt-10 scroll-mt-24 space-y-8 sm:mt-12">
+      <div id="similar" className="mt-10 flex scroll-mt-24 flex-col gap-8 sm:mt-12">
         <SimilarCalculatorsWidget
           items={similar}
           title={`Similar calculators to ${calculator.title}`}
           subtitle={`Related tools in ${category?.name ?? "this topic"} and nearby categories on Stats Calculator Online`}
         />
 
-        <aside className="rounded-2xl border border-[var(--brand-ink)]/10 bg-white/70 p-4 sm:p-5">
-          <h2 className="font-display text-lg text-[var(--brand-ink)]">
-            Keep learning on Stats Calculator Online
-          </h2>
-          <ul className="mt-3 flex flex-wrap gap-2">
-            {category && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="font-display text-lg">
+              Keep learning on Stats Calculator Online
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="flex flex-wrap gap-2">
+              {category && (
+                <li>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    render={<Link href={`/calculators/${calculator.category}`} />}
+                    nativeButton={false}
+                  >
+                    More {category.name}
+                  </Button>
+                </li>
+              )}
               <li>
-                <Link
-                  href={`/calculators/${calculator.category}`}
-                  className="inline-flex min-h-9 items-center rounded-full bg-[var(--brand-paper)] px-3 text-xs font-semibold text-[var(--brand-ink)] hover:bg-white"
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  render={
+                    <Link href="/calculators/hypothesis-testing/statistical-test-flow-chart" />
+                  }
+                  nativeButton={false}
                 >
-                  More {category.name}
-                </Link>
+                  Test selector
+                </Button>
               </li>
-            )}
-            <li>
-              <Link
-                href="/calculators/hypothesis-testing/statistical-test-flow-chart"
-                className="inline-flex min-h-9 items-center rounded-full bg-[var(--brand-paper)] px-3 text-xs font-semibold text-[var(--brand-ink)] hover:bg-white"
-              >
-                Test selector
-              </Link>
-            </li>
-            {resourceLinks.slice(0, 4).map((r) => (
-              <li key={r.href}>
-                <Link
-                  href={r.href}
-                  className="inline-flex min-h-9 items-center rounded-full bg-[var(--brand-paper)] px-3 text-xs font-semibold text-[var(--brand-ink)] hover:bg-white"
-                >
-                  {r.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </aside>
+              {resourceLinks.slice(0, 4).map((r) => (
+                <li key={r.href}>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    render={<Link href={r.href} />}
+                    nativeButton={false}
+                  >
+                    {r.title}
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
       </div>
     </article>
   );

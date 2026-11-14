@@ -1,6 +1,14 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import { ContentPage } from "@/components/ContentPage";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Statistical Tables",
@@ -35,35 +43,43 @@ const tables = [
 
 export default function StatisticalTablesHub() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-accent)]">
-        Resources
-      </p>
-      <h1 className="mt-2 font-display text-4xl text-[var(--brand-ink)]">Statistical tables</h1>
-      <p className="mt-3 max-w-2xl text-[var(--brand-ink-soft)]">
-        Critical value tables for classroom and research work. Pair them with the matching calculators
-        for p-values, confidence intervals, and step-by-step reports.
-      </p>
-      <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+    <ContentPage
+      wide
+      eyebrow="Resources"
+      title="Statistical tables"
+      crumbs={[
+        { href: "/", label: "Home" },
+        { href: "/resources", label: "Resources" },
+        { label: "Tables" },
+      ]}
+      description="Critical value tables for classroom and research work. Pair them with the matching calculators for p-values, confidence intervals, and step-by-step reports."
+    >
+      <ul className="grid gap-3 sm:grid-cols-2">
         {tables.map((t) => (
           <li key={t.href}>
-            <Link
-              href={t.href}
-              className="block h-full rounded-xl border border-[var(--brand-border)] bg-[var(--brand-panel)] px-4 py-4 shadow-[var(--brand-shadow)] hover:border-[var(--brand-accent)]/35"
-            >
-              <span className="font-medium text-[var(--brand-ink)]">{t.title}</span>
-              <span className="mt-1 block text-sm text-[var(--brand-ink-soft)]">{t.desc}</span>
+            <Link href={t.href} className="block h-full">
+              <Card className="h-full transition hover:ring-primary/30">
+                <CardHeader>
+                  <CardTitle className="text-base">{t.title}</CardTitle>
+                  <CardDescription>{t.desc}</CardDescription>
+                </CardHeader>
+              </Card>
             </Link>
           </li>
         ))}
       </ul>
-      <p className="mt-8 text-sm text-[var(--brand-ink-soft)]">
+      <p className="text-sm text-muted-foreground">
         Looking for interactive tools?{" "}
-        <Link href="/calculators" className="font-semibold text-[var(--brand-accent)] hover:underline">
+        <Button
+          variant="link"
+          className="inline h-auto px-0"
+          render={<Link href="/calculators" />}
+          nativeButton={false}
+        >
           Browse all calculators
-        </Link>
+        </Button>
         .
       </p>
-    </div>
+    </ContentPage>
   );
 }

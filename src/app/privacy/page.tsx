@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import { ContentPage } from "@/components/ContentPage";
+import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Privacy Policy",
@@ -10,21 +12,27 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function PrivacyPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="font-display text-4xl text-[var(--brand-ink)]">Privacy Policy</h1>
-      <p className="mt-4 leading-relaxed text-[var(--brand-ink-soft)]">
-        Stats Calculator Online runs calculations in your browser. We do not require an account to use
-        calculators. Aggregated analytics (for example via Google Tag Manager) and advertising partners
-        such as Google AdSense may use cookies or similar technologies as described in their policies.
-        Do not paste confidential or regulated data into public tools.
-      </p>
-      <p className="mt-4 leading-relaxed text-[var(--brand-ink-soft)]">
-        Contact{" "}
-        <a className="underline" href={`mailto:${siteConfig.contactEmail}`}>
-          {siteConfig.contactEmail}
-        </a>{" "}
-        with privacy questions.
-      </p>
-    </div>
+    <ContentPage
+      title="Privacy Policy"
+      crumbs={[{ href: "/", label: "Home" }, { label: "Privacy" }]}
+    >
+      <Card>
+        <CardContent className="flex flex-col gap-4 pt-(--card-spacing) leading-relaxed text-muted-foreground">
+          <p>
+            Stats Calculator Online runs calculations in your browser. We do not require an account to
+            use calculators. Aggregated analytics (for example via Google Tag Manager) and advertising
+            partners such as Google AdSense may use cookies or similar technologies as described in
+            their policies. Do not paste confidential or regulated data into public tools.
+          </p>
+          <p>
+            Contact{" "}
+            <a className="text-primary underline" href={`mailto:${siteConfig.contactEmail}`}>
+              {siteConfig.contactEmail}
+            </a>{" "}
+            with privacy questions.
+          </p>
+        </CardContent>
+      </Card>
+    </ContentPage>
   );
 }

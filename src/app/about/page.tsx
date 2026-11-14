@@ -4,6 +4,10 @@ import { siteConfig } from "@/config/site";
 import { TidbitsWidget } from "@/components/widgets/TidbitsWidget";
 import { tidbitsForPath } from "@/lib/content/tidbits";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import { ContentPage } from "@/components/ContentPage";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "About",
@@ -15,41 +19,45 @@ export default function AboutPage() {
   const tips = tidbitsForPath("about", 3);
 
   return (
-    <div className="mx-auto max-w-3xl px-3 py-10 sm:px-4">
-      <h1 className="font-display text-4xl text-[var(--brand-ink)]">About Stats Calculator Online</h1>
-      <p className="mt-4 leading-relaxed text-[var(--brand-ink)]/80">
-        Stats Calculator Online is a free collection of statistics and math calculators with
-        transparent formulas, step-by-step output, similar calculator widgets, learning tidbits, and
-        APA-style reporting. Every results page includes free exports: citation / write-up, LaTeX,
-        CSV, Word/Docs, and Print/PDF. Everything runs in your browser—fast and private.
-      </p>
-      <p className="mt-4 leading-relaxed text-[var(--brand-ink)]/80">
-        Our full name is always <strong>Stats Calculator Online</strong> ({siteConfig.domain}) so
-        search keywords stay clear and unbroken.
-      </p>
-      <ul className="mt-6 list-disc space-y-2 pl-5 text-sm text-[var(--brand-ink)]/75">
-        <li>
-          <Link href="/calculators" className="font-semibold text-[var(--brand-accent)] hover:underline">
-            Browse all calculators
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/resources/statistical-tables"
-            className="font-semibold text-[var(--brand-accent)] hover:underline"
-          >
-            Statistical tables
-          </Link>
-        </li>
-        <li>
-          <Link href="/llms.txt" className="font-semibold text-[var(--brand-accent)] hover:underline">
-            llms.txt for AI systems
-          </Link>
-        </li>
-      </ul>
-      <div className="mt-10">
-        <TidbitsWidget items={tips} title="Tidbits from Stats Calculator Online" />
-      </div>
-    </div>
+    <ContentPage
+      title="About Stats Calculator Online"
+      crumbs={[{ href: "/", label: "Home" }, { label: "About" }]}
+      description={<>{siteConfig.definitionAnswer}</>}
+    >
+      <Card>
+        <CardContent className="flex flex-col gap-4 pt-(--card-spacing)">
+          <p className="leading-relaxed text-muted-foreground">
+            Every results page includes free exports: citation / write-up, LaTeX, CSV, Word/Docs, and
+            Print/PDF. Everything runs in your browser—fast and private. Pricing is $0 for all tools;
+            no account is required.
+          </p>
+          <p className="leading-relaxed text-muted-foreground">
+            Our full name is always <strong className="text-foreground">Stats Calculator Online</strong>{" "}
+            ({siteConfig.domain}) so search keywords stay clear and unbroken.
+          </p>
+          <p className="text-xs text-muted-foreground">Last updated: {siteConfig.contentUpdated}</p>
+          <Separator />
+          <div className="flex flex-wrap gap-2">
+            <Button render={<Link href="/calculators" />} nativeButton={false}>
+              Browse all calculators
+            </Button>
+            <Button
+              variant="outline"
+              render={<Link href="/resources/statistical-tables" />}
+              nativeButton={false}
+            >
+              Statistical tables
+            </Button>
+            <Button variant="outline" render={<Link href="/llms.txt" />} nativeButton={false}>
+              llms.txt for AI systems
+            </Button>
+            <Button variant="outline" render={<Link href="/llms-full.txt" />} nativeButton={false}>
+              Full AI catalog
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      <TidbitsWidget items={tips} title="Tidbits from Stats Calculator Online" />
+    </ContentPage>
   );
 }

@@ -39,18 +39,36 @@ export function buildCalculatorMetadata(calc: CalculatorDef): Metadata {
   });
 }
 
+/** Self-contained 40–60 word lead answer for AI citation / featured snippets. */
+export function calculatorAnswerBlock(calc: CalculatorDef): string {
+  const outline = getCalculatorOutline(calc);
+  const definition = outline.whatIs.definition.replace(/\s+/g, " ").trim();
+  const lead = `The free ${calc.title} calculator on ${siteConfig.name} computes ${calc.description.toLowerCase()}. ${definition}`;
+  if (lead.length <= 320) return lead;
+  return `${lead.slice(0, 317).replace(/\s+\S*$/, "").trimEnd()}…`;
+}
+
 export function buildCalculatorJsonLd(calc: CalculatorDef) {
   const guide = getCalculatorGuide(calc);
   const outline = getCalculatorOutline(calc);
   const cat = getCategory(calc.category);
   const url = `${siteConfig.url}/calculators/${calc.category}/${calc.slug}`;
   const pageName = `${calc.title} Calculator`;
+  const dateModified = siteConfig.contentUpdated;
 
   const faqEntities = [
     {
       "@type": "Question",
       name: `What is ${calc.title}?`,
       acceptedAnswer: { "@type": "Answer", text: outline.whatIs.definition },
+    },
+    {
+      "@type": "Question",
+      name: `Is the ${calc.title} calculator free?`,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `Yes. The ${pageName} on ${siteConfig.name} is free to use with no account required. It includes formulas, steps, and PDF / Word / CSV exports.`,
+      },
     },
     {
       "@type": "Question",
@@ -100,15 +118,21 @@ export function buildCalculatorJsonLd(calc: CalculatorDef) {
         ],
       },
       {
-        "@type": "WebApplication",
+        "@type": ["WebApplication", "SoftwareApplication"],
         name: pageName,
         applicationCategory: "EducationalApplication",
         operatingSystem: "Any",
-        browserRequirements: "Requires JavaScript",
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        browserRequirements: "Requires JavaScript. Core formulas and guides are in HTML.",
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "USD",
+          availability: "https://schema.org/InStock",
+        },
         description: calculatorMetaDescription(calc),
         url,
         isAccessibleForFree: true,
+        dateModified,
         featureList: [
           "Understanding & Using outline",
           "Formulas with notation",
@@ -120,8 +144,18 @@ export function buildCalculatorJsonLd(calc: CalculatorDef) {
         provider: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
       },
       {
+        "@type": "Article",
+        headline: pageName,
+        description: calculatorAnswerBlock(calc),
+        dateModified,
+        author: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
+        publisher: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
+        mainEntityOfPage: url,
+        about: calc.title,
+      },
+      {
         "@type": "HowTo",
-        name: `How to act on ${calc.title} results`,
+        name: `How to use the ${calc.title} calculator`,
         description: outline.whatIs.definition,
         totalTime: "PT10M",
         step: [

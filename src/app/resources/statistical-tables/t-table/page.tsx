@@ -2,6 +2,14 @@ import type { Metadata } from "next";
 import { tCriticalTable } from "@/lib/stats/tables";
 import { TablePage } from "@/components/TablePage";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "t-Table",
@@ -16,28 +24,28 @@ export default function TTablePage() {
   const alphas = [0.1, 0.05, 0.025, 0.01];
   return (
     <TablePage title="t-Table" blurb="Upper-tail critical values of Student's t distribution.">
-      <table className="w-full min-w-[32rem] text-left text-sm">
-        <thead>
-          <tr className="border-b border-teal-900/10">
-            <th className="py-2">df</th>
+      <Table className="min-w-[32rem]">
+        <TableHeader>
+          <TableRow>
+            <TableHead>df</TableHead>
             {alphas.map((a) => (
-              <th key={a}>α={a}</th>
+              <TableHead key={a}>α={a}</TableHead>
             ))}
-          </tr>
-        </thead>
-        <tbody>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {rows.map((r) => (
-            <tr key={r.df} className="border-b border-teal-900/5">
-              <td className="py-2 font-mono">{r.df}</td>
+            <TableRow key={r.df}>
+              <TableCell className="font-mono">{r.df}</TableCell>
               {r.values.map((v, i) => (
-                <td key={i} className="font-mono">
+                <TableCell key={i} className="font-mono">
                   {v.toFixed(3)}
-                </td>
+                </TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </TablePage>
   );
 }

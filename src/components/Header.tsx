@@ -2,46 +2,34 @@
 
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  ArrowDown01Icon,
+  Cancel01Icon,
+  Menu01Icon,
+} from "@hugeicons/core-free-icons";
 import { BrandMark } from "@/components/BrandMark";
 import { categoriesInGroup, navGroups } from "@/config/nav";
 import { siteConfig } from "@/config/site";
-
-function HamburgerIcon({ open }: { open: boolean }) {
-  return (
-    <span className="relative block h-3.5 w-5" aria-hidden>
-      <span
-        className={`absolute left-0 top-0 h-0.5 w-5 rounded-full bg-current transition duration-200 ${
-          open ? "translate-y-[6px] rotate-45" : ""
-        }`}
-      />
-      <span
-        className={`absolute left-0 top-[6px] h-0.5 w-5 rounded-full bg-current transition duration-200 ${
-          open ? "opacity-0" : ""
-        }`}
-      />
-      <span
-        className={`absolute left-0 top-[12px] h-0.5 w-5 rounded-full bg-current transition duration-200 ${
-          open ? "-translate-y-[6px] -rotate-45" : ""
-        }`}
-      />
-    </span>
-  );
-}
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileGroup, setMobileGroup] = useState<string | null>(null);
   const megaId = useId();
-  const mobileNavId = useId();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const drawerRef = useRef<HTMLDivElement>(null);
-
-  function closeMobile() {
-    setMobileOpen(false);
-    setMobileGroup(null);
-  }
 
   function openMega() {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -55,33 +43,12 @@ export function Header() {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        setMegaOpen(false);
-        if (mobileOpen) {
-          closeMobile();
-          menuButtonRef.current?.focus();
-        }
-      }
+      if (e.key === "Escape") setMegaOpen(false);
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [mobileOpen]);
+  }, []);
 
-  useEffect(() => {
-    if (!mobileOpen) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    // Focus first focusable in drawer for accessibility
-    const first = drawerRef.current?.querySelector<HTMLElement>(
-      "a,button,[tabindex]:not([tabindex='-1'])",
-    );
-    first?.focus();
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, [mobileOpen]);
-
-  // Close mobile drawer when resizing to desktop
   useEffect(() => {
     function onResize() {
       if (window.matchMedia("(min-width: 1024px)").matches) {
@@ -94,220 +61,222 @@ export function Header() {
   }, []);
 
   return (
-    <>
-      {/* Solid sticky bar — no backdrop-filter so overlays aren't trapped */}
-      <header className="sticky top-0 z-50 border-b border-[var(--brand-border)] bg-[var(--brand-panel)]">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-3 py-2.5 sm:px-4 sm:py-3">
-          <Link
-            href="/"
-            className="min-w-0 shrink"
-            aria-label={`${siteConfig.name} home`}
-            onClick={closeMobile}
+    <header className="sticky top-0 z-50 border-b border-border bg-card">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-3 py-2.5 sm:px-4 sm:py-3">
+        <Link
+          href="/"
+          className="min-w-0 shrink"
+          aria-label={`${siteConfig.name} home`}
+          onClick={() => setMobileOpen(false)}
+        >
+          <span className="hidden min-[420px]:inline-flex">
+            <BrandMark size="md" />
+          </span>
+          <span className="inline-flex min-[420px]:hidden">
+            <BrandMark size="sm" showWordmark={false} />
+            <span className="ml-2 self-center font-display text-sm font-semibold leading-tight text-foreground">
+              Stats Calculator Online
+            </span>
+          </span>
+        </Link>
+
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
+          <div
+            className="relative"
+            onMouseEnter={openMega}
+            onMouseLeave={scheduleCloseMega}
           >
-            <span className="hidden min-[420px]:inline-flex">
-              <BrandMark size="md" />
-            </span>
-            <span className="inline-flex min-[420px]:hidden">
-              <BrandMark size="sm" showWordmark={false} />
-              <span className="ml-2 self-center font-display text-sm font-semibold leading-tight text-[var(--brand-ink)]">
-                Stats Calculator Online
-              </span>
-            </span>
-          </Link>
-
-          <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
-            <div
-              className="relative"
-              onMouseEnter={openMega}
-              onMouseLeave={scheduleCloseMega}
+            <Button
+              type="button"
+              variant={megaOpen ? "default" : "ghost"}
+              size="lg"
+              className="min-h-10"
+              aria-expanded={megaOpen}
+              aria-controls={megaId}
+              onClick={() => setMegaOpen((v) => !v)}
             >
-              <button
-                type="button"
-                className={`inline-flex min-h-10 items-center gap-1.5 rounded-xl px-3.5 text-sm font-semibold transition ${
-                  megaOpen
-                    ? "bg-[var(--brand-ink)] text-white"
-                    : "text-[var(--brand-ink)]/85 hover:bg-[var(--brand-paper)]"
-                }`}
-                aria-expanded={megaOpen}
-                aria-controls={megaId}
-                onClick={() => setMegaOpen((v) => !v)}
-              >
-                Calculators
-                <span aria-hidden className={`text-xs transition ${megaOpen ? "rotate-180" : ""}`}>
-                  ▾
-                </span>
-              </button>
+              Calculators
+              <HugeiconsIcon
+                icon={ArrowDown01Icon}
+                data-icon="inline-end"
+                strokeWidth={2}
+                className={cn("transition", megaOpen && "rotate-180")}
+              />
+            </Button>
 
-              {megaOpen && (
-                <div
-                  id={megaId}
-                  role="region"
-                  aria-label="Calculator categories mega menu"
-                  className="absolute left-1/2 top-full z-50 w-[min(92vw,52rem)] -translate-x-[42%] pt-3"
-                  onMouseEnter={openMega}
-                  onMouseLeave={scheduleCloseMega}
-                >
-                  <div className="overflow-hidden rounded-2xl border border-[var(--brand-border)] bg-white shadow-[var(--brand-shadow)]">
-                    <div className="grid gap-0 md:grid-cols-[0.9fr_1.1fr]">
-                      <div className="border-b border-white/10 bg-[var(--brand-ink)] px-5 py-5 text-white md:border-b-0 md:border-r">
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--brand-amber)]">
-                          Stats Calculator Online
-                        </p>
-                        <p className="mt-2 font-display text-xl leading-snug">
-                          Browse every free calculator by topic
-                        </p>
-                        <p className="mt-2 text-sm leading-relaxed text-white/70">
-                          Formulas, how-to steps, interpretation tips, and free APA / PDF exports on
-                          each page.
-                        </p>
-                        <Link
-                          href="/calculators"
-                          className="mt-5 inline-flex min-h-10 items-center rounded-xl bg-[var(--brand-amber)] px-4 text-sm font-semibold text-[var(--brand-ink)]"
-                          onClick={() => setMegaOpen(false)}
-                        >
-                          View all calculators
-                        </Link>
-                      </div>
-                      <div className="grid max-h-[min(70vh,28rem)] gap-5 overflow-y-auto p-5 sm:grid-cols-2">
-                        {navGroups.map((group) => {
-                          const cats = categoriesInGroup(group).slice(0, 6);
-                          return (
-                            <div key={group.id}>
-                              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-accent)]">
-                                {group.title}
-                              </p>
-                              <p className="mt-1 text-xs text-[var(--brand-ink-soft)]">{group.blurb}</p>
-                              <ul className="mt-2.5 space-y-1">
-                                {cats.map((c) => (
-                                  <li key={c.id}>
-                                    <Link
-                                      href={`/calculators/${c.id}`}
-                                      className="block truncate rounded-lg px-2 py-1.5 text-sm text-[var(--brand-ink)]/85 hover:bg-[var(--brand-paper)]"
-                                      onClick={() => setMegaOpen(false)}
-                                    >
-                                      {c.name}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          );
-                        })}
-                      </div>
+            {megaOpen && (
+              <div
+                id={megaId}
+                role="region"
+                aria-label="Calculator categories mega menu"
+                className="absolute top-full left-1/2 z-50 w-[min(92vw,52rem)] -translate-x-[42%] pt-3"
+                onMouseEnter={openMega}
+                onMouseLeave={scheduleCloseMega}
+              >
+                <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-lg">
+                  <div className="grid gap-0 md:grid-cols-[0.9fr_1.1fr]">
+                    <div className="border-b border-white/10 bg-foreground px-5 py-5 text-background md:border-r md:border-b-0">
+                      <Badge className="bg-[var(--brand-amber)] text-foreground hover:bg-[var(--brand-amber)]">
+                        Stats Calculator Online
+                      </Badge>
+                      <p className="mt-3 font-display text-xl leading-snug">
+                        Browse every free calculator by topic
+                      </p>
+                      <p className="mt-2 text-sm leading-relaxed text-background/70">
+                        Formulas, how-to steps, interpretation tips, and free APA / PDF exports on
+                        each page.
+                      </p>
+                      <Button
+                        className="mt-5 min-h-10 bg-[var(--brand-amber)] text-foreground hover:bg-[var(--brand-amber)]/90"
+                        render={<Link href="/calculators" />}
+                        nativeButton={false}
+                        onClick={() => setMegaOpen(false)}
+                      >
+                        View all calculators
+                      </Button>
                     </div>
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--brand-border)] bg-[var(--brand-paper)] px-5 py-3 text-xs">
-                      <Link
-                        href="/calculators/hypothesis-testing/statistical-test-flow-chart"
-                        className="font-semibold text-[var(--brand-accent)] hover:underline"
-                        onClick={() => setMegaOpen(false)}
-                      >
-                        Not sure which test? Use the selector →
-                      </Link>
-                      <Link
-                        href="/resources/statistical-tables"
-                        className="text-[var(--brand-ink-soft)] hover:text-[var(--brand-ink)]"
-                        onClick={() => setMegaOpen(false)}
-                      >
-                        Critical value tables
-                      </Link>
+                    <div className="grid max-h-[min(70vh,28rem)] gap-5 overflow-y-auto p-5 sm:grid-cols-2">
+                      {navGroups.map((group) => {
+                        const cats = categoriesInGroup(group).slice(0, 6);
+                        return (
+                          <div key={group.id} className="flex flex-col gap-2">
+                            <p className="text-[11px] font-semibold tracking-[0.14em] text-primary uppercase">
+                              {group.title}
+                            </p>
+                            <p className="text-xs text-muted-foreground">{group.blurb}</p>
+                            <ul className="flex flex-col gap-1">
+                              {cats.map((c) => (
+                                <li key={c.id}>
+                                  <Link
+                                    href={`/calculators/${c.id}`}
+                                    className="block truncate rounded-lg px-2 py-1.5 text-sm text-foreground/85 hover:bg-muted"
+                                    onClick={() => setMegaOpen(false)}
+                                  >
+                                    {c.name}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border bg-muted px-5 py-3 text-xs">
+                    <Link
+                      href="/calculators/hypothesis-testing/statistical-test-flow-chart"
+                      className="font-semibold text-primary hover:underline"
+                      onClick={() => setMegaOpen(false)}
+                    >
+                      Not sure which test? Use the selector →
+                    </Link>
+                    <Link
+                      href="/resources/statistical-tables"
+                      className="text-muted-foreground hover:text-foreground"
+                      onClick={() => setMegaOpen(false)}
+                    >
+                      Critical value tables
+                    </Link>
+                  </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+          </div>
 
-            <Link
-              href="/sitemap"
-              className="inline-flex min-h-10 items-center rounded-xl px-3.5 text-sm font-semibold text-[var(--brand-ink)]/85 hover:bg-[var(--brand-paper)]"
-            >
-              Sitemap
-            </Link>
-            <Link
-              href="/resources"
-              className="inline-flex min-h-10 items-center rounded-xl px-3.5 text-sm font-semibold text-[var(--brand-ink)]/85 hover:bg-[var(--brand-paper)]"
-            >
-              Resources
-            </Link>
-            <Link
-              href="/about"
-              className="inline-flex min-h-10 items-center rounded-xl px-3.5 text-sm font-semibold text-[var(--brand-ink)]/85 hover:bg-[var(--brand-paper)]"
-            >
-              About
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex min-h-10 items-center rounded-xl bg-[var(--brand-accent)] px-4 text-sm font-semibold text-white hover:bg-[var(--brand-accent-dark)]"
-            >
-              Contact
-            </Link>
-          </nav>
-
-          <button
-            ref={menuButtonRef}
-            type="button"
-            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-[var(--brand-border)] bg-[var(--brand-paper)] text-[var(--brand-ink)] lg:hidden"
-            aria-expanded={mobileOpen}
-            aria-controls={mobileNavId}
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            onClick={() => {
-              setMegaOpen(false);
-              setMobileOpen((v) => !v);
-            }}
+          <Button
+            variant="ghost"
+            size="lg"
+            className="min-h-10"
+            render={<Link href="/sitemap" />}
+            nativeButton={false}
           >
-            <HamburgerIcon open={mobileOpen} />
-          </button>
-        </div>
-      </header>
-
-      {/* Mobile drawer rendered OUTSIDE sticky header so fixed positioning works */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-[60] lg:hidden" role="dialog" aria-modal="true" aria-label="Mobile navigation">
-          <button
-            type="button"
-            className="absolute inset-0 bg-[var(--brand-ink)]/45"
-            aria-label="Close menu overlay"
-            onClick={closeMobile}
-          />
-
-          <div
-            ref={drawerRef}
-            id={mobileNavId}
-            className="absolute inset-y-0 right-0 flex w-[min(100%,22rem)] flex-col bg-[var(--brand-panel)] shadow-[-12px_0_40px_-20px_rgba(26,31,44,0.45)]"
+            Sitemap
+          </Button>
+          <Button
+            variant="ghost"
+            size="lg"
+            className="min-h-10"
+            render={<Link href="/resources" />}
+            nativeButton={false}
           >
-            <div className="flex items-center justify-between gap-3 border-b border-[var(--brand-border)] px-4 py-3">
-              <p className="text-sm font-semibold text-[var(--brand-ink)]">Menu</p>
-              <button
-                type="button"
-                className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-xl border border-[var(--brand-border)] text-[var(--brand-ink)]"
-                aria-label="Close menu"
-                onClick={closeMobile}
-              >
-                <HamburgerIcon open />
-              </button>
-            </div>
+            Resources
+          </Button>
+          <Button
+            variant="ghost"
+            size="lg"
+            className="min-h-10"
+            render={<Link href="/about" />}
+            nativeButton={false}
+          >
+            About
+          </Button>
+          <Button
+            size="lg"
+            className="min-h-10"
+            render={<Link href="/contact" />}
+            nativeButton={false}
+          >
+            Contact
+          </Button>
+        </nav>
 
-            <div className="flex-1 overflow-y-auto overscroll-contain px-3 py-4 [-webkit-overflow-scrolling:touch]">
-              <Link
-                href="/calculators"
-                onClick={closeMobile}
-                className="flex min-h-12 items-center justify-center rounded-xl bg-[var(--brand-accent)] px-4 text-sm font-semibold text-white"
+        <Sheet
+          open={mobileOpen}
+          onOpenChange={(open) => {
+            setMobileOpen(open);
+            if (!open) setMobileGroup(null);
+          }}
+        >
+          <SheetTrigger
+            render={
+              <Button
+                variant="outline"
+                size="icon-lg"
+                className="min-h-11 min-w-11 bg-muted lg:hidden"
+                aria-label="Open menu"
+              />
+            }
+          >
+            <HugeiconsIcon icon={Menu01Icon} strokeWidth={2} />
+          </SheetTrigger>
+          <SheetContent side="right" className="w-[min(100%,22rem)] p-0" showCloseButton={false}>
+            <SheetHeader className="border-b border-border px-4 py-3">
+              <div className="flex items-center justify-between gap-3">
+                <SheetTitle>Menu</SheetTitle>
+                <SheetClose
+                  render={
+                    <Button variant="outline" size="icon" aria-label="Close menu" />
+                  }
+                >
+                  <HugeiconsIcon icon={Cancel01Icon} strokeWidth={2} />
+                </SheetClose>
+              </div>
+            </SheetHeader>
+
+            <div className="flex flex-1 flex-col gap-4 overflow-y-auto overscroll-contain px-3 py-4 [-webkit-overflow-scrolling:touch]">
+              <Button
+                size="lg"
+                className="min-h-12 w-full"
+                render={<Link href="/calculators" />}
+                nativeButton={false}
+                onClick={() => setMobileOpen(false)}
               >
                 Browse all calculators
-              </Link>
+              </Button>
 
-              <div className="mt-4 space-y-2">
+              <div className="flex flex-col gap-2">
                 {navGroups.map((group) => {
                   const open = mobileGroup === group.id;
-                  const panelId = `${mobileNavId}-${group.id}`;
+                  const panelId = `mobile-group-${group.id}`;
                   const cats = categoriesInGroup(group);
                   return (
                     <div
                       key={group.id}
-                      className="overflow-hidden rounded-xl border border-[var(--brand-border)] bg-[var(--brand-paper)]"
+                      className="overflow-hidden rounded-xl border border-border bg-muted"
                     >
                       <button
                         type="button"
-                        className="flex min-h-12 w-full items-center justify-between gap-3 px-4 text-left text-sm font-semibold text-[var(--brand-ink)]"
+                        className="flex min-h-12 w-full items-center justify-between gap-3 px-4 text-left text-sm font-semibold text-foreground"
                         aria-expanded={open}
                         aria-controls={panelId}
                         onClick={() => setMobileGroup(open ? null : group.id)}
@@ -315,21 +284,25 @@ export function Header() {
                         <span>{group.title}</span>
                         <span
                           aria-hidden
-                          className={`text-lg leading-none text-[var(--brand-accent)] transition ${
-                            open ? "rotate-45" : ""
-                          }`}
+                          className={cn(
+                            "text-lg leading-none text-primary transition",
+                            open && "rotate-45",
+                          )}
                         >
                           +
                         </span>
                       </button>
                       {open && (
-                        <ul id={panelId} className="border-t border-[var(--brand-border)] bg-white px-2 py-2">
+                        <ul
+                          id={panelId}
+                          className="flex flex-col gap-0.5 border-t border-border bg-card px-2 py-2"
+                        >
                           {cats.map((c) => (
                             <li key={c.id}>
                               <Link
                                 href={`/calculators/${c.id}`}
-                                onClick={closeMobile}
-                                className="flex min-h-11 items-center rounded-lg px-3 text-sm text-[var(--brand-ink)]/85 active:bg-[var(--brand-paper)]"
+                                onClick={() => setMobileOpen(false)}
+                                className="flex min-h-11 items-center rounded-lg px-3 text-sm text-foreground/85 active:bg-muted"
                               >
                                 {c.name}
                               </Link>
@@ -342,27 +315,32 @@ export function Header() {
                 })}
               </div>
 
-              <div className="mt-4 grid gap-2 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+              <Separator />
+
+              <div className="grid gap-2 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
                 {[
                   { href: "/sitemap", label: "HTML Sitemap" },
                   { href: "/resources", label: "Resources & tables" },
                   { href: "/about", label: "About" },
                   { href: "/contact", label: "Contact" },
                 ].map((item) => (
-                  <Link
+                  <Button
                     key={item.href}
-                    href={item.href}
-                    onClick={closeMobile}
-                    className="flex min-h-11 items-center rounded-xl border border-[var(--brand-border)] bg-white px-4 text-sm font-medium text-[var(--brand-ink)]"
+                    variant="outline"
+                    size="lg"
+                    className="min-h-11 justify-start bg-card"
+                    render={<Link href={item.href} />}
+                    nativeButton={false}
+                    onClick={() => setMobileOpen(false)}
                   >
                     {item.label}
-                  </Link>
+                  </Button>
                 ))}
               </div>
             </div>
-          </div>
-        </div>
-      )}
-    </>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </header>
   );
 }

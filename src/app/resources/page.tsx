@@ -1,6 +1,17 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import { ContentPage } from "@/components/ContentPage";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Statistical Resources",
@@ -19,41 +30,47 @@ const tables = [
 
 export default function ResourcesPage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="font-display text-4xl text-[var(--brand-ink)]">Resources</h1>
-      <p className="mt-2 text-[var(--brand-ink-soft)]">
-        Distribution tables and reference tools for classroom and research work.
-      </p>
-
-      <aside className="mt-8 rounded-2xl border border-[var(--brand-accent)]/25 bg-[var(--brand-paper)] p-5">
-        <h2 className="font-display text-xl text-[var(--brand-ink)]">Free branded PDF reports</h2>
-        <p className="mt-2 text-sm leading-relaxed text-[var(--brand-ink-soft)]">
+    <ContentPage
+      wide
+      title="Resources"
+      crumbs={[{ href: "/", label: "Home" }, { label: "Resources" }]}
+      description="Distribution tables and reference tools for classroom and research work."
+    >
+      <Alert>
+        <AlertTitle>Free branded PDF reports</AlertTitle>
+        <AlertDescription>
           Every calculator on Stats Calculator Online can export a PDF (and Word / CSV) that shows the
           complete breakdown: what you entered, which formulas were applied, the worked steps, and the
-          end results — with our branding so you can attach it to homework or drafts.
-        </p>
-        <Link
-          href="/calculators"
-          className="mt-3 inline-flex min-h-10 items-center text-sm font-semibold text-[var(--brand-accent)] hover:underline"
-        >
-          Open a calculator and export →
-        </Link>
-      </aside>
+          end results.
+        </AlertDescription>
+      </Alert>
+      <Button
+        variant="link"
+        className="w-fit px-0"
+        render={<Link href="/calculators" />}
+        nativeButton={false}
+      >
+        Open a calculator and export
+        <HugeiconsIcon icon={ArrowRight01Icon} data-icon="inline-end" strokeWidth={2} />
+      </Button>
 
-      <h2 className="mt-10 font-display text-2xl text-[var(--brand-ink)]">Statistical tables</h2>
-      <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-        {tables.map((t) => (
-          <li key={t.href}>
-            <Link
-              href={t.href}
-              className="block rounded-xl border border-[var(--brand-border)] bg-[var(--brand-panel)] px-4 py-3 shadow-[var(--brand-shadow)] hover:border-[var(--brand-accent)]/35"
-            >
-              <span className="font-medium text-[var(--brand-ink)]">{t.title}</span>
-              <span className="mt-1 block text-sm text-[var(--brand-ink-soft)]">{t.desc}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+      <div className="flex flex-col gap-3">
+        <h2 className="font-display text-2xl text-foreground">Statistical tables</h2>
+        <ul className="grid gap-3 sm:grid-cols-2">
+          {tables.map((t) => (
+            <li key={t.href}>
+              <Link href={t.href} className="block h-full">
+                <Card className="h-full transition hover:ring-primary/30">
+                  <CardHeader>
+                    <CardTitle className="text-base">{t.title}</CardTitle>
+                    <CardDescription>{t.desc}</CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </ContentPage>
   );
 }

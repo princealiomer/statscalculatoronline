@@ -21,6 +21,25 @@ import {
   downloadTxt,
   printPdfHtml,
 } from "@/lib/reports/download";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Spinner } from "@/components/ui/spinner";
 
 const styles: { id: ReportStyle; label: string }[] = [
   { id: "apa", label: "APA" },
@@ -101,261 +120,267 @@ export function ResultsReport({
   }
 
   return (
-    <div
-      id="exports"
-      className="scroll-mt-24 rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-panel)] p-4 shadow-[var(--brand-shadow)] sm:p-5"
-    >
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <h3 className="font-display text-lg text-[var(--brand-ink)]">
-            Free branded PDF report &amp; exports
-          </h3>
-          <p className="mt-1 text-sm text-[var(--brand-ink-soft)]">
-            Every PDF / Word file is a complete breakdown: what you entered, which formulas were
-            applied, the worked steps, and the final results — with Stats Calculator Online branding.
-          </p>
-        </div>
-        <div
-          className="flex w-full rounded-xl border border-[var(--brand-border)] bg-[var(--brand-paper)] p-1 text-xs font-semibold sm:w-auto"
-          role="group"
-          aria-label="Write-up style"
-        >
-          {styles.map((s) => (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => setStyle(s.id)}
-              className={`min-h-9 flex-1 rounded-lg px-3 py-1.5 transition sm:flex-none ${
-                style === s.id
-                  ? "bg-[var(--brand-accent)] text-white"
-                  : "text-[var(--brand-ink-soft)] hover:bg-white"
-              }`}
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
-      </div>
+    <Card id="exports" className="scroll-mt-24">
+      <CardHeader className="border-b">
+        <CardTitle className="font-display text-lg">
+          Free branded PDF report &amp; exports
+        </CardTitle>
+        <CardDescription>
+          Every PDF / Word file is a complete breakdown: what you entered, which formulas were
+          applied, the worked steps, and the final results — with Stats Calculator Online branding.
+        </CardDescription>
+        <CardAction>
+          <ToggleGroup
+            value={[style]}
+            onValueChange={(v) => {
+              const next = v[0] as ReportStyle | undefined;
+              if (next) setStyle(next);
+            }}
+            variant="outline"
+            spacing={0}
+            aria-label="Write-up style"
+          >
+            {styles.map((s) => (
+              <ToggleGroupItem key={s.id} value={s.id}>
+                {s.label}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </CardAction>
+      </CardHeader>
 
-      <div className="mt-4 rounded-xl border border-[var(--brand-accent)]/25 bg-[var(--brand-paper)] p-3 sm:p-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--brand-accent)]">
-          What’s inside your PDF
+      <CardContent className="flex flex-col gap-4 pt-(--card-spacing)">
+        <Alert>
+          <AlertTitle>What’s inside your PDF</AlertTitle>
+          <AlertDescription>
+            <ol className="mt-2 grid gap-2 sm:grid-cols-2">
+              <li>
+                <Badge variant="secondary" className="mr-1">
+                  1
+                </Badge>
+                Inputs —{" "}
+                {inputPreview.length
+                  ? `${inputPreview.length} field${inputPreview.length === 1 ? "" : "s"} you entered`
+                  : "Your entered values"}
+              </li>
+              <li>
+                <Badge variant="secondary" className="mr-1">
+                  2
+                </Badge>
+                Formulas —{" "}
+                {(ctx.formulas?.length ?? 0) > 0
+                  ? `${ctx.formulas!.length} textbook formula${ctx.formulas!.length === 1 ? "" : "s"}`
+                  : "Formulas for this method"}
+              </li>
+              <li>
+                <Badge variant="secondary" className="mr-1">
+                  3
+                </Badge>
+                Work done —{" "}
+                {result.steps.length
+                  ? `${result.steps.length} step${result.steps.length === 1 ? "" : "s"} shown`
+                  : "Computation path for this run"}
+              </li>
+              <li>
+                <Badge variant="secondary" className="mr-1">
+                  4
+                </Badge>
+                Results — {result.fields.length} final statistic
+                {result.fields.length === 1 ? "" : "s"} + citation
+              </li>
+            </ol>
+          </AlertDescription>
+        </Alert>
+
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          <ExportButton
+            busy={busy === "pdf"}
+            onClick={() =>
+              runAction("pdf", "Print dialog opened — choose Save as PDF for a branded PDF", exportPdf)
+            }
+          >
+            Save PDF
+          </ExportButton>
+          <ExportButton
+            busy={busy === "word"}
+            onClick={() =>
+              runAction("word", "Word file downloaded (.rtf — opens in Microsoft Word)", () =>
+                downloadRtf(`${baseName}-report.rtf`, buildRtfReport(ctx, style)),
+              )
+            }
+          >
+            Word (.rtf)
+          </ExportButton>
+          <ExportButton
+            busy={busy === "csv"}
+            onClick={() =>
+              runAction("csv", "CSV downloaded (.csv — opens in Excel)", () =>
+                downloadCsv(`${baseName}-results.csv`, report.csv),
+              )
+            }
+          >
+            Excel CSV
+          </ExportButton>
+          <ExportButton
+            busy={busy === "txt"}
+            onClick={() =>
+              runAction("txt", "Text report downloaded (.txt)", () =>
+                downloadTxt(`${baseName}-report.txt`, report.breakdown),
+              )
+            }
+          >
+            Text (.txt)
+          </ExportButton>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Files save with clear extensions: <strong>.pdf</strong> (via print), <strong>.rtf</strong> for
+          Word, <strong>.csv</strong> for Excel/Sheets, and <strong>.txt</strong> for any device.
         </p>
-        <ol className="mt-2 grid gap-2 text-sm text-[var(--brand-ink)] sm:grid-cols-2">
-          <li>
-            <span className="font-semibold text-[var(--brand-accent)]">1. Inputs — </span>
-            {inputPreview.length
-              ? `${inputPreview.length} field${inputPreview.length === 1 ? "" : "s"} you entered`
-              : "Your entered values"}
-          </li>
-          <li>
-            <span className="font-semibold text-[var(--brand-accent)]">2. Formulas — </span>
-            {(ctx.formulas?.length ?? 0) > 0
-              ? `${ctx.formulas!.length} textbook formula${ctx.formulas!.length === 1 ? "" : "s"}`
-              : "Formulas for this method"}
-          </li>
-          <li>
-            <span className="font-semibold text-[var(--brand-accent)]">3. Work done — </span>
-            {result.steps.length
-              ? `${result.steps.length} step${result.steps.length === 1 ? "" : "s"} shown`
-              : "Computation path for this run"}
-          </li>
-          <li>
-            <span className="font-semibold text-[var(--brand-accent)]">4. Results — </span>
-            {result.fields.length} final statistic{result.fields.length === 1 ? "" : "s"} + citation
-          </li>
-        </ol>
-      </div>
 
-      <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-        <PrimaryAction
-          busy={busy === "pdf"}
-          onClick={() =>
-            runAction("pdf", "Print dialog opened — choose Save as PDF for a branded PDF", exportPdf)
-          }
-        >
-          Save PDF
-        </PrimaryAction>
-        <PrimaryAction
-          busy={busy === "word"}
-          onClick={() =>
-            runAction("word", "Word file downloaded (.rtf — opens in Microsoft Word)", () =>
-              downloadRtf(`${baseName}-report.rtf`, buildRtfReport(ctx, style)),
-            )
-          }
-        >
-          Word (.rtf)
-        </PrimaryAction>
-        <PrimaryAction
-          busy={busy === "csv"}
-          onClick={() =>
-            runAction("csv", "CSV downloaded (.csv — opens in Excel)", () =>
-              downloadCsv(`${baseName}-results.csv`, report.csv),
-            )
-          }
-        >
-          Excel CSV
-        </PrimaryAction>
-        <PrimaryAction
-          busy={busy === "txt"}
-          onClick={() =>
-            runAction("txt", "Text report downloaded (.txt)", () =>
-              downloadTxt(`${baseName}-report.txt`, report.breakdown),
-            )
-          }
-        >
-          Text (.txt)
-        </PrimaryAction>
-      </div>
-      <p className="mt-2 text-xs text-[var(--brand-ink-soft)]">
-        Files save with clear extensions: <strong>.pdf</strong> (via print), <strong>.rtf</strong> for
-        Word, <strong>.csv</strong> for Excel/Sheets, and <strong>.txt</strong> for any device. Each
-        includes inputs, formulas, steps, and results.
-      </p>
-
-      <details className="mt-4 rounded-xl border border-[var(--brand-border)] bg-white px-3 py-2 open:pb-3">
-        <summary className="cursor-pointer text-sm font-medium text-[var(--brand-ink)]">
-          Preview breakdown (same structure as the PDF)
-        </summary>
-        <div className="mt-3 space-y-4 text-sm">
-          <section>
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-[var(--brand-accent)]">
-              1. Inputs
-            </h4>
-            {inputPreview.length ? (
-              <ul className="mt-1 space-y-1 text-[var(--brand-ink-soft)]">
-                {inputPreview.map((row) => (
-                  <li key={row.label}>
-                    <span className="font-medium text-[var(--brand-ink)]">{row.label}:</span>{" "}
-                    <span className="font-mono text-xs">{row.value}</span>
-                  </li>
+        <Accordion>
+          <AccordionItem value="preview">
+            <AccordionTrigger>Preview breakdown (same structure as the PDF)</AccordionTrigger>
+            <AccordionContent>
+              <div className="flex flex-col gap-4 py-2 text-sm">
+                <section className="flex flex-col gap-1">
+                  <h4 className="text-xs font-semibold tracking-wide text-primary uppercase">
+                    1. Inputs
+                  </h4>
+                  {inputPreview.length ? (
+                    <ul className="flex flex-col gap-1 text-muted-foreground">
+                      {inputPreview.map((row) => (
+                        <li key={row.label}>
+                          <span className="font-medium text-foreground">{row.label}:</span>{" "}
+                          <span className="font-mono text-xs">{row.value}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-muted-foreground">No inputs recorded.</p>
+                  )}
+                </section>
+                <section className="flex flex-col gap-1">
+                  <h4 className="text-xs font-semibold tracking-wide text-primary uppercase">
+                    2. Formulas applied
+                  </h4>
+                  <ul className="flex flex-col gap-2">
+                    {(ctx.formulas ?? []).slice(0, 6).map((f) => (
+                      <li key={f.label + f.latex}>
+                        <p className="font-medium text-foreground">{f.label}</p>
+                        <p className="font-mono text-xs text-muted-foreground">{f.latex}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+                <section className="flex flex-col gap-1">
+                  <h4 className="text-xs font-semibold tracking-wide text-primary uppercase">
+                    3. Work done
+                  </h4>
+                  <ol className="list-decimal pl-5 text-muted-foreground">
+                    {result.steps.map((s) => (
+                      <li key={s.title}>
+                        <span className="font-medium text-foreground">{s.title}</span> — {s.detail}
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+                <section className="flex flex-col gap-1">
+                  <h4 className="text-xs font-semibold tracking-wide text-primary uppercase">
+                    4. End results
+                  </h4>
+                  <ul className="flex flex-col gap-1 text-muted-foreground">
+                    {result.fields.map((f) => (
+                      <li key={f.label}>
+                        <span className="font-medium text-foreground">{f.label}:</span>{" "}
+                        <span className="font-mono text-xs">{f.value}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="assumptions">
+            <AccordionTrigger>Assumptions checklist</AccordionTrigger>
+            <AccordionContent>
+              <ul className="flex list-disc flex-col gap-1 py-2 pl-5 text-sm text-muted-foreground">
+                {report.assumptions.map((a) => (
+                  <li key={a}>{a}</li>
                 ))}
               </ul>
-            ) : (
-              <p className="mt-1 text-[var(--brand-ink-soft)]">No inputs recorded.</p>
-            )}
-          </section>
-          <section>
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-[var(--brand-accent)]">
-              2. Formulas applied
-            </h4>
-            <ul className="mt-1 space-y-2">
-              {(ctx.formulas ?? []).slice(0, 6).map((f) => (
-                <li key={f.label + f.latex}>
-                  <p className="font-medium text-[var(--brand-ink)]">{f.label}</p>
-                  <p className="font-mono text-xs text-[var(--brand-ink-soft)]">{f.latex}</p>
-                </li>
-              ))}
-            </ul>
-          </section>
-          <section>
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-[var(--brand-accent)]">
-              3. Work done
-            </h4>
-            <ol className="mt-1 list-decimal space-y-1 pl-5 text-[var(--brand-ink-soft)]">
-              {result.steps.map((s) => (
-                <li key={s.title}>
-                  <span className="font-medium text-[var(--brand-ink)]">{s.title}</span> — {s.detail}
-                </li>
-              ))}
-            </ol>
-          </section>
-          <section>
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-[var(--brand-accent)]">
-              4. End results
-            </h4>
-            <ul className="mt-1 space-y-1 text-[var(--brand-ink-soft)]">
-              {result.fields.map((f) => (
-                <li key={f.label}>
-                  <span className="font-medium text-[var(--brand-ink)]">{f.label}:</span>{" "}
-                  <span className="font-mono text-xs">{f.value}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+
+        <div className="flex flex-col gap-3">
+          <Block label="Citation">{report.citation}</Block>
+          <Block label="Methods + Results write-up">{report.writeUp}</Block>
         </div>
-      </details>
 
-      <div className="mt-4 space-y-3">
-        <Block label="Citation">{report.citation}</Block>
-        <Block label="Methods + Results write-up">{report.writeUp}</Block>
-        <details className="rounded-xl border border-[var(--brand-border)] bg-[var(--brand-paper)] px-3 py-2">
-          <summary className="cursor-pointer text-sm font-medium text-[var(--brand-ink)]">
-            Assumptions checklist
-          </summary>
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-[var(--brand-ink-soft)]">
-            {report.assumptions.map((a) => (
-              <li key={a}>{a}</li>
-            ))}
-          </ul>
-        </details>
-      </div>
+        <div className="flex flex-wrap gap-2">
+          <CopyButton
+            busy={busy === "cite"}
+            onClick={() => runAction("cite", "Citation copied", () => copyText(report.citation))}
+          >
+            Copy citation
+          </CopyButton>
+          <CopyButton
+            busy={busy === "write"}
+            onClick={() => runAction("write", "Write-up copied", () => copyText(report.writeUp))}
+          >
+            Copy write-up
+          </CopyButton>
+          <CopyButton
+            busy={busy === "full"}
+            onClick={() =>
+              runAction("full", "Full breakdown copied", () => copyText(report.breakdown))
+            }
+          >
+            Copy full breakdown
+          </CopyButton>
+          <CopyButton
+            busy={busy === "latex"}
+            onClick={() => runAction("latex", "LaTeX copied", () => copyText(report.latex))}
+          >
+            Copy LaTeX
+          </CopyButton>
+          <CopyButton
+            busy={busy === "html"}
+            onClick={() =>
+              runAction("html", "Printable HTML downloaded", () =>
+                downloadPrintableHtml(
+                  `${baseName}-report.html`,
+                  calculator.title,
+                  reportHtmlBody(ctx, style),
+                ),
+              )
+            }
+          >
+            Download HTML
+          </CopyButton>
+        </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        <SecondaryAction
-          busy={busy === "cite"}
-          onClick={() => runAction("cite", "Citation copied", () => copyText(report.citation))}
-        >
-          Copy citation
-        </SecondaryAction>
-        <SecondaryAction
-          busy={busy === "write"}
-          onClick={() => runAction("write", "Write-up copied", () => copyText(report.writeUp))}
-        >
-          Copy write-up
-        </SecondaryAction>
-        <SecondaryAction
-          busy={busy === "full"}
-          onClick={() =>
-            runAction("full", "Full breakdown copied", () => copyText(report.breakdown))
-          }
-        >
-          Copy full breakdown
-        </SecondaryAction>
-        <SecondaryAction
-          busy={busy === "latex"}
-          onClick={() => runAction("latex", "LaTeX copied", () => copyText(report.latex))}
-        >
-          Copy LaTeX
-        </SecondaryAction>
-        <SecondaryAction
-          busy={busy === "html"}
-          onClick={() =>
-            runAction("html", "Printable HTML downloaded", () =>
-              downloadPrintableHtml(
-                `${baseName}-report.html`,
-                calculator.title,
-                reportHtmlBody(ctx, style),
-              ),
-            )
-          }
-        >
-          Download HTML
-        </SecondaryAction>
-      </div>
-
-      {status && (
-        <p
-          className="mt-3 rounded-lg bg-[var(--brand-paper)] px-3 py-2 text-xs font-medium text-[var(--brand-accent-dark)]"
-          role="status"
-        >
-          {status}
-        </p>
-      )}
-    </div>
+        {status ? (
+          <Alert role="status">
+            <AlertTitle>Status</AlertTitle>
+            <AlertDescription>{status}</AlertDescription>
+          </Alert>
+        ) : null}
+      </CardContent>
+    </Card>
   );
 }
 
 function Block({ label, children }: { label: string; children: string }) {
   return (
-    <div className="rounded-xl bg-[var(--brand-paper)] px-3 py-3">
-      <p className="text-xs font-semibold uppercase tracking-wide text-[var(--brand-ink-soft)]">{label}</p>
-      <p className="mt-1 text-sm leading-relaxed text-[var(--brand-ink)]">{children}</p>
+    <div className="rounded-xl bg-muted px-3 py-3">
+      <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">{label}</p>
+      <p className="mt-1 text-sm leading-relaxed text-foreground">{children}</p>
     </div>
   );
 }
 
-function PrimaryAction({
+function ExportButton({
   children,
   onClick,
   busy,
@@ -365,18 +390,14 @@ function PrimaryAction({
   busy?: boolean;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={busy}
-      className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--brand-accent)] px-3.5 text-sm font-semibold text-white transition hover:bg-[var(--brand-accent-dark)] disabled:opacity-70"
-    >
+    <Button type="button" size="lg" className="min-h-11" onClick={onClick} disabled={busy}>
+      {busy ? <Spinner data-icon="inline-start" /> : null}
       {busy ? "Working…" : children}
-    </button>
+    </Button>
   );
 }
 
-function SecondaryAction({
+function CopyButton({
   children,
   onClick,
   busy,
@@ -386,13 +407,8 @@ function SecondaryAction({
   busy?: boolean;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={busy}
-      className="inline-flex min-h-10 items-center rounded-xl border border-[var(--brand-border)] bg-white px-3.5 py-2 text-xs font-semibold text-[var(--brand-ink)] transition hover:bg-[var(--brand-paper)] disabled:opacity-70 sm:min-h-0 sm:py-1.5"
-    >
+    <Button type="button" variant="outline" size="sm" onClick={onClick} disabled={busy}>
       {busy ? "…" : children}
-    </button>
+    </Button>
   );
 }

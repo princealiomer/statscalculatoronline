@@ -2,6 +2,14 @@ import type { Metadata } from "next";
 import { zCriticalRows } from "@/lib/stats/tables";
 import { TablePage } from "@/components/TablePage";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Z-Table Calculator",
@@ -15,24 +23,24 @@ export default function ZTablePage() {
   const rows = zCriticalRows();
   return (
     <TablePage title="Z-Table" blurb="Critical values from the standard normal distribution.">
-      <table className="w-full text-left text-sm">
-        <thead>
-          <tr className="border-b border-[var(--brand-border)]">
-            <th className="py-2">α</th>
-            <th>One-tailed z</th>
-            <th>Two-tailed z</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>α</TableHead>
+            <TableHead>One-tailed z</TableHead>
+            <TableHead>Two-tailed z</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {rows.map((r) => (
-            <tr key={r.alpha} className="border-b border-[var(--brand-border)]/50">
-              <td className="py-2 font-mono">{r.alpha}</td>
-              <td className="font-mono">{r.oneTail.toFixed(4)}</td>
-              <td className="font-mono">{r.twoTail.toFixed(4)}</td>
-            </tr>
+            <TableRow key={r.alpha}>
+              <TableCell className="font-mono">{r.alpha}</TableCell>
+              <TableCell className="font-mono">{r.oneTail.toFixed(4)}</TableCell>
+              <TableCell className="font-mono">{r.twoTail.toFixed(4)}</TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </TablePage>
   );
 }

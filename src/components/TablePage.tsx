@@ -1,3 +1,6 @@
+import { ContentPage } from "@/components/ContentPage";
+import { Card, CardContent } from "@/components/ui/card";
+
 export function TablePage({
   title,
   blurb,
@@ -8,12 +11,21 @@ export function TablePage({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-10">
-      <h1 className="font-display text-4xl text-teal-950">{title}</h1>
-      <p className="mt-2 text-teal-900/70">{blurb}</p>
-      <div className="mt-8 overflow-x-auto rounded-2xl border border-teal-900/10 bg-white/70 p-4">
-        {children}
-      </div>
-    </div>
+    <ContentPage
+      eyebrow="Resources"
+      title={title}
+      description={blurb}
+      crumbs={[
+        { href: "/", label: "Home" },
+        { href: "/resources", label: "Resources" },
+        { href: "/resources/statistical-tables", label: "Tables" },
+        { label: title },
+      ]}
+      wide
+    >
+      <Card>
+        <CardContent className="pt-(--card-spacing)">{children}</CardContent>
+      </Card>
+    </ContentPage>
   );
 }

@@ -9,6 +9,14 @@ import { tidbitsForPath } from "@/lib/content/tidbits";
 import { getPopularCalculators } from "@/lib/calculators/related";
 import { siteConfig } from "@/config/site";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "All Statistics Calculators",
@@ -22,35 +30,31 @@ export default function CalculatorsIndexPage() {
   const popular = getPopularCalculators(8);
 
   return (
-    <div className="mx-auto max-w-6xl px-3 py-8 sm:px-4 sm:py-10">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-accent)]">
-        Stats Calculator Online
-      </p>
-      <h1 className="mt-2 font-display text-3xl text-[var(--brand-ink)] sm:text-4xl">
-        All statistics calculators
-      </h1>
-      <p className="mt-2 max-w-2xl text-[var(--brand-ink)]/70">
-        {calculators.length} free tools across {categories.length} categories. Search below or jump
-        to a topic — every page includes formulas, similar calculators, and tidbits.
-      </p>
+    <div className="mx-auto flex max-w-6xl flex-col gap-8 px-3 py-8 sm:px-4 sm:py-10">
+      <div className="flex flex-col gap-2">
+        <Badge variant="secondary">Stats Calculator Online</Badge>
+        <h1 className="font-display text-3xl text-foreground sm:text-4xl">
+          All statistics calculators
+        </h1>
+        <p className="max-w-2xl text-muted-foreground">
+          {calculators.length} free tools across {categories.length} categories. Search below or jump
+          to a topic — every page includes formulas, similar calculators, and tidbits.
+        </p>
+      </div>
 
-      <Suspense fallback={<p className="mt-6 text-sm text-[var(--brand-ink)]/60">Loading search…</p>}>
+      <Suspense fallback={<Skeleton className="h-12 w-full" />}>
         <CalculatorsSearch />
       </Suspense>
 
-      <div className="mt-8 flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2">
         {categories.map((c) => (
-          <Link
-            key={c.id}
-            href={`/calculators/${c.id}`}
-            className="rounded-full border border-[var(--brand-ink)]/10 bg-white/70 px-3 py-1.5 text-xs font-medium text-[var(--brand-ink)] hover:bg-white"
-          >
+          <Badge key={c.id} variant="outline" render={<Link href={`/calculators/${c.id}`} />}>
             {c.name}
-          </Link>
+          </Badge>
         ))}
       </div>
 
-      <div className="mt-10 space-y-8">
+      <div className="flex flex-col gap-8">
         <SimilarCalculatorsWidget
           items={popular}
           title="Start with popular calculators"
@@ -59,15 +63,16 @@ export default function CalculatorsIndexPage() {
         <TidbitsWidget items={tips} />
       </div>
 
-      <ul className="mt-10 grid gap-3 sm:grid-cols-2">
+      <ul className="grid gap-3 sm:grid-cols-2">
         {calculators.map((c) => (
           <li key={`${c.category}/${c.slug}`}>
-            <Link
-              href={`/calculators/${c.category}/${c.slug}`}
-              className="block rounded-xl border border-[var(--brand-ink)]/10 bg-white/65 px-4 py-3 hover:border-[var(--brand-accent)]/30"
-            >
-              <span className="font-medium text-[var(--brand-ink)]">{c.title} Calculator</span>
-              <span className="mt-1 block text-sm text-[var(--brand-ink)]/65">{c.description}</span>
+            <Link href={`/calculators/${c.category}/${c.slug}`} className="block h-full">
+              <Card className="h-full transition hover:ring-primary/30">
+                <CardHeader>
+                  <CardTitle className="text-base">{c.title} Calculator</CardTitle>
+                  <CardDescription>{c.description}</CardDescription>
+                </CardHeader>
+              </Card>
             </Link>
           </li>
         ))}

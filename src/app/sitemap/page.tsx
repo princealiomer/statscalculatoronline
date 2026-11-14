@@ -3,8 +3,18 @@ import type { Metadata } from "next";
 import { apHub, calculators, categories, getByCategory } from "@/lib/calculators/registry";
 import { navGroups, categoriesInGroup, resourceLinks } from "@/config/nav";
 import { siteConfig } from "@/config/site";
-
 import { buildPageMetadata } from "@/lib/seo/meta";
+import { ContentPage } from "@/components/ContentPage";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "HTML Sitemap",
@@ -27,7 +37,8 @@ const staticPages = [
   { href: "/privacy", title: "Privacy Policy" },
   { href: "/terms", title: "Terms of Use" },
   { href: "/accessibility", title: "Accessibility" },
-  { href: "/llms.txt", title: "llms.txt" },
+  { href: "/llms.txt", title: "llms.txt (AI overview)" },
+  { href: "/llms-full.txt", title: "llms-full.txt (full catalog)" },
   { href: "/sitemap.xml", title: "XML Sitemap" },
 ] as const;
 
@@ -36,79 +47,58 @@ export default function HtmlSitemapPage() {
   const ungrouped = categories.filter((c) => !groupedIds.has(c.id));
 
   return (
-    <div className="mx-auto max-w-6xl px-3 py-8 sm:px-4 sm:py-10">
-      <nav className="text-xs text-[var(--brand-ink)]/55 sm:text-sm" aria-label="Breadcrumb">
-        <Link href="/" className="hover:text-[var(--brand-accent)]">
-          Home
-        </Link>
-        <span aria-hidden> / </span>
-        <span className="text-[var(--brand-ink)]">Sitemap</span>
-      </nav>
-
-      <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-accent)]">
-        Stats Calculator Online
-      </p>
-      <h1 className="mt-2 font-display text-3xl leading-tight text-[var(--brand-ink)] sm:text-4xl">
-        HTML Sitemap — all calculators
-      </h1>
-      <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-[var(--brand-ink)]/70 sm:text-base">
-        Every public page on Stats Calculator Online in one place. Jump to a category, open any
-        calculator, or use the{" "}
-        <Link href="/sitemap.xml" className="font-semibold text-[var(--brand-accent)] hover:underline">
-          XML sitemap
-        </Link>{" "}
-        for crawlers. Catalog size: <strong>{calculators.length}</strong> calculators across{" "}
-        <strong>{categories.length}</strong> categories.
-      </p>
-
-      <div className="mt-6 flex flex-wrap gap-2">
-        <a
-          href="#categories"
-          className="inline-flex min-h-9 items-center rounded-full bg-[var(--brand-accent)] px-3.5 text-xs font-semibold text-white"
-        >
+    <ContentPage
+      wide
+      title="HTML Sitemap — all calculators"
+      crumbs={[{ href: "/", label: "Home" }, { label: "Sitemap" }]}
+      description={
+        <>
+          Every public page on Stats Calculator Online in one place. Catalog size:{" "}
+          <strong className="text-foreground">{calculators.length}</strong> calculators across{" "}
+          <strong className="text-foreground">{categories.length}</strong> categories.
+        </>
+      }
+    >
+      <div className="flex flex-wrap gap-2">
+        <Button size="sm" render={<a href="#categories" />} nativeButton={false}>
           Categories
-        </a>
-        <a
-          href="#all-calculators"
-          className="inline-flex min-h-9 items-center rounded-full border border-[var(--brand-ink)]/15 bg-white px-3.5 text-xs font-semibold text-[var(--brand-ink)]"
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          render={<a href="#all-calculators" />}
+          nativeButton={false}
         >
-          All calculators A–Z sections
-        </a>
-        <a
-          href="#resources"
-          className="inline-flex min-h-9 items-center rounded-full border border-[var(--brand-ink)]/15 bg-white px-3.5 text-xs font-semibold text-[var(--brand-ink)]"
-        >
+          All calculators
+        </Button>
+        <Button size="sm" variant="outline" render={<a href="#resources" />} nativeButton={false}>
           Resources
-        </a>
-        <a
-          href="#site-pages"
-          className="inline-flex min-h-9 items-center rounded-full border border-[var(--brand-ink)]/15 bg-white px-3.5 text-xs font-semibold text-[var(--brand-ink)]"
-        >
+        </Button>
+        <Button size="sm" variant="outline" render={<a href="#site-pages" />} nativeButton={false}>
           Site pages
-        </a>
+        </Button>
       </div>
 
-      <section id="categories" className="mt-10 scroll-mt-24">
-        <h2 className="font-display text-2xl text-[var(--brand-ink)]">Jump to a category</h2>
-        <p className="mt-1 text-sm text-[var(--brand-ink)]/60">
+      <section id="categories" className="flex scroll-mt-24 flex-col gap-3">
+        <h2 className="font-display text-2xl text-foreground">Jump to a category</h2>
+        <p className="text-sm text-muted-foreground">
           Category hub pages list every tool in that topic.
         </p>
-        <ul className="mt-4 columns-1 gap-x-8 sm:columns-2 lg:columns-3">
+        <ul className="columns-1 gap-x-8 sm:columns-2 lg:columns-3">
           {categories.map((c) => {
             const count = getByCategory(c.id).length;
             return (
               <li key={c.id} className="mb-2 break-inside-avoid">
-                <a
-                  href={`#cat-${c.id}`}
-                  className="text-sm font-medium text-[var(--brand-accent)] hover:underline"
-                >
+                <a href={`#cat-${c.id}`} className="text-sm font-medium text-primary hover:underline">
                   {c.name}
                 </a>
-                <span className="ml-1 text-xs text-[var(--brand-ink)]/40">({count})</span>
-                <span className="mx-1 text-[var(--brand-ink)]/25">·</span>
+                <Badge variant="secondary" className="ml-1">
+                  {count}
+                </Badge>
+                <span className="mx-1 text-muted-foreground/40">·</span>
                 <Link
                   href={`/calculators/${c.id}`}
-                  className="text-xs text-[var(--brand-ink)]/55 hover:text-[var(--brand-ink)]"
+                  className="text-xs text-muted-foreground hover:text-foreground"
                 >
                   hub
                 </Link>
@@ -118,7 +108,7 @@ export default function HtmlSitemapPage() {
           <li className="mb-2 break-inside-avoid">
             <Link
               href={`/calculators/${apHub.category}`}
-              className="text-sm font-medium text-[var(--brand-accent)] hover:underline"
+              className="text-sm font-medium text-primary hover:underline"
             >
               {apHub.title}
             </Link>
@@ -126,12 +116,12 @@ export default function HtmlSitemapPage() {
         </ul>
       </section>
 
-      <section id="all-calculators" className="mt-12 scroll-mt-24 space-y-10">
-        <div>
-          <h2 className="font-display text-2xl text-[var(--brand-ink)]">
-            All calculators by category
-          </h2>
-          <p className="mt-1 text-sm text-[var(--brand-ink)]/60">
+      <Separator />
+
+      <section id="all-calculators" className="flex scroll-mt-24 flex-col gap-10">
+        <div className="flex flex-col gap-1">
+          <h2 className="font-display text-2xl text-foreground">All calculators by category</h2>
+          <p className="text-sm text-muted-foreground">
             Direct links to every calculator page on Stats Calculator Online.
           </p>
         </div>
@@ -139,10 +129,12 @@ export default function HtmlSitemapPage() {
         {navGroups.map((group) => {
           const cats = categoriesInGroup(group);
           return (
-            <div key={group.id}>
-              <h3 className="font-display text-xl text-[var(--brand-ink)]">{group.title}</h3>
-              <p className="mt-1 text-sm text-[var(--brand-ink)]/55">{group.blurb}</p>
-              <div className="mt-5 space-y-8">
+            <div key={group.id} className="flex flex-col gap-5">
+              <div>
+                <h3 className="font-display text-xl text-foreground">{group.title}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{group.blurb}</p>
+              </div>
+              <div className="flex flex-col gap-4">
                 {cats.map((cat) => (
                   <CategoryBlock key={cat.id} categoryId={cat.id} name={cat.name} />
                 ))}
@@ -152,9 +144,9 @@ export default function HtmlSitemapPage() {
         })}
 
         {ungrouped.length > 0 && (
-          <div>
-            <h3 className="font-display text-xl text-[var(--brand-ink)]">More categories</h3>
-            <div className="mt-5 space-y-8">
+          <div className="flex flex-col gap-5">
+            <h3 className="font-display text-xl text-foreground">More categories</h3>
+            <div className="flex flex-col gap-4">
               {ungrouped.map((cat) => (
                 <CategoryBlock key={cat.id} categoryId={cat.id} name={cat.name} />
               ))}
@@ -163,38 +155,40 @@ export default function HtmlSitemapPage() {
         )}
       </section>
 
-      <section id="resources" className="mt-12 scroll-mt-24">
-        <h2 className="font-display text-2xl text-[var(--brand-ink)]">Resources</h2>
-        <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+      <section id="resources" className="flex scroll-mt-24 flex-col gap-3">
+        <h2 className="font-display text-2xl text-foreground">Resources</h2>
+        <ul className="grid gap-2 sm:grid-cols-2">
           {resourceLinks.map((r) => (
             <li key={r.href}>
-              <Link
-                href={r.href}
-                className="block rounded-xl border border-[var(--brand-ink)]/10 bg-white/70 px-4 py-3 text-sm font-medium text-[var(--brand-ink)] hover:border-[var(--brand-accent)]/30"
-              >
-                {r.title}
+              <Link href={r.href} className="block h-full">
+                <Card className="h-full transition hover:ring-primary/30">
+                  <CardHeader>
+                    <CardTitle className="text-sm">{r.title}</CardTitle>
+                  </CardHeader>
+                </Card>
               </Link>
             </li>
           ))}
         </ul>
       </section>
 
-      <section id="site-pages" className="mt-12 scroll-mt-24 pb-6">
-        <h2 className="font-display text-2xl text-[var(--brand-ink)]">Site pages</h2>
-        <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      <section id="site-pages" className="flex scroll-mt-24 flex-col gap-3 pb-6">
+        <h2 className="font-display text-2xl text-foreground">Site pages</h2>
+        <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {staticPages.map((p) => (
             <li key={p.href}>
-              <Link
-                href={p.href}
-                className="block rounded-xl border border-[var(--brand-ink)]/10 bg-white/70 px-4 py-3 text-sm font-medium text-[var(--brand-ink)] hover:border-[var(--brand-accent)]/30"
-              >
-                {p.title}
+              <Link href={p.href} className="block h-full">
+                <Card className="h-full transition hover:ring-primary/30">
+                  <CardHeader>
+                    <CardTitle className="text-sm">{p.title}</CardTitle>
+                  </CardHeader>
+                </Card>
               </Link>
             </li>
           ))}
         </ul>
       </section>
-    </div>
+    </ContentPage>
   );
 }
 
@@ -203,28 +197,33 @@ function CategoryBlock({ categoryId, name }: { categoryId: string; name: string 
   if (items.length === 0) return null;
 
   return (
-    <section id={`cat-${categoryId}`} className="scroll-mt-24 rounded-2xl border border-[var(--brand-ink)]/10 bg-white/60 p-4 sm:p-5">
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h4 className="font-display text-lg text-[var(--brand-ink)]">{name}</h4>
-        <Link
-          href={`/calculators/${categoryId}`}
-          className="text-xs font-semibold text-[var(--brand-accent)] hover:underline"
+    <Card id={`cat-${categoryId}`} className="scroll-mt-24">
+      <CardHeader className="flex flex-row flex-wrap items-baseline justify-between gap-2">
+        <CardTitle className="font-display text-lg">{name}</CardTitle>
+        <Button
+          variant="link"
+          className="h-auto px-0 text-xs"
+          render={<Link href={`/calculators/${categoryId}`} />}
+          nativeButton={false}
         >
           Open {name} hub →
-        </Link>
-      </div>
-      <ul className="mt-3 columns-1 gap-x-6 sm:columns-2">
-        {items.map((c) => (
-          <li key={c.slug} className="mb-1.5 break-inside-avoid">
-            <Link
-              href={`/calculators/${c.category}/${c.slug}`}
-              className="text-sm text-[var(--brand-ink)]/85 hover:text-[var(--brand-accent)] hover:underline"
-            >
-              {c.title} Calculator
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
+        </Button>
+      </CardHeader>
+      <CardContent>
+        <CardDescription className="sr-only">{items.length} calculators</CardDescription>
+        <ul className="columns-1 gap-x-6 sm:columns-2">
+          {items.map((c) => (
+            <li key={c.slug} className="mb-1.5 break-inside-avoid">
+              <Link
+                href={`/calculators/${c.category}/${c.slug}`}
+                className="text-sm text-foreground/85 hover:text-primary hover:underline"
+              >
+                {c.title} Calculator
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
   );
 }

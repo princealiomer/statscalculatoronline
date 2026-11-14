@@ -6,10 +6,11 @@ import { Footer } from "@/components/Footer";
 import { SitePageWidgets } from "@/components/widgets/SitePageWidgets";
 import { GtmNoscript, ThirdPartyTags } from "@/components/ThirdPartyTags";
 import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
 import "./globals.css";
 
 const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+  variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
   preload: true,
@@ -65,7 +66,15 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
   },
-  alternates: { canonical: "/" },
+  alternates: {
+    canonical: "/",
+    types: {
+      "text/plain": [
+        { url: "/llms.txt", title: "llms.txt" },
+        { url: "/llms-full.txt", title: "llms-full.txt" },
+      ],
+    },
+  },
   other: {
     "google-adsense-account": siteConfig.adsenseClient,
   },
@@ -77,20 +86,28 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     "@graph": [
       {
         "@type": "Organization",
+        "@id": `${siteConfig.url}/#organization`,
         name: siteConfig.name,
         url: siteConfig.url,
         email: siteConfig.contactEmail,
         description: siteConfig.description,
+        foundingDate: "2024",
+        sameAs: [`https://${siteConfig.domain}`],
       },
       {
         "@type": "WebSite",
+        "@id": `${siteConfig.url}/#website`,
         name: siteConfig.name,
         url: siteConfig.url,
         description: siteConfig.description,
-        publisher: { "@type": "Organization", name: siteConfig.name },
+        inLanguage: "en-US",
+        publisher: { "@id": `${siteConfig.url}/#organization` },
         potentialAction: {
           "@type": "SearchAction",
-          target: `${siteConfig.url}/calculators?q={search_term_string}`,
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: `${siteConfig.url}/calculators?q={search_term_string}`,
+          },
           "query-input": "required name=search_term_string",
         },
       },
@@ -98,7 +115,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   };
 
   return (
-    <html lang="en" className={`${dmSans.variable} ${sourceSerif.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={cn("h-full font-sans antialiased", dmSans.variable, sourceSerif.variable)}
+    >
       <body className="flex min-h-full flex-col">
         <GtmNoscript />
         <ThirdPartyTags />
@@ -108,7 +128,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-white focus:px-3 focus:py-2"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-card focus:px-3 focus:py-2 focus:text-foreground"
         >
           Skip to main content
         </a>

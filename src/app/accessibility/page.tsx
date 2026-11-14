@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import { ContentPage } from "@/components/ContentPage";
+import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Accessibility",
@@ -10,14 +12,20 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function AccessibilityPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="font-display text-4xl text-[var(--brand-ink)]">Accessibility</h1>
-      <p className="mt-4 leading-relaxed text-[var(--brand-ink-soft)]">
-        We design Stats Calculator Online so calculators work with keyboard navigation, clear labels,
-        and readable contrast. Export formats include plain text and CSV for easier reuse with assistive
-        tools. If you hit a barrier, email {siteConfig.contactEmail} with the page URL and what you
-        expected to happen.
-      </p>
-    </div>
+    <ContentPage
+      title="Accessibility"
+      crumbs={[{ href: "/", label: "Home" }, { label: "Accessibility" }]}
+    >
+      <Card>
+        <CardContent className="pt-(--card-spacing) leading-relaxed text-muted-foreground">
+          <p>
+            We design Stats Calculator Online so calculators work with keyboard navigation, clear
+            labels, and readable contrast. Export formats include plain text and CSV for easier reuse
+            with assistive tools. If you hit a barrier, email {siteConfig.contactEmail} with the page
+            URL and what you expected to happen.
+          </p>
+        </CardContent>
+      </Card>
+    </ContentPage>
   );
 }

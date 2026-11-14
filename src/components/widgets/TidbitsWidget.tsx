@@ -1,5 +1,16 @@
 import Link from "next/link";
 import type { Tidbit } from "@/lib/content/tidbits";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 
 export function TidbitsWidget({
   items,
@@ -11,31 +22,37 @@ export function TidbitsWidget({
   if (items.length === 0) return null;
 
   return (
-    <section aria-labelledby="tidbits-heading" className="space-y-3">
-      <h2 id="tidbits-heading" className="font-display text-lg text-[var(--brand-ink)] sm:text-xl">
+    <section aria-labelledby="tidbits-heading" className="flex flex-col gap-3">
+      <h2 id="tidbits-heading" className="font-display text-lg text-foreground sm:text-xl">
         {title}
       </h2>
       <ul className="grid gap-3 md:grid-cols-3">
         {items.map((t) => (
-          <li
-            key={t.id}
-            className="rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-panel)] p-4 shadow-[var(--brand-shadow)]"
-          >
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--brand-amber-ink)]">
-              {t.eyebrow}
-            </p>
-            <p className="mt-1.5 text-sm font-semibold leading-snug text-[var(--brand-ink)]">
-              {t.title}
-            </p>
-            <p className="mt-2 text-xs leading-relaxed text-[var(--brand-ink)]/70">{t.body}</p>
-            {t.href && (
-              <Link
-                href={t.href}
-                className="mt-3 inline-flex text-xs font-semibold text-[var(--brand-accent)] hover:underline"
-              >
-                {t.hrefLabel ?? "Learn more"} →
-              </Link>
-            )}
+          <li key={t.id}>
+            <Card className="h-full">
+              <CardHeader>
+                <Badge variant="outline">{t.eyebrow}</Badge>
+                <CardTitle className="text-sm leading-snug">{t.title}</CardTitle>
+                <CardDescription className="text-xs leading-relaxed">{t.body}</CardDescription>
+              </CardHeader>
+              {t.href ? (
+                <CardFooter>
+                  <Button
+                    variant="link"
+                    className="h-auto px-0"
+                    render={<Link href={t.href} />}
+                    nativeButton={false}
+                  >
+                    {t.hrefLabel ?? "Learn more"}
+                    <HugeiconsIcon
+                      icon={ArrowRight01Icon}
+                      data-icon="inline-end"
+                      strokeWidth={2}
+                    />
+                  </Button>
+                </CardFooter>
+              ) : null}
+            </Card>
           </li>
         ))}
       </ul>
