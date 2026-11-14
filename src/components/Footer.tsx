@@ -2,7 +2,6 @@ import Link from "next/link";
 import { BrandMark } from "@/components/BrandMark";
 import { siteConfig } from "@/config/site";
 import { footerPopular, navGroups, resourceLinks, categoriesInGroup } from "@/config/nav";
-import { categories } from "@/lib/calculators/categories";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 
@@ -91,26 +90,6 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link href="/sitemap" className="hover:text-background">
-                  HTML Sitemap (all calculators)
-                </Link>
-              </li>
-              <li>
-                <a href="/sitemap.xml" className="hover:text-background">
-                  XML Sitemap
-                </a>
-              </li>
-              <li>
-                <a href="/llms.txt" className="hover:text-background">
-                  llms.txt (AI overview)
-                </a>
-              </li>
-              <li>
-                <a href="/llms-full.txt" className="hover:text-background">
-                  llms-full.txt (full catalog)
-                </a>
-              </li>
             </ul>
           </FooterColumn>
           <FooterColumn title="Site">
@@ -138,11 +117,6 @@ export function Footer() {
               <li>
                 <Link href="/accessibility" className="hover:text-background">
                   Accessibility
-                </Link>
-              </li>
-              <li>
-                <Link href="/calculators" className="hover:text-background">
-                  All {categories.length} categories
                 </Link>
               </li>
               <li>
