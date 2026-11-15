@@ -4,6 +4,7 @@ import { apHub, calculators, categories, getByCategory } from "@/lib/calculators
 import { navGroups, categoriesInGroup, resourceLinks } from "@/config/nav";
 import { siteConfig } from "@/config/site";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
 import { ContentPage } from "@/components/ContentPage";
 import { Button } from "@/components/ui/button";
 import {
@@ -218,7 +219,7 @@ function CategoryBlock({ categoryId, name }: { categoryId: string; name: string 
                 href={`/calculators/${c.category}/${c.slug}`}
                 className="text-sm text-foreground/85 hover:text-primary hover:underline"
               >
-                {c.title} Calculator
+                {calculatorDisplayTitle(c)}
               </Link>
             </li>
           ))}

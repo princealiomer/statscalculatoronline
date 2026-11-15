@@ -1,11 +1,12 @@
 import type { CalculatorDef } from "./types";
 import { categories } from "./categories";
+import { seoBySlug } from "./seoTargeting";
 
 export { categories } from "./categories";
 export type { CategoryDef } from "./types";
 
 export const calculators: CalculatorDef[] = [
-  { category: "descriptive-statistics", slug: "mean-median-mode-calculator", title: "Mean, Median, Mode", description: "Calculate arithmetic mean, median, and mode", engine: "mean-median-mode" },
+  { category: "descriptive-statistics", slug: "mean-median-mode-calculator", title: "Mean Median Mode Calculator", description: "Calculate arithmetic mean, median, and mode", engine: "mean-median-mode" },
   { category: "descriptive-statistics", slug: "average-calculator", title: "Average Calculator", description: "Compute the arithmetic average (mean) of a data set", engine: "average" },
   { category: "descriptive-statistics", slug: "sum-calculator", title: "Sum Calculator", description: "Add a list of numbers and show the total", engine: "sum" },
   { category: "descriptive-statistics", slug: "basic-statistics-calculator", title: "Basic Statistics", description: "Min, max, sum, count, mean, median, mode, SD, and variance", engine: "basic-stats" },
@@ -13,13 +14,13 @@ export const calculators: CalculatorDef[] = [
   { category: "descriptive-statistics", slug: "five-number-summary-calculator", title: "Five-Number Summary", description: "Min, Q1, median, Q3, and max", engine: "five-number" },
   { category: "descriptive-statistics", slug: "range-variance-stddev-calculator", title: "Range, Variance & SD", description: "Measure spread with range, variance, and standard deviation", engine: "range-var-sd" },
   { category: "descriptive-statistics", slug: "percent-error-calculator", title: "Percent Error", description: "Percent error of experimental vs theoretical value", engine: "percent-error" },
-  { category: "descriptive-statistics", slug: "odds-probability-calculator", title: "Odds to Probability", description: "Convert odds of winning into probability and percent chance", engine: "odds-prob" },
+  { category: "descriptive-statistics", slug: "odds-probability-calculator", title: "Odds Calculator", description: "Convert odds of winning into probability and percent chance", engine: "odds-prob" },
   { category: "descriptive-statistics", slug: "vote-percentage-calculator", title: "Vote Percentage", description: "Share of each count as a percent of the total", engine: "vote-percent" },
   { category: "descriptive-statistics", slug: "mean-calculator", title: "Mean Calculator", description: "Compute the arithmetic mean of a data set", engine: "mean-only" },
   { category: "descriptive-statistics", slug: "variance-calculator", title: "Variance Calculator", description: "Sample or population variance with SD", engine: "variance-only" },
-  { category: "descriptive-statistics", slug: "sample-standard-deviation-calculator", title: "Standard Deviation", description: "Sample or population standard deviation with variance", engine: "stddev-only" },
+  { category: "descriptive-statistics", slug: "sample-standard-deviation-calculator", title: "Standard Deviation Calculator", description: "Sample or population standard deviation with variance", engine: "stddev-only" },
   { category: "descriptive-statistics", slug: "quartile-calculator", title: "Quartile Calculator", description: "Q1, Q2, Q3, IQR, min, and max", engine: "quartile" },
-  { category: "descriptive-statistics", slug: "interquartile-range-calculator", title: "Interquartile Range", description: "IQR = Q3 − Q1 with quartile context", engine: "iqr-only" },
+  { category: "descriptive-statistics", slug: "interquartile-range-calculator", title: "Interquartile Range Calculator", description: "IQR = Q3 − Q1 with quartile context", engine: "iqr-only" },
   { category: "descriptive-statistics", slug: "coefficient-of-variation-calculator", title: "Coefficient of Variation", description: "Relative variability as a percentage of the mean", engine: "cv" },
   { category: "descriptive-statistics", slug: "mean-absolute-deviation-calculator", title: "Mean Absolute Deviation", description: "Average absolute deviation from the mean", engine: "mad" },
   { category: "descriptive-statistics", slug: "median-absolute-deviation-calculator", title: "Median Absolute Deviation", description: "Robust dispersion using median absolute deviations", engine: "medad" },
@@ -46,7 +47,7 @@ export const calculators: CalculatorDef[] = [
   { category: "hypothesis-testing", slug: "two-sample-paired-t-test-calculator", title: "Paired t-Test", description: "Compare paired observations", engine: "paired-t" },
   { category: "hypothesis-testing", slug: "one-way-anova-calculator", title: "One-Way ANOVA", description: "Compare means across three or more groups", engine: "one-way-anova" },
   { category: "hypothesis-testing", slug: "two-way-anova-calculator", title: "Two-Way ANOVA", description: "Two-factor ANOVA with interaction", engine: "two-way-anova" },
-  { category: "hypothesis-testing", slug: "three-way-anova-calculator", title: "Three-Way ANOVA", description: "Three-factor ANOVA overview calculator", engine: "three-way-anova" },
+  { category: "hypothesis-testing", slug: "three-way-anova-calculator", title: "3 Factor ANOVA", description: "Three-factor ANOVA overview calculator", engine: "three-way-anova" },
   { category: "hypothesis-testing", slug: "welch-anova-calculator", title: "Welch ANOVA", description: "ANOVA without equal-variance assumption", engine: "welch-anova" },
   { category: "hypothesis-testing", slug: "repeated-measures-anova-calculator", title: "Repeated Measures ANOVA", description: "Within-subjects ANOVA", engine: "rm-anova" },
   { category: "hypothesis-testing", slug: "ancova-calculator", title: "ANCOVA", description: "ANOVA with a continuous covariate", engine: "ancova" },
@@ -69,7 +70,7 @@ export const calculators: CalculatorDef[] = [
   { category: "hypothesis-testing", slug: "mcnemars-test-calculator", title: "McNemar Test", description: "Paired binary proportions", engine: "mcnemar" },
   { category: "hypothesis-testing", slug: "levenes-test-calculator", title: "Levene Test", description: "Test equality of variances", engine: "levene" },
   { category: "hypothesis-testing", slug: "normality-test-calculator", title: "Normality Test", description: "Jarque-Bera / normality diagnostics", engine: "normality" },
-  { category: "hypothesis-testing", slug: "outlier-detection-calculator", title: "Outlier Detection", description: "Grubbs test for outliers", engine: "outliers" },
+  { category: "hypothesis-testing", slug: "outlier-detection-calculator", title: "Outlier Calculator", description: "Grubbs test for outliers", engine: "outliers" },
   { category: "hypothesis-testing", slug: "permutation-test-calculator", title: "Permutation Test", description: "Resampling-based mean comparison", engine: "permutation" },
   { category: "hypothesis-testing", slug: "p-value-calculator", title: "P-Value Calculator", description: "Convert test statistics to p-values", engine: "pvalue" },
   { category: "hypothesis-testing", slug: "critical-value-calculator", title: "Critical Value Calculator", description: "Find Z, t, F, or chi-square critical values", engine: "critical" },
@@ -130,7 +131,7 @@ export const calculators: CalculatorDef[] = [
   { category: "chart", slug: "dot-plot", title: "Dot Plot", description: "Individual points and distribution", engine: "chart-dot" },
   { category: "chart", slug: "density-plot", title: "Density Plot", description: "Kernel-density style visualization", engine: "chart-density" },
   { category: "chart", slug: "violin-plot", title: "Violin Plot", description: "Density + box-style summary", engine: "chart-violin" },
-  { category: "chart", slug: "stem-and-leaf-plot", title: "Stem-and-Leaf Plot", description: "Preserve values while showing shape", engine: "chart-stem" },
+  { category: "chart", slug: "stem-and-leaf-plot", title: "Stem and Leaf Plot Generator", description: "Preserve values while showing shape", engine: "chart-stem" },
   { category: "chart", slug: "funnel-chart", title: "Funnel Chart", description: "Conversion stages", engine: "chart-funnel" },
   { category: "chart", slug: "tree-map", title: "Tree Map", description: "Nested proportional rectangles", engine: "chart-treemap" },
   { category: "chart", slug: "waterfall-chart", title: "Waterfall Chart", description: "Cumulative gains and losses", engine: "chart-waterfall" },
@@ -176,7 +177,7 @@ export const calculators: CalculatorDef[] = [
   { category: "random-tools", slug: "random-letter-set-generator", title: "Random Letter Sets", description: "Generate random letter strings", engine: "random-letters" },
 
   // Text tools
-  { category: "text-tools", slug: "character-counter", title: "Character Counter", description: "Count characters, words, lines, and character frequency", engine: "char-count" },
+  { category: "text-tools", slug: "character-counter", title: "Character Calculator", description: "Count characters, words, lines, and character frequency", engine: "char-count" },
   { category: "text-tools", slug: "word-counter", title: "Word Counter", description: "Count words and show top word densities", engine: "word-count" },
 
   // Percentages (Math core)
@@ -245,7 +246,7 @@ export const calculators: CalculatorDef[] = [
   { category: "geometry-plane", slug: "trapezoid-calculator", title: "Trapezoid", description: "Area from bases and height", engine: "geo-trapezoid" },
   { category: "geometry-plane", slug: "parallelogram-calculator", title: "Parallelogram", description: "Area from base and height", engine: "geo-parallelogram" },
   { category: "geometry-plane", slug: "rhombus-calculator", title: "Rhombus", description: "Area and side from diagonals", engine: "geo-rhombus" },
-  { category: "geometry-plane", slug: "distance-two-points-calculator", title: "Distance Between Points", description: "2D Euclidean distance", engine: "geo-distance-2d" },
+  { category: "geometry-plane", slug: "distance-two-points-calculator", title: "Distance Between Two Points", description: "2D Euclidean distance", engine: "geo-distance-2d" },
   { category: "geometry-plane", slug: "midpoint-calculator", title: "Midpoint", description: "Midpoint of a line segment", engine: "geo-midpoint" },
   { category: "geometry-plane", slug: "slope-calculator", title: "Slope", description: "Slope and angle between two points", engine: "geo-slope" },
   { category: "geometry-plane", slug: "annulus-calculator", title: "Annulus", description: "Area of a ring between two radii", engine: "geo-annulus" },
@@ -276,7 +277,7 @@ export const calculators: CalculatorDef[] = [
   { category: "conversions", slug: "square-feet-to-acres-converter", title: "Square Feet to Acres", description: "ft² → acres and m²", engine: "sqft-acre" },
   { category: "conversions", slug: "acres-to-square-feet-converter", title: "Acres to Square Feet", description: "acres → ft²", engine: "acre-sqft" },
   { category: "conversions", slug: "angle-converter", title: "Angle Converter", description: "Degrees ↔ radians", engine: "angle-convert" },
-  { category: "conversions", slug: "roman-numeral-converter", title: "Roman Numeral Converter", description: "Convert between integers and Roman numerals", engine: "roman-numeral" },
+  { category: "conversions", slug: "roman-numeral-converter", title: "Roman Numeral Calculator", description: "Convert between integers and Roman numerals", engine: "roman-numeral" },
 
   // Physics
   { category: "physics", slug: "force-calculator", title: "Force Calculator", description: "F = m·a", engine: "phys-force" },
@@ -331,6 +332,7 @@ export const calculators: CalculatorDef[] = [
   { category: "fractions", slug: "decimal-to-fraction-calculator", title: "Decimal to Fraction", description: "Approximate a decimal as a fraction", engine: "dec-to-frac" },
   { category: "fractions", slug: "mixed-to-improper-calculator", title: "Mixed to Improper", description: "Convert a mixed number to an improper fraction", engine: "mixed-to-improper" },
   { category: "fractions", slug: "improper-to-mixed-calculator", title: "Improper to Mixed", description: "Convert an improper fraction to a mixed number", engine: "improper-to-mixed" },
+  { category: "fractions", slug: "average-fractions-calculator", title: "Fractions Average Calculator", description: "Average two fractions and simplify the result", engine: "frac-average" },
 
   // General math
   { category: "general-math", slug: "gcf-calculator", title: "GCF / GCD", description: "Greatest common factor of integers", engine: "gcf" },
@@ -387,7 +389,7 @@ export const calculators: CalculatorDef[] = [
   { category: "time", slug: "day-of-the-week-calculator", title: "Day of the Week", description: "Find weekday for a calendar date", engine: "day-of-week" },
   { category: "time", slug: "work-hours-calculator", title: "Work Hours", description: "Hours worked from start, end, and break", engine: "work-hours" },
   { category: "finance", slug: "amortization-schedule-calculator", title: "Amortization Schedule", description: "Payment breakdown and loan schedule preview", engine: "amortization-schedule" },
-  { category: "finance", slug: "straight-line-depreciation-calculator", title: "Straight-Line Depreciation", description: "Annual depreciation expense", engine: "straight-line-depr" },
+  { category: "finance", slug: "straight-line-depreciation-calculator", title: "Depreciation Calculator", description: "Straight-line annual depreciation expense", engine: "straight-line-depr" },
   { category: "finance", slug: "declining-balance-depreciation-calculator", title: "Declining Balance Depreciation", description: "Year-by-year declining-balance schedule", engine: "declining-balance" },
   { category: "finance", slug: "how-much-car-can-i-afford", title: "Car Affordability", description: "Loan amount from a target monthly payment", engine: "car-afford" },
   { category: "finance", slug: "how-much-house-can-i-afford", title: "House Affordability", description: "Home price estimate from income and debts", engine: "house-afford" },
@@ -469,11 +471,19 @@ export function getCategory(id: string) {
 export function searchCalculators(q: string) {
   const s = q.toLowerCase().trim();
   if (!s) return calculators;
-  return calculators.filter(
-    (c) =>
-      c.title.toLowerCase().includes(s) ||
-      c.description.toLowerCase().includes(s) ||
-      c.slug.includes(s) ||
-      c.category.includes(s),
-  );
+  return calculators.filter((c) => {
+    const targeted = seoBySlug[c.slug];
+    const hay = [
+      c.title,
+      c.description,
+      c.slug,
+      c.category,
+      targeted?.metaTitle ?? "",
+      ...(targeted?.keywords ?? []),
+      ...(c.keywords ?? []),
+    ]
+      .join(" ")
+      .toLowerCase();
+    return hay.includes(s);
+  });
 }

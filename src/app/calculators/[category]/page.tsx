@@ -14,6 +14,7 @@ import { tidbitsForPath } from "@/lib/content/tidbits";
 import { siteConfig } from "@/config/site";
 import { getPopularCalculators } from "@/lib/calculators/related";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
 import { ContentPage } from "@/components/ContentPage";
 import {
   Card,
@@ -134,7 +135,7 @@ function CategoryView({
             <Link href={`/calculators/${c.category}/${c.slug}`} className="block h-full">
               <Card className="h-full min-h-14 transition hover:ring-primary/30">
                 <CardHeader>
-                  <CardTitle className="text-base">{c.title} Calculator</CardTitle>
+                  <CardTitle className="text-base">{calculatorDisplayTitle(c)}</CardTitle>
                   <CardDescription className="text-sm leading-snug">{c.description}</CardDescription>
                 </CardHeader>
               </Card>

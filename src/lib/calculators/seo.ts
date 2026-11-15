@@ -2,39 +2,54 @@ import type { Metadata } from "next";
 import type { CalculatorDef } from "@/lib/calculators/types";
 import { getCategory } from "@/lib/calculators/registry";
 import { getCalculatorGuide, getCalculatorOutline } from "@/lib/calculators/explain";
+import { seoBySlug } from "@/lib/calculators/seoTargeting";
+import { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
 import { siteConfig } from "@/config/site";
 import { buildPageMetadata, seoDescription } from "@/lib/seo/meta";
 
+export { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
+
 export function calculatorKeywords(calc: CalculatorDef): string[] {
   const cat = getCategory(calc.category);
+  const display = calculatorDisplayTitle(calc);
+  const targeted = seoBySlug[calc.slug]?.keywords ?? [];
   const base = [
+    display,
     calc.title,
     `${calc.title} calculator`,
-    `free ${calc.title.toLowerCase()} calculator`,
+    `free ${display.toLowerCase()}`,
     "online calculator",
     "statistics calculator",
+    "stats calculator",
+    "free online calculator",
     "step by step",
     "formulas",
     siteConfig.name,
+    siteConfig.domain,
   ];
   if (cat) base.push(cat.name, `${cat.name} calculator`);
   if (calc.keywords?.length) base.push(...calc.keywords);
+  base.push(...targeted);
   return [...new Set(base.map((k) => k.trim()).filter(Boolean))];
 }
 
 export function calculatorMetaDescription(calc: CalculatorDef): string {
   const guide = getCalculatorGuide(calc);
-  const raw = `Free ${calc.title} calculator — ${calc.description}. ${guide.overview} Formulas, steps, and PDF exports on ${siteConfig.name}.`;
+  const display = calculatorDisplayTitle(calc);
+  const blurb = seoBySlug[calc.slug]?.blurb;
+  const raw = blurb
+    ? `${blurb} ${calc.description}. Formulas, steps, and free PDF/CSV exports on ${siteConfig.name}.`
+    : `Free ${display} — ${calc.description}. ${guide.overview} Instant results with formulas, steps, and PDF exports on ${siteConfig.name}.`;
   return seoDescription(raw);
 }
 
 export function buildCalculatorMetadata(calc: CalculatorDef): Metadata {
   const path = `/calculators/${calc.category}/${calc.slug}`;
   return buildPageMetadata({
-    title: `${calc.title} Calculator`,
+    title: calculatorDisplayTitle(calc),
     description: calculatorMetaDescription(calc),
     path,
-    keywords: [...calculatorKeywords(calc), siteConfig.domain],
+    keywords: calculatorKeywords(calc),
     type: "article",
   });
 }
@@ -43,7 +58,8 @@ export function buildCalculatorMetadata(calc: CalculatorDef): Metadata {
 export function calculatorAnswerBlock(calc: CalculatorDef): string {
   const outline = getCalculatorOutline(calc);
   const definition = outline.whatIs.definition.replace(/\s+/g, " ").trim();
-  const lead = `The free ${calc.title} calculator on ${siteConfig.name} computes ${calc.description.toLowerCase()}. ${definition}`;
+  const display = calculatorDisplayTitle(calc);
+  const lead = `The free ${display} on ${siteConfig.name} computes ${calc.description.toLowerCase()}. ${definition}`;
   if (lead.length <= 320) return lead;
   return `${lead.slice(0, 317).replace(/\s+\S*$/, "").trimEnd()}…`;
 }
@@ -53,7 +69,7 @@ export function buildCalculatorJsonLd(calc: CalculatorDef) {
   const outline = getCalculatorOutline(calc);
   const cat = getCategory(calc.category);
   const url = `${siteConfig.url}/calculators/${calc.category}/${calc.slug}`;
-  const pageName = `${calc.title} Calculator`;
+  const pageName = calculatorDisplayTitle(calc);
   const dateModified = siteConfig.contentUpdated;
 
   const faqEntities = [
@@ -155,7 +171,7 @@ export function buildCalculatorJsonLd(calc: CalculatorDef) {
       },
       {
         "@type": "HowTo",
-        name: `How to use the ${calc.title} calculator`,
+        name: `How to use the ${pageName}`,
         description: outline.whatIs.definition,
         totalTime: "PT10M",
         step: [

@@ -58,12 +58,12 @@ export function GET() {
 
   lines.push("## Popular calculator URLs");
   const popularSlugs = [
+    "prime-number-checker",
+    "sample-standard-deviation-calculator",
+    "percentage-increase-calculator",
+    "percent-difference-calculator",
     "one-sample-t-test-calculator",
     "mean-median-mode-calculator",
-    "normal-distribution-calculator",
-    "simple-linear-regression-calculator",
-    "chi-square-test-of-independence-calculator",
-    "sample-size-and-power-analysis-calculator",
   ];
   for (const slug of popularSlugs) {
     const c = calculators.find((x) => x.slug === slug);

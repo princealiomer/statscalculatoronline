@@ -14,9 +14,16 @@ import {
 export const metadata: Metadata = buildPageMetadata({
   title: "Z-Table Calculator",
   description:
-    "Standard normal Z-table with one-tailed and two-tailed critical values for common significance levels. Free reference on Stats Calculator Online.",
+    "Free z table calculator with one-tailed and two-tailed standard normal critical values for common α levels. Instant reference on Stats Calculator Online.",
   path: "/resources/statistical-tables/z-table",
-  keywords: ["z table", "z table calculator", "standard normal", "critical value"],
+  keywords: [
+    "z table calculator",
+    "z table",
+    "z-table",
+    "standard normal table",
+    "normal cdf",
+    "critical value",
+  ],
 });
 
 export default function ZTablePage() {

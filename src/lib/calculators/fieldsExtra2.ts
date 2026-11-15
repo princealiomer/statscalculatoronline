@@ -24,6 +24,7 @@ export function fieldsExtra2(engine: string): FieldDef[] | null {
     case "frac-mul":
     case "frac-div":
     case "frac-compare":
+    case "frac-average":
       return [...fracPair("1", "A", "1", "2"), ...fracPair("2", "B", "1", "3")];
     case "frac-simplify":
     case "frac-to-dec":

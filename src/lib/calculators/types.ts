@@ -13,4 +13,6 @@ export type CalculatorDef = {
   engine: string;
   formula?: string;
   keywords?: string[];
+  /** Optional SERP/H1 override (already includes words like Calculator/Checker) */
+  metaTitle?: string;
 };

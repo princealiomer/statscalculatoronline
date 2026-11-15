@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { CalculatorDef } from "@/lib/calculators/types";
 import { calcHref } from "@/lib/calculators/related";
 import { getCategory } from "@/lib/calculators/registry";
+import { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -58,7 +59,7 @@ export function SimilarCalculatorsWidget({
                     className="group flex min-h-14 flex-col justify-center rounded-xl border border-border bg-muted/70 px-3.5 py-3 transition hover:bg-card hover:ring-1 hover:ring-primary/30"
                   >
                     <span className="text-sm font-semibold text-foreground group-hover:text-primary">
-                      {c.title} Calculator
+                      {calculatorDisplayTitle(c)}
                     </span>
                     <span className="mt-0.5 line-clamp-2 text-xs leading-snug text-muted-foreground">
                       {cat ? `${cat.name} · ` : ""}

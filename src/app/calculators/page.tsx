@@ -9,6 +9,7 @@ import { tidbitsForPath } from "@/lib/content/tidbits";
 import { getPopularCalculators } from "@/lib/calculators/related";
 import { siteConfig } from "@/config/site";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -20,9 +21,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "All Statistics Calculators",
-  description: `Browse ${calculators.length}+ free tools for hypothesis tests, descriptive stats, probability, regression, math, and finance.`,
+  description: `Free statistics calculators and stats tools — browse ${calculators.length}+ calculators for SD, t-tests, percentages, probability, regression, math, and finance.`,
   path: "/calculators",
-  keywords: [...siteConfig.keywords, "all statistics calculators"],
+  keywords: [...siteConfig.keywords, "all statistics calculators", "statistics calculators"],
 });
 
 export default function CalculatorsIndexPage() {
@@ -69,7 +70,7 @@ export default function CalculatorsIndexPage() {
             <Link href={`/calculators/${c.category}/${c.slug}`} className="block h-full">
               <Card className="h-full transition hover:ring-primary/30">
                 <CardHeader>
-                  <CardTitle className="text-base">{c.title} Calculator</CardTitle>
+                  <CardTitle className="text-base">{calculatorDisplayTitle(c)}</CardTitle>
                   <CardDescription>{c.description}</CardDescription>
                 </CardHeader>
               </Card>

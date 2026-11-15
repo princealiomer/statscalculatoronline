@@ -73,7 +73,8 @@ export function runSoupMath2(engine: string, input: Input): CalcResult | null {
     case "frac-add":
     case "frac-sub":
     case "frac-mul":
-    case "frac-div": {
+    case "frac-div":
+    case "frac-average": {
       const a = parseFrac(input, "n1", "d1", 1, 2);
       const b = parseFrac(input, "n2", "d2", 1, 3);
       let n: number;
@@ -87,6 +88,10 @@ export function runSoupMath2(engine: string, input: Input): CalcResult | null {
       } else if (engine === "frac-mul") {
         n = a.n * b.n;
         d = a.d * b.d;
+      } else if (engine === "frac-average") {
+        // ((a/b)+(c/d))/2 = (ad+bc)/(2bd)
+        n = a.n * b.d + b.n * a.d;
+        d = 2 * a.d * b.d;
       } else {
         if (b.n === 0) throw new Error("Cannot divide by zero.");
         n = a.n * b.d;
@@ -99,7 +104,15 @@ export function runSoupMath2(engine: string, input: Input): CalcResult | null {
           { label: "Decimal", value: fmt(s.n / s.d) },
           { label: "Mixed", value: `${Math.trunc(s.n / s.d)} ${Math.abs(s.n % s.d)}/${s.d}` },
         ],
-        [{ title: "Fraction arithmetic", detail: `${a.n}/${a.d} op ${b.n}/${b.d}` }],
+        [
+          {
+            title: engine === "frac-average" ? "Average of fractions" : "Fraction arithmetic",
+            detail:
+              engine === "frac-average"
+                ? `((${a.n}/${a.d}) + (${b.n}/${b.d})) / 2 = ${s.n}/${s.d}`
+                : `${a.n}/${a.d} op ${b.n}/${b.d}`,
+          },
+        ],
       );
     }
 

@@ -4,13 +4,13 @@ export const siteConfig = {
   /** Compact mark for tight UI only (logo glyph / abbreviated labels) */
   shortName: "SCO",
   domain: "statscalculatoronline.com",
-  tagline: "Free online statistics calculators with clear formulas, steps, and branded PDF reports",
+  tagline: "Free statistics calculator online — formulas, steps, and branded PDF reports",
   /** Long marketing blurb (pages, JSON-LD). Prefer metaDescription for <meta> tags. */
   description:
-    "Stats Calculator Online is a free library of statistics and math calculators with step-by-step solutions, textbook formulas, APA write-ups, and free branded PDF reports that include your inputs, formulas applied, worked steps, and final results (plus Word/CSV). Hypothesis tests, descriptive statistics, probability, regression, algebra, finance, and more.",
+    "Stats Calculator Online is a free statistics calculator and math toolkit with step-by-step solutions, textbook formulas, APA write-ups, and free branded PDF reports that include your inputs, formulas applied, worked steps, and final results (plus Word/CSV). Hypothesis tests, descriptive statistics, probability, regression, algebra, finance, and more.",
   /** Keep ≤155 chars for SEO crawlers */
   metaDescription:
-    "Free statistics & math calculators with formulas, step-by-step work, APA write-ups, and branded PDF/CSV exports. t-tests, probability, regression, and more.",
+    "Free statistics calculator online: SD, t-test, percentages, probability, regression, and 200+ math tools with formulas, steps, and PDF exports. No signup.",
   /**
    * 40–60 word answer block for “What is Stats Calculator Online?” (AI extractability).
    * Keep self-contained so AI systems can cite it without surrounding context.
@@ -23,7 +23,7 @@ export const siteConfig = {
   twitter: "@statscalculatoronline",
   contactEmail: "hello@statscalculatoronline.com",
   /** ISO date shown as freshness signal on key pages */
-  contentUpdated: "2026-11-14",
+  contentUpdated: "2026-11-15",
   /** Search Console HTML-tag verification content */
   googleSiteVerification: "JGq8tz4ab7qaJgvaz0TguRXWR33ow1K7Q1J6DvLq4qI",
   /** Google Tag Manager container */
@@ -33,11 +33,22 @@ export const siteConfig = {
   keywords: [
     "Stats Calculator Online",
     "statistics calculator",
+    "stats calculator",
+    "stat calculator",
+    "statistic calculator",
+    "statistical calculator",
+    "statistics calculator online",
     "online statistics calculator",
     "free statistics calculator",
-    "hypothesis test calculator",
+    "statistics calculators",
+    "statistical calculators",
+    "stats calc",
+    "standard deviation calculator",
     "t-test calculator",
+    "percentage increase calculator",
+    "percent difference calculator",
     "descriptive statistics calculator",
+    "probability calculator",
     "math calculator online",
   ],
 } as const;

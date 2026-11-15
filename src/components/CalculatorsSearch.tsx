@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { searchCalculators } from "@/lib/calculators/registry";
+import { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -38,7 +39,7 @@ export function CalculatorsSearch() {
                 href={`/calculators/${c.category}/${c.slug}`}
                 className="text-sm text-primary underline-offset-2 hover:underline"
               >
-                {c.title}
+                {calculatorDisplayTitle(c)}
               </Link>
             </li>
           ))}

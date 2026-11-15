@@ -5,9 +5,10 @@ import { siteConfig } from "@/config/site";
 import { BrandInfographic } from "@/components/BrandInfographic";
 import { getPopularCalculators, calcHref } from "@/lib/calculators/related";
 import { buildPageMetadata } from "@/lib/seo/meta";
+import { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Free Statistics & Math Calculators",
+  title: "Free Statistics Calculator Online",
   description: siteConfig.metaDescription,
   path: "/",
   keywords: [...siteConfig.keywords],
@@ -19,12 +20,12 @@ const homeFaqs = [
     a: siteConfig.definitionAnswer,
   },
   {
-    q: "Are the statistics calculators free?",
-    a: "Yes. Every calculator on Stats Calculator Online is free to use with no account required. Formulas, step-by-step guidance, APA/AMA write-ups, and PDF, Word, and CSV exports are included at no cost.",
+    q: "Is this a free statistics calculator?",
+    a: "Yes. Stats Calculator Online is a free statistics calculator (also called a stats calculator) with no account required. Formulas, step-by-step guidance, APA/AMA write-ups, and PDF, Word, and CSV exports are included at no cost.",
   },
   {
     q: "Which statistics calculators are available?",
-    a: `Stats Calculator Online hosts ${calculators.length}+ tools across ${categories.length} categories, including hypothesis tests, descriptive statistics, probability, confidence intervals, regression, correlation, algebra, finance, and critical-value tables.`,
+    a: `This statistics calculator site hosts ${calculators.length}+ tools across ${categories.length} categories, including standard deviation, t-tests, percentage increase and difference, descriptive statistics, probability, regression, algebra, finance, and critical-value tables.`,
   },
   {
     q: "How do I choose the right statistical test?",
@@ -105,7 +106,7 @@ export default function HomePage() {
               Stats Calculator Online
             </p>
             <h1 className="mt-5 max-w-xl text-xl font-medium leading-snug text-[var(--brand-ink)] md:text-2xl">
-              Free statistics calculators with formulas, steps, and branded PDF reports you can cite
+              Free statistics calculator online — SD, t-tests, percentages, probability, and more
             </h1>
             <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[var(--brand-ink-soft)] md:text-base">
               {siteConfig.definitionAnswer}
@@ -210,7 +211,9 @@ export default function HomePage() {
                 href={calcHref(c)}
                 className="block h-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-panel)] p-4 shadow-[var(--brand-shadow)] transition hover:border-[var(--brand-accent)]/35"
               >
-                <span className="font-medium text-[var(--brand-ink)]">{c.title} Calculator</span>
+                <span className="font-medium text-[var(--brand-ink)]">
+                  {calculatorDisplayTitle(c)}
+                </span>
                 <span className="mt-1 block text-sm text-[var(--brand-ink-soft)]">{c.description}</span>
               </Link>
             </li>

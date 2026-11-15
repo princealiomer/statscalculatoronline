@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getHubCategories, getPopularCalculators, calcHref } from "@/lib/calculators/related";
 import { calculators } from "@/lib/calculators/registry";
+import { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
 import { resourceLinks } from "@/config/nav";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,7 +38,7 @@ export function PopularHubWidget() {
                       href={calcHref(c)}
                       className="text-sm text-background/85 hover:text-[var(--brand-amber)] hover:underline"
                     >
-                      {c.title} Calculator
+                      {calculatorDisplayTitle(c)}
                     </Link>
                   </li>
                 ))}

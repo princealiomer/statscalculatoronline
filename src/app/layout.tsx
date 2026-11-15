@@ -36,7 +36,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} | Free Statistics Calculators`,
+    default: `${siteConfig.name} | Free Statistics Calculator`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.metaDescription,
@@ -52,13 +52,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: siteConfig.locale,
     siteName: siteConfig.name,
-    title: `${siteConfig.name} | Free Statistics Calculators`,
+    title: `${siteConfig.name} | Free Statistics Calculator`,
     description: siteConfig.metaDescription,
     // url omitted on purpose — child routes set openGraph.url to match their canonical
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} | Free Statistics Calculators`,
+    title: `${siteConfig.name} | Free Statistics Calculator`,
     description: siteConfig.metaDescription,
   },
   robots: {

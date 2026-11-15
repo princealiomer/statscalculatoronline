@@ -9,6 +9,7 @@ import { TidbitsWidget } from "@/components/widgets/TidbitsWidget";
 import { getSimilarCalculators } from "@/lib/calculators/related";
 import { tidbitsForPath } from "@/lib/content/tidbits";
 import { calculatorAnswerBlock } from "@/lib/calculators/seo";
+import { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
 import { siteConfig } from "@/config/site";
 import { resourceLinks } from "@/config/nav";
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,7 @@ export function CalculatorShell({ calculator }: { calculator: CalculatorDef }) {
   const similar = getSimilarCalculators(calculator, 8);
   const tips = tidbitsForPath(`${calculator.category}/${calculator.slug}`, 3);
   const answerBlock = calculatorAnswerBlock(calculator);
+  const displayTitle = calculatorDisplayTitle(calculator);
 
   return (
     <article className="mx-auto max-w-6xl px-3 py-6 sm:px-4 sm:py-8">
@@ -50,7 +52,7 @@ export function CalculatorShell({ calculator }: { calculator: CalculatorDef }) {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{calculator.title}</BreadcrumbPage>
+            <BreadcrumbPage>{displayTitle}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -61,7 +63,7 @@ export function CalculatorShell({ calculator }: { calculator: CalculatorDef }) {
           {category ? ` · ${category.name}` : ""}
         </Badge>
         <h1 className="font-display text-[1.75rem] font-semibold leading-tight tracking-tight text-foreground sm:text-3xl md:text-4xl">
-          {calculator.title} Calculator
+          {displayTitle}
         </h1>
         <p className="text-[15px] leading-relaxed text-muted-foreground sm:text-base md:text-lg">
           {answerBlock}

@@ -60,17 +60,23 @@ export function getSimilarCalculators(calc: CalculatorDef, limit = 8): Calculato
 }
 
 export function getPopularCalculators(limit = 6): CalculatorDef[] {
+  /** Ordered by Search Console demand (impressions) for internal linking. */
   const preferred = [
+    "prime-number-checker",
+    "sample-standard-deviation-calculator",
+    "percentage-increase-calculator",
+    "percent-difference-calculator",
+    "distance-two-points-calculator",
     "one-sample-t-test-calculator",
     "mean-median-mode-calculator",
+    "odds-probability-calculator",
+    "two-sample-t-test-calculator",
+    "descriptive-statistics-calculator",
+    "average-fractions-calculator",
+    "roman-numeral-converter",
+    "straight-line-depreciation-calculator",
     "normal-distribution-calculator",
     "simple-linear-regression-calculator",
-    "chi-square-test-of-independence-calculator",
-    "sample-size-and-power-analysis-calculator",
-    "two-sample-t-test-calculator",
-    "z-score-calculator",
-    "binomial-distribution-calculator",
-    "percent-error-calculator",
   ];
   const list = preferred
     .map((slug) => calculators.find((c) => c.slug === slug))
