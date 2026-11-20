@@ -19,6 +19,23 @@ export function fieldsExtra2(engine: string): FieldDef[] | null {
   ];
 
   switch (engine) {
+    case "frac-all":
+      return [
+        {
+          name: "op",
+          label: "Operation",
+          type: "select",
+          options: [
+            { value: "add", label: "Add" },
+            { value: "sub", label: "Subtract" },
+            { value: "mul", label: "Multiply" },
+            { value: "div", label: "Divide" },
+          ],
+          defaultValue: "add",
+        },
+        ...fracPair("1", "A", "1", "2"),
+        ...fracPair("2", "B", "1", "3"),
+      ];
     case "frac-add":
     case "frac-sub":
     case "frac-mul":

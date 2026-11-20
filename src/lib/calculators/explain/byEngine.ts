@@ -46,6 +46,28 @@ export const engineGuides: Record<string, Partial<CalculatorGuideContent>> = {
     tips: ["A set can be multimodal or have no unique mode."],
   },
 
+  "prime-check": {
+    overview:
+      "A prime number checker tests whether an integer n > 1 has no positive divisors other than 1 and itself. This free online prime number checker returns Yes or No instantly.",
+    howTo: [
+      "Enter any integer (for example 97).",
+      "Click calculate to see whether it is prime.",
+      "Use related tools for prime factors or a list of primes up to a limit.",
+    ],
+    formulas: [
+      { label: "Definition", latex: "n\\text{ is prime }\\iff n>1\\text{ and }\\forall d\\in\\{2,\\ldots,\\lfloor\\sqrt{n}\\rfloor\\},\\; n\\bmod d \\neq 0" },
+    ],
+    interpretation: [
+      "Yes means n is prime; No means n is composite (or n < 2).",
+      "2 is the only even prime; every larger even number is composite.",
+    ],
+    tips: [
+      "Negative numbers and 0/1 are not prime.",
+      "For factorization, open the Prime Factors calculator.",
+    ],
+    example: "97 → Yes (prime). 91 → No (7 × 13).",
+  },
+
   "standard-deviation": {
     overview: "Standard deviation measures typical distance of observations from the mean.",
     howTo: ["Enter data.", "Select Sample (n−1) or Population (n).", "Read variance and SD."],

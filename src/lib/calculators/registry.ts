@@ -7,6 +7,8 @@ export type { CategoryDef } from "./types";
 
 export const calculators: CalculatorDef[] = [
   { category: "descriptive-statistics", slug: "mean-median-mode-calculator", title: "Mean Median Mode Calculator", description: "Calculate arithmetic mean, median, and mode", engine: "mean-median-mode" },
+  { category: "descriptive-statistics", slug: "mode-calculator", title: "Mode Calculator", description: "Find the most frequent value(s) in a data set", engine: "mode-only" },
+  { category: "descriptive-statistics", slug: "midhinge-calculator", title: "Midhinge Calculator", description: "Compute the midhinge (Q1 + Q3) / 2", engine: "midhinge" },
   { category: "descriptive-statistics", slug: "average-calculator", title: "Average Calculator", description: "Compute the arithmetic average (mean) of a data set", engine: "average" },
   { category: "descriptive-statistics", slug: "sum-calculator", title: "Sum Calculator", description: "Add a list of numbers and show the total", engine: "sum" },
   { category: "descriptive-statistics", slug: "basic-statistics-calculator", title: "Basic Statistics", description: "Min, max, sum, count, mean, median, mode, SD, and variance", engine: "basic-stats" },
@@ -237,7 +239,7 @@ export const calculators: CalculatorDef[] = [
   { category: "finance", slug: "effective-annual-rate-calculator", title: "Effective Annual Rate", description: "Convert nominal APR to EAR", engine: "apr-ear" },
 
   // Plane geometry
-  { category: "geometry-plane", slug: "circle-calculator", title: "Circle", description: "Circumference, area, and diameter", engine: "geo-circle" },
+  { category: "geometry-plane", slug: "circle-calculator", title: "Circle Calculator", description: "Circumference, area, radius, and diameter", engine: "geo-circle" },
   { category: "geometry-plane", slug: "rectangle-calculator", title: "Rectangle", description: "Area, perimeter, and diagonal", engine: "geo-rectangle" },
   { category: "geometry-plane", slug: "square-geometry-calculator", title: "Square", description: "Area, perimeter, and diagonal", engine: "geo-square" },
   { category: "geometry-plane", slug: "triangle-calculator", title: "Triangle (Heron)", description: "Area and perimeter from three sides", engine: "geo-triangle" },
@@ -322,6 +324,7 @@ export const calculators: CalculatorDef[] = [
   { category: "technology", slug: "image-resize-calculator", title: "Image Resize", description: "Scale dimensions while keeping aspect ratio", engine: "resize-image" },
 
   // Fractions
+  { category: "fractions", slug: "fraction-calculator", title: "Fraction Calculator", description: "Add, subtract, multiply, or divide fractions and simplify", engine: "frac-all" },
   { category: "fractions", slug: "adding-fractions-calculator", title: "Add Fractions", description: "Add two fractions and simplify", engine: "frac-add" },
   { category: "fractions", slug: "subtracting-fractions-calculator", title: "Subtract Fractions", description: "Subtract two fractions and simplify", engine: "frac-sub" },
   { category: "fractions", slug: "multiplying-fractions-calculator", title: "Multiply Fractions", description: "Multiply two fractions and simplify", engine: "frac-mul" },
@@ -339,7 +342,7 @@ export const calculators: CalculatorDef[] = [
   { category: "general-math", slug: "lcm-calculator", title: "LCM Calculator", description: "Least common multiple of integers", engine: "lcm-calc" },
   { category: "general-math", slug: "factors-calculator", title: "Factors Calculator", description: "List all positive factors of n", engine: "factors" },
   { category: "general-math", slug: "prime-factors-calculator", title: "Prime Factors", description: "Prime factorization of n", engine: "prime-factors" },
-  { category: "general-math", slug: "prime-number-checker", title: "Prime Number Checker", description: "Test whether n is prime", engine: "prime-check" },
+  { category: "general-math", slug: "prime-number-checker", title: "Prime Number Checker", description: "Instantly check whether any integer is prime", engine: "prime-check" },
   { category: "general-math", slug: "prime-numbers-list", title: "Prime Numbers List", description: "List primes up to a limit", engine: "primes-list" },
   { category: "general-math", slug: "ratio-simplifier", title: "Ratio Simplifier", description: "Simplify a:b using GCD", engine: "ratio-simplify" },
   { category: "general-math", slug: "unit-rate-calculator", title: "Unit Rate", description: "Compute a per-1 unit rate", engine: "unit-rate" },

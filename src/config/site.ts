@@ -23,7 +23,7 @@ export const siteConfig = {
   twitter: "@statscalculatoronline",
   contactEmail: "hello@statscalculatoronline.com",
   /** ISO date shown as freshness signal on key pages */
-  contentUpdated: "2026-11-15",
+  contentUpdated: "2026-11-21",
   /** Search Console HTML-tag verification content */
   googleSiteVerification: "JGq8tz4ab7qaJgvaz0TguRXWR33ow1K7Q1J6DvLq4qI",
   /** Google Tag Manager container */

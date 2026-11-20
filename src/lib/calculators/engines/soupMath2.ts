@@ -74,21 +74,34 @@ export function runSoupMath2(engine: string, input: Input): CalcResult | null {
     case "frac-sub":
     case "frac-mul":
     case "frac-div":
-    case "frac-average": {
+    case "frac-average":
+    case "frac-all": {
       const a = parseFrac(input, "n1", "d1", 1, 2);
       const b = parseFrac(input, "n2", "d2", 1, 3);
+      const op =
+        engine === "frac-all"
+          ? (input.op || "add")
+          : engine === "frac-add"
+            ? "add"
+            : engine === "frac-sub"
+              ? "sub"
+              : engine === "frac-mul"
+                ? "mul"
+                : engine === "frac-div"
+                  ? "div"
+                  : "average";
       let n: number;
       let d: number;
-      if (engine === "frac-add") {
+      if (op === "add") {
         n = a.n * b.d + b.n * a.d;
         d = a.d * b.d;
-      } else if (engine === "frac-sub") {
+      } else if (op === "sub") {
         n = a.n * b.d - b.n * a.d;
         d = a.d * b.d;
-      } else if (engine === "frac-mul") {
+      } else if (op === "mul") {
         n = a.n * b.n;
         d = a.d * b.d;
-      } else if (engine === "frac-average") {
+      } else if (op === "average") {
         // ((a/b)+(c/d))/2 = (ad+bc)/(2bd)
         n = a.n * b.d + b.n * a.d;
         d = 2 * a.d * b.d;
@@ -98,6 +111,8 @@ export function runSoupMath2(engine: string, input: Input): CalcResult | null {
         d = a.d * b.n;
       }
       const s = simplify(n, d);
+      const opLabel =
+        op === "add" ? "+" : op === "sub" ? "−" : op === "mul" ? "×" : op === "div" ? "÷" : "avg";
       return ok(
         [
           { label: "Result", value: `${s.n}/${s.d}` },
@@ -106,11 +121,11 @@ export function runSoupMath2(engine: string, input: Input): CalcResult | null {
         ],
         [
           {
-            title: engine === "frac-average" ? "Average of fractions" : "Fraction arithmetic",
+            title: op === "average" ? "Average of fractions" : "Fraction arithmetic",
             detail:
-              engine === "frac-average"
+              op === "average"
                 ? `((${a.n}/${a.d}) + (${b.n}/${b.d})) / 2 = ${s.n}/${s.d}`
-                : `${a.n}/${a.d} op ${b.n}/${b.d}`,
+                : `${a.n}/${a.d} ${opLabel} ${b.n}/${b.d} = ${s.n}/${s.d}`,
           },
         ],
       );

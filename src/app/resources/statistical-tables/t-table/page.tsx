@@ -12,11 +12,19 @@ import {
 } from "@/components/ui/table";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "t-Table",
+  title: "t-Table Calculator",
   description:
-    "Student’s t critical value table by degrees of freedom for common significance levels. Free reference on Stats Calculator Online.",
+    "Free t table calculator — Student’s t critical values by df for one- and two-tailed tests. Instant reference.",
   path: "/resources/statistical-tables/t-table",
-  keywords: ["t table", "student t", "critical value"],
+  keywords: [
+    "t table calculator",
+    "t tabel",
+    "two-tailed t test table",
+    "two tailed t table",
+    "t test value table",
+    "student t",
+    "critical value",
+  ],
 });
 
 export default function TTablePage() {

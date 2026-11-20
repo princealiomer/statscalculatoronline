@@ -15,6 +15,7 @@ import { siteConfig } from "@/config/site";
 import { getPopularCalculators } from "@/lib/calculators/related";
 import { buildPageMetadata } from "@/lib/seo/meta";
 import { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
+import { categorySeo } from "@/lib/calculators/categorySeo";
 import { ContentPage } from "@/components/ContentPage";
 import {
   Card,
@@ -46,11 +47,20 @@ export async function generateMetadata({
   }
   const cat = getCategory(category);
   if (!cat) return {};
+  const targeted = categorySeo[category];
   return buildPageMetadata({
-    title: `${cat.name} Calculators`,
-    description: `${cat.description} Free ${cat.name.toLowerCase()} calculators with formulas, steps, and PDF exports.`,
+    title: targeted?.title ?? `${cat.name} Calculators`,
+    description:
+      targeted?.description ??
+      `${cat.description} Free ${cat.name.toLowerCase()} calculators with formulas, steps, and PDF exports.`,
     path: `/calculators/${category}`,
-    keywords: [cat.name, `${cat.name} calculator`, siteConfig.name, siteConfig.domain],
+    keywords: [
+      ...(targeted?.keywords ?? []),
+      cat.name,
+      `${cat.name} calculator`,
+      siteConfig.name,
+      siteConfig.domain,
+    ],
   });
 }
 

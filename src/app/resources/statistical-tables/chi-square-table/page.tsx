@@ -12,11 +12,16 @@ import {
 } from "@/components/ui/table";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Chi-Square Table",
+  title: "Chi-Square Table Calculator",
   description:
-    "Chi-square (χ²) critical values by degrees of freedom across common α levels. Free reference on Stats Calculator Online.",
+    "Free chi-square table calculator — χ² critical values by degrees of freedom for common α levels. Instant reference.",
   path: "/resources/statistical-tables/chi-square-table",
-  keywords: ["chi square table", "chi-square critical value"],
+  keywords: [
+    "chi-square table calculator",
+    "chi square table calculator",
+    "chi square table",
+    "chi-square critical value",
+  ],
 });
 
 export default function ChiTablePage() {

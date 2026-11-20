@@ -9,9 +9,10 @@ import { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Free Statistics Calculator Online",
-  description: siteConfig.metaDescription,
+  description:
+    "Free statistics calculator & stats tools online — standard deviation, t-test, mode, fractions, prime checker, and 200+ calculators with formulas and PDF exports.",
   path: "/",
-  keywords: [...siteConfig.keywords],
+  keywords: [...siteConfig.keywords, "prime number checker", "mode calculator", "fraction calculator"],
 });
 
 const homeFaqs = [

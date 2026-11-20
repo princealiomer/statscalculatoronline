@@ -96,6 +96,8 @@ export function fieldsForEngine(engine: string): FieldDef[] {
   if (
     [
       "mean-median-mode",
+      "mode-only",
+      "midhinge",
       "average",
       "sum",
       "five-number",

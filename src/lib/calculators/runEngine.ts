@@ -177,6 +177,46 @@ export function runEngine(engine: string, input: EngineInput): CalcResult {
           );
         });
 
+      case "mode-only":
+        return descriptivePaste(input, (data) => {
+          const modes = mode(data);
+          return ok(
+            [
+              { label: "n", value: data.length },
+              { label: "Mode", value: modes.length ? modes.map(fmt).join(", ") : "No unique mode" },
+              { label: "Number of modes", value: modes.length },
+            ],
+            [
+              { title: "Count frequencies", detail: `n = ${data.length}` },
+              {
+                title: "Mode",
+                detail: modes.length
+                  ? `Most frequent value(s): ${modes.map(fmt).join(", ")}`
+                  : "All values appear equally often — no unique mode",
+              },
+            ],
+          );
+        });
+
+      case "midhinge":
+        return descriptivePaste(input, (data) => {
+          const q = quartiles(data);
+          const midhinge = (q.q1 + q.q3) / 2;
+          return ok(
+            [
+              { label: "n", value: data.length },
+              { label: "Q1", value: fmt(q.q1) },
+              { label: "Q3", value: fmt(q.q3) },
+              { label: "Midhinge", value: fmt(midhinge) },
+              { label: "IQR", value: fmt(q.iqr) },
+            ],
+            [
+              { title: "Quartiles", detail: `Q1 = ${fmt(q.q1)}, Q3 = ${fmt(q.q3)}` },
+              { title: "Midhinge", detail: `(Q1 + Q3) / 2 = ${fmt(midhinge)}` },
+            ],
+          );
+        });
+
       case "average":
         return descriptivePaste(input, (data) => {
           const m = mean(data);

@@ -84,24 +84,24 @@ export const footerPopular = [
     href: "/calculators/general-math/prime-number-checker",
   },
   {
+    title: "Fraction Calculator",
+    href: "/calculators/fractions/fraction-calculator",
+  },
+  {
+    title: "Mode Calculator",
+    href: "/calculators/descriptive-statistics/mode-calculator",
+  },
+  {
     title: "Standard Deviation Calculator",
     href: "/calculators/descriptive-statistics/sample-standard-deviation-calculator",
-  },
-  {
-    title: "Percentage Increase Calculator",
-    href: "/calculators/percentages/percentage-increase-calculator",
-  },
-  {
-    title: "Percent Difference Calculator",
-    href: "/calculators/percentages/percent-difference-calculator",
   },
   {
     title: "t-Test Calculator",
     href: "/calculators/hypothesis-testing/one-sample-t-test-calculator",
   },
   {
-    title: "Distance Between Two Points",
-    href: "/calculators/geometry-plane/distance-two-points-calculator",
+    title: "Square Calculator",
+    href: "/calculators/algebra/square-calculator",
   },
 ] as const;
 

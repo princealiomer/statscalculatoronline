@@ -11,6 +11,8 @@ const ENGINE_ALIASES: Record<string, string> = {
   // Descriptive
   average: "mean-median-mode",
   sum: "mean-median-mode",
+  "mode-only": "mean-median-mode",
+  midhinge: "five-number",
   "basic-stats": "descriptive",
   "descriptive-full": "descriptive",
   "mean-only": "mean-median-mode",

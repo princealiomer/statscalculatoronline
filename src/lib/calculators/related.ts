@@ -63,20 +63,20 @@ export function getPopularCalculators(limit = 6): CalculatorDef[] {
   /** Ordered by Search Console demand (impressions) for internal linking. */
   const preferred = [
     "prime-number-checker",
+    "fraction-calculator",
+    "mode-calculator",
     "sample-standard-deviation-calculator",
+    "one-sample-t-test-calculator",
     "percentage-increase-calculator",
     "percent-difference-calculator",
     "distance-two-points-calculator",
-    "one-sample-t-test-calculator",
     "mean-median-mode-calculator",
+    "square-calculator",
+    "circle-calculator",
     "odds-probability-calculator",
     "two-sample-t-test-calculator",
     "descriptive-statistics-calculator",
-    "average-fractions-calculator",
     "roman-numeral-converter",
-    "straight-line-depreciation-calculator",
-    "normal-distribution-calculator",
-    "simple-linear-regression-calculator",
   ];
   const list = preferred
     .map((slug) => calculators.find((c) => c.slug === slug))
