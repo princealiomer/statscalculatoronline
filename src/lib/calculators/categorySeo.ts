@@ -1,17 +1,24 @@
 /** Category hub SEO for GSC queries that map to a topic page, not one tool. */
 export const categorySeo: Record<
   string,
-  { title?: string; description?: string; keywords?: string[] }
+  {
+    title?: string;
+    description?: string;
+    keywords?: string[];
+    brandMode?: "full" | "none";
+  }
 > = {
   fractions: {
-    title: "Fraction Calculator",
+    title: "Fraction Calculator — Free Online Tools",
     description:
-      "Free fraction calculator hub — add, subtract, multiply, divide, simplify, convert, and average fractions with steps.",
+      "Free fraction calculator hub — add, subtract, multiply, divide, simplify, convert, and average fractions with clear steps. No signup.",
+    brandMode: "none",
     keywords: [
       "fraction calculator",
       "fractions calculator",
       "calculator fractions",
       "calculator for fractions",
+      "calculator fraction",
       "proper fraction calculator",
     ],
   },

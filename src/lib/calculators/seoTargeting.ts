@@ -3,8 +3,12 @@
  * Merged into meta titles, keywords, and descriptions at build time.
  */
 export type SeoTarget = {
-  /** SERP / H1 title — do not append "Calculator" again */
+  /** On-page H1 / display title — do not append "Calculator" again */
   metaTitle?: string;
+  /** Optional SERP-only title (CTR). Falls back to metaTitle / display title. */
+  serpTitle?: string;
+  /** none = skip "| Stats Calculator Online" so the full 60 chars sell the click */
+  brandMode?: "full" | "none";
   keywords?: string[];
   /** Extra phrase injected into the meta description lead */
   blurb?: string;
@@ -12,31 +16,43 @@ export type SeoTarget = {
 
 export const seoBySlug: Record<string, SeoTarget> = {
   "prime-number-checker": {
-    metaTitle: "Free Prime Number Checker Online",
+    metaTitle: "Prime Number Checker",
+    serpTitle: "Prime Number Checker — Instant Free Yes/No",
+    brandMode: "none",
     keywords: [
       "prime number checker",
       "prime checker",
       "prime check",
+      "prime number check",
       "check prime",
+      "check if prime",
+      "check for prime",
       "check prime number",
       "check prime number online",
       "prime number calculator",
       "prime number calculator online",
       "prime number finder",
+      "prime number solver",
+      "prime number tester",
       "prime numbers calculator",
       "prime numbers checker",
       "prime numbers check",
       "prime number lookup",
       "prime number test",
       "prime number checker online",
+      "prime no checker",
       "test prime number",
+      "is 2 a prime number calculator",
       "is 3 a prime number calculator",
+      "is 4 a prime number calculator",
+      "is 7 a prime number calculator",
       "is prime calculator",
       "calculator prime",
       "prime calculator",
+      "prime counter",
     ],
     blurb:
-      "Free prime number checker — enter any integer and get an instant Yes/No result. No signup, works in your browser.",
+      "Check if any number is prime in one click. Instant Yes/No prime number checker — free, no signup, works in your browser.",
   },
   "sample-standard-deviation-calculator": {
     metaTitle: "Free SD Calculator Online",
@@ -167,6 +183,8 @@ export const seoBySlug: Record<string, SeoTarget> = {
   },
   "mean-median-mode-calculator": {
     metaTitle: "Mean Median Mode Calculator",
+    serpTitle: "Mean Median Mode Calculator — Free Online",
+    brandMode: "none",
     keywords: [
       "mean median mode calculator",
       "mean median and mode calculator",
@@ -185,6 +203,8 @@ export const seoBySlug: Record<string, SeoTarget> = {
   },
   "mode-calculator": {
     metaTitle: "Mode Calculator",
+    serpTitle: "Mode Calculator — Find the Most Frequent Value",
+    brandMode: "none",
     keywords: [
       "mode calculator",
       "modes calculator",
@@ -193,23 +213,33 @@ export const seoBySlug: Record<string, SeoTarget> = {
       "statistics mode calculator",
       "calculator with mode",
       "mode mean and median calculator",
+      "mode mean median calculator",
+      "mode median and mean calculator",
     ],
-    blurb: "Free mode calculator — find the most frequent value(s) in your data set instantly.",
+    blurb: "Free mode calculator — paste your list and get the most frequent value(s) instantly. No signup.",
   },
   "fraction-calculator": {
     metaTitle: "Fraction Calculator",
+    serpTitle: "Fraction Calculator — Add Subtract Multiply Divide",
+    brandMode: "none",
     keywords: [
       "fraction calculator",
       "fractions calculator",
       "calculator fractions",
       "calculator for fractions",
+      "calculator fraction",
       "fraction calculater",
+      "fraction coculator",
+      "fraction calendar",
       "proper fraction calculator",
+      "fractions generator",
       "calcolatrice con frazioni online",
       "estimating fractions calculator",
       "simplest form calculator",
+      "simplify mixed fractions calculator",
     ],
-    blurb: "Free fraction calculator — add, subtract, multiply, or divide fractions and simplify the answer.",
+    blurb:
+      "Free fraction calculator — add, subtract, multiply, or divide any two fractions and get a simplified answer instantly.",
   },
   "average-calculator": {
     metaTitle: "Average Calculator",

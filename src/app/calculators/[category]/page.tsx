@@ -61,6 +61,7 @@ export async function generateMetadata({
       siteConfig.name,
       siteConfig.domain,
     ],
+    brandMode: targeted?.brandMode ?? "full",
   });
 }
 

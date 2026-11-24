@@ -8,24 +8,38 @@ export const DESC_MAX = 155;
 /** Avoid "too short" flags from auditors. */
 export const DESC_MIN = 70;
 
+export type BrandMode = "full" | "none";
+
 export function clampText(text: string, max: number) {
   const clean = text.replace(/\s+/g, " ").trim();
   if (clean.length <= max) return clean;
   return `${clean.slice(0, max - 1).replace(/\s+\S*$/, "").trimEnd()}…`;
 }
 
-/** Build `Page | Brand` within TITLE_MAX. */
-export function seoTitle(pageTitle: string, max = TITLE_MAX) {
-  const brand = siteConfig.name;
-  const suffix = ` | ${brand}`;
-  const budget = Math.max(12, max - suffix.length);
+/**
+ * Build a SERP title. Use brandMode "none" for high-impression tool queries
+ * where "| Stats Calculator Online" wastes budget and can suppress CTR
+ * (e.g. prime checker, fraction calculator).
+ */
+export function seoTitle(pageTitle: string, max = TITLE_MAX, brandMode: BrandMode = "full") {
   let left = pageTitle.replace(/\s+/g, " ").trim();
-  // Drop filler phrases that inflate titles
   left = left
     .replace(/\s*[—-]\s*Free Online Tools?/gi, "")
     .replace(/\s*[—-]\s*Free Online Tool/gi, "")
     .replace(/\s+Calculator Calculator$/i, " Calculator")
     .trim();
+
+  // Avoid "Statistics Calculator | Stats Calculator Online" redundancy
+  const alreadyBranded =
+    /stats?\s*calculator\s*online/i.test(left) ||
+    left.toLowerCase().includes(siteConfig.domain.toLowerCase());
+
+  if (brandMode === "none" || alreadyBranded) {
+    return clampText(left, max);
+  }
+
+  const suffix = ` | ${siteConfig.name}`;
+  const budget = Math.max(12, max - suffix.length);
   if (left.length > budget) left = clampText(left, budget);
   return `${left}${suffix}`;
 }
@@ -48,6 +62,8 @@ type PageMetaInput = {
   keywords?: string[];
   type?: "website" | "article";
   noIndex?: boolean;
+  /** full = append brand; none = use full 60-char title for CTR */
+  brandMode?: BrandMode;
 };
 
 /** Consistent canonical + Open Graph + Twitter for every indexable page. */
@@ -58,8 +74,9 @@ export function buildPageMetadata({
   keywords,
   type = "website",
   noIndex = false,
+  brandMode = "full",
 }: PageMetaInput): Metadata {
-  const t = seoTitle(title);
+  const t = seoTitle(title, TITLE_MAX, brandMode);
   const d = seoDescription(description);
   const url = path.startsWith("http") ? path : path;
 

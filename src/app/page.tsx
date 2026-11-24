@@ -8,11 +8,20 @@ import { buildPageMetadata } from "@/lib/seo/meta";
 import { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Free Statistics Calculator Online",
+  title: "Statistics Calculator — Free Online Stats Tools",
   description:
-    "Free statistics calculator & stats tools online — standard deviation, t-test, mode, fractions, prime checker, and 200+ calculators with formulas and PDF exports.",
+    "Free statistics calculator online. Instant t-tests, standard deviation, mean median mode, probability, regression, and 200+ calculators with formulas and steps. No signup.",
   path: "/",
-  keywords: [...siteConfig.keywords, "prime number checker", "mode calculator", "fraction calculator"],
+  keywords: [
+    ...siteConfig.keywords,
+    "free statistics calculator",
+    "online statistics calculator",
+    "online stats calculator",
+    "best statistics calculator online",
+    "calculator for statistics online",
+    "statistics online calculator",
+  ],
+  brandMode: "none",
 });
 
 const homeFaqs = [
@@ -107,7 +116,7 @@ export default function HomePage() {
               Stats Calculator Online
             </p>
             <h1 className="mt-5 max-w-xl text-xl font-medium leading-snug text-[var(--brand-ink)] md:text-2xl">
-              Free statistics calculator online — SD, t-tests, percentages, probability, and more
+              Free statistics calculator online for t-tests, SD, mean median mode, and more
             </h1>
             <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[var(--brand-ink-soft)] md:text-base">
               {siteConfig.definitionAnswer}

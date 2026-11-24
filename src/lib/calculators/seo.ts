@@ -9,6 +9,24 @@ import { buildPageMetadata, seoDescription } from "@/lib/seo/meta";
 
 export { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
 
+const STATS_CATEGORIES = new Set([
+  "descriptive-statistics",
+  "hypothesis-testing",
+  "probability",
+  "confidence-interval",
+  "regression-analysis",
+  "correlation",
+  "multivariate-analysis",
+  "survival-analysis",
+  "experimental-design",
+  "causal-inference",
+  "reliability-analysis",
+  "cluster-analysis",
+  "measurement-systems",
+  "matrix-algebra",
+  "chart",
+]);
+
 export function calculatorKeywords(calc: CalculatorDef): string[] {
   const cat = getCategory(calc.category);
   const display = calculatorDisplayTitle(calc);
@@ -19,14 +37,16 @@ export function calculatorKeywords(calc: CalculatorDef): string[] {
     `${calc.title} calculator`,
     `free ${display.toLowerCase()}`,
     "online calculator",
-    "statistics calculator",
-    "stats calculator",
     "free online calculator",
     "step by step",
     "formulas",
     siteConfig.name,
     siteConfig.domain,
   ];
+  // Only attach brand stats queries on actual stats tools — keeps math pages topically clean
+  if (STATS_CATEGORIES.has(calc.category)) {
+    base.push("statistics calculator", "stats calculator");
+  }
   if (cat) base.push(cat.name, `${cat.name} calculator`);
   if (calc.keywords?.length) base.push(...calc.keywords);
   base.push(...targeted);
@@ -38,19 +58,21 @@ export function calculatorMetaDescription(calc: CalculatorDef): string {
   const display = calculatorDisplayTitle(calc);
   const blurb = seoBySlug[calc.slug]?.blurb;
   const raw = blurb
-    ? `${blurb} ${calc.description}. Formulas, steps, and free PDF/CSV exports on ${siteConfig.name}.`
-    : `Free ${display} — ${calc.description}. ${guide.overview} Instant results with formulas, steps, and PDF exports on ${siteConfig.name}.`;
+    ? `${blurb} ${calc.description}.`
+    : `Free ${display} — ${calc.description}. ${guide.overview} Instant results with clear formulas and steps.`;
   return seoDescription(raw);
 }
 
 export function buildCalculatorMetadata(calc: CalculatorDef): Metadata {
   const path = `/calculators/${calc.category}/${calc.slug}`;
+  const targeted = seoBySlug[calc.slug];
   return buildPageMetadata({
-    title: calculatorDisplayTitle(calc),
+    title: targeted?.serpTitle ?? calculatorDisplayTitle(calc),
     description: calculatorMetaDescription(calc),
     path,
     keywords: calculatorKeywords(calc),
     type: "article",
+    brandMode: targeted?.brandMode ?? "full",
   });
 }
 
@@ -59,7 +81,10 @@ export function calculatorAnswerBlock(calc: CalculatorDef): string {
   const outline = getCalculatorOutline(calc);
   const definition = outline.whatIs.definition.replace(/\s+/g, " ").trim();
   const display = calculatorDisplayTitle(calc);
-  const lead = `The free ${display} on ${siteConfig.name} computes ${calc.description.toLowerCase()}. ${definition}`;
+  const lead =
+    calc.slug === "prime-number-checker"
+      ? `A prime number checker tells you whether an integer is prime. Use this free prime number checker to enter any whole number and get an instant Yes/No result—no signup required. ${definition}`
+      : `The free ${display} computes ${calc.description.toLowerCase()}. ${definition}`;
   if (lead.length <= 320) return lead;
   return `${lead.slice(0, 317).replace(/\s+\S*$/, "").trimEnd()}…`;
 }

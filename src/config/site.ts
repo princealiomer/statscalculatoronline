@@ -10,7 +10,7 @@ export const siteConfig = {
     "Stats Calculator Online is a free statistics calculator and math toolkit with step-by-step solutions, textbook formulas, APA write-ups, and free branded PDF reports that include your inputs, formulas applied, worked steps, and final results (plus Word/CSV). Hypothesis tests, descriptive statistics, probability, regression, algebra, finance, and more.",
   /** Keep ≤155 chars for SEO crawlers */
   metaDescription:
-    "Free statistics calculator online: SD, t-test, percentages, probability, regression, and 200+ math tools with formulas, steps, and PDF exports. No signup.",
+    "Free statistics calculator online — run t-tests, standard deviation, mean/median/mode, probability, and 200+ stats & math tools. Instant results, no signup.",
   /**
    * 40–60 word answer block for “What is Stats Calculator Online?” (AI extractability).
    * Keep self-contained so AI systems can cite it without surrounding context.
@@ -23,7 +23,7 @@ export const siteConfig = {
   twitter: "@statscalculatoronline",
   contactEmail: "hello@statscalculatoronline.com",
   /** ISO date shown as freshness signal on key pages */
-  contentUpdated: "2026-11-24",
+  contentUpdated: "2026-11-25",
   /** Search Console HTML-tag verification content */
   googleSiteVerification: "JGq8tz4ab7qaJgvaz0TguRXWR33ow1K7Q1J6DvLq4qI",
   /** Google Tag Manager container */
