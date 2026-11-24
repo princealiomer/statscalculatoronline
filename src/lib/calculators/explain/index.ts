@@ -170,6 +170,10 @@ function mergeGuide(
 
 function formulasForEngine(engine: string, title: string): FormulaBlock[] {
   const e = engine.toLowerCase();
+  const fromGuide = engineGuides[ENGINE_ALIASES[engine] ?? engine]?.formulas;
+  if (fromGuide?.length) return fromGuide;
+  if (engineGuides[engine]?.formulas?.length) return engineGuides[engine]!.formulas!;
+
   if (e.includes("t-test") || e.includes("sample-t") || e === "paired-t") {
     return engineGuides["one-sample-t"]?.formulas ?? [];
   }
@@ -187,16 +191,14 @@ function formulasForEngine(engine: string, title: string): FormulaBlock[] {
   if (e.includes("percent") || e.includes("interest") || e.includes("loan")) {
     return engineGuides.percentage?.formulas ?? [];
   }
+  if (e.startsWith("geo-") && engineGuides[e]?.formulas?.length) {
+    return engineGuides[e]!.formulas!;
+  }
   if (title.toLowerCase().includes("quadratic")) {
     return engineGuides.quadratic?.formulas ?? [];
   }
-  return [
-    {
-      label: "General relation",
-      latex: "\\text{output}=f(\\text{inputs})",
-      note: "Exact formula for this tool is shown in the steps after you calculate.",
-    },
-  ];
+  // Prefer no fake formula over repeating output=f(inputs)
+  return [];
 }
 
 function buildFallback(calc: CalculatorDef): CalculatorGuideContent {
@@ -219,7 +221,6 @@ function buildFallback(calc: CalculatorDef): CalculatorGuideContent {
     ],
     tips: [
       ...(cat.tips ?? []),
-      "Use the free APA/AMA/plain write-up and PDF/Word/CSV exports to document your work.",
       "Related calculators in this category appear at the bottom of the page.",
     ],
   };

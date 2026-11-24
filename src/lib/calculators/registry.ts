@@ -259,7 +259,7 @@ export const calculators: CalculatorDef[] = [
   { category: "geometry-solids", slug: "cone-calculator", title: "Cone", description: "Volume, slant height, and surfaces", engine: "geo-cone" },
   { category: "geometry-solids", slug: "cube-solid-calculator", title: "Cube", description: "Volume, surface, and space diagonal", engine: "geo-cube" },
   { category: "geometry-solids", slug: "rectangular-prism-calculator", title: "Rectangular Prism", description: "Box volume, surface, and diagonal", engine: "geo-box" },
-  { category: "geometry-solids", slug: "pyramid-calculator", title: "Pyramid", description: "Volume of a square-base pyramid", engine: "geo-pyramid" },
+  { category: "geometry-solids", slug: "pyramid-calculator", title: "Square-Base Pyramid", description: "Volume of a right square-base pyramid from base side and height", engine: "geo-pyramid" },
   { category: "geometry-solids", slug: "hemisphere-calculator", title: "Hemisphere", description: "Volume and surface areas", engine: "geo-hemisphere" },
 
   // Conversions

@@ -663,6 +663,17 @@ export const seoBySlug: Record<string, SeoTarget> = {
       "radius of a cone calculator",
     ],
   },
+  "pyramid-calculator": {
+    metaTitle: "Square-Base Pyramid Volume Calculator",
+    keywords: [
+      "pyramid calculator",
+      "square base pyramid volume",
+      "pyramid volume calculator",
+      "volume of a pyramid calculator",
+    ],
+    blurb:
+      "Free square-base pyramid volume calculator — enter base side and vertical height for V = (1/3)·b²·h.",
+  },
   "hemisphere-calculator": {
     metaTitle: "Hemisphere Calculator",
     keywords: ["hemisphere calculator", "volume of hemisphere calculator", "hemisphere surface area calculator"],

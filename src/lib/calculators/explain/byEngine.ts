@@ -754,6 +754,122 @@ export const engineGuides: Record<string, Partial<CalculatorGuideContent>> = {
     tips: ["Confirm you need a full sphere vs hemisphere."],
   },
 
+  "geo-pyramid": {
+    overview:
+      "This square-base pyramid volume calculator finds the 3D volume of a right pyramid with a square base from base side length and perpendicular height.",
+    whenToUse:
+      "Use it when you know the base edge length and the vertical height from the center of the base to the apex—not the slant height along a face.",
+    howTo: [
+      "Enter the base side length (b) and the perpendicular height (h).",
+      "Use the same length unit for both measurements.",
+      "Read the volume in cubic units and check the step-by-step breakdown.",
+    ],
+    formulas: [
+      {
+        label: "Volume",
+        latex: "V=\\dfrac{1}{3} b^{2} h",
+        note: "b = square base side length; h = perpendicular height from base center to apex; V is in cubic units of that length.",
+      },
+      {
+        label: "Base area",
+        latex: "A_{\\mathrm{base}}=b^{2}",
+        note: "A pyramid’s volume is one-third of a prism with the same base and height.",
+      },
+    ],
+    interpretation: [
+      "Doubling height doubles volume; doubling the base side multiplies volume by four.",
+      "If the result looks unrealistic, you may have used slant height or mixed units.",
+    ],
+    tips: [
+      "Do not use slant height for volume—slant height runs along a triangular face.",
+      "Convert cm and m to the same unit before multiplying.",
+    ],
+    example: "b = 6, h = 8 → V = (1/3)·36·8 = 96 cubic units.",
+  },
+
+  "geo-cone": {
+    overview: "Volume and surface measures for a right circular cone from radius and height.",
+    howTo: ["Enter radius r and perpendicular height h.", "Read volume and surface outputs shown."],
+    formulas: [
+      { label: "Volume", latex: "V=\\dfrac{1}{3}\\pi r^{2} h", note: "h is vertical height, not slant height." },
+      { label: "Slant height", latex: "l=\\sqrt{r^{2}+h^{2}}" },
+      { label: "Lateral area", latex: "A_{\\mathrm{lat}}=\\pi r l" },
+    ],
+    interpretation: ["A cone is one-third the volume of a cylinder with the same r and h."],
+    tips: ["Keep r and h in the same units."],
+  },
+
+  "geo-cylinder": {
+    overview: "Volume and surface area of a right circular cylinder.",
+    howTo: ["Enter radius and height.", "Read volume and surface area."],
+    formulas: [
+      { label: "Volume", latex: "V=\\pi r^{2} h" },
+      { label: "Lateral area", latex: "A_{\\mathrm{lat}}=2\\pi r h" },
+      { label: "Total surface", latex: "A_{\\mathrm{tot}}=2\\pi r(h+r)" },
+    ],
+    tips: ["Confirm open vs closed cylinder if you only need lateral area."],
+  },
+
+  "geo-sphere": {
+    overview: "Volume and surface area of a sphere from its radius.",
+    howTo: ["Enter radius r.", "Read volume and surface area."],
+    formulas: [
+      { label: "Volume", latex: "V=\\dfrac{4}{3}\\pi r^{3}" },
+      { label: "Surface area", latex: "A=4\\pi r^{2}" },
+    ],
+    tips: ["Use the hemisphere calculator if you only need half a sphere."],
+  },
+
+  "geo-hemisphere": {
+    overview: "Volume and surface areas of a hemisphere from radius.",
+    howTo: ["Enter radius r.", "Read volume, curved surface, and total surface."],
+    formulas: [
+      { label: "Volume", latex: "V=\\dfrac{2}{3}\\pi r^{3}" },
+      { label: "Curved surface", latex: "A_{\\mathrm{curved}}=2\\pi r^{2}" },
+      { label: "Total surface", latex: "A_{\\mathrm{tot}}=3\\pi r^{2}" },
+    ],
+    tips: ["Total surface includes the circular base."],
+  },
+
+  "geo-cube": {
+    overview: "Volume, surface area, and space diagonal of a cube from side length.",
+    howTo: ["Enter side length s.", "Read volume, surface, and diagonal."],
+    formulas: [
+      { label: "Volume", latex: "V=s^{3}" },
+      { label: "Surface area", latex: "A=6s^{2}" },
+      { label: "Space diagonal", latex: "d=s\\sqrt{3}" },
+    ],
+  },
+
+  "geo-box": {
+    overview: "Volume and surface area of a rectangular box (rectangular prism).",
+    howTo: ["Enter length, width, and height.", "Read volume and surface area."],
+    formulas: [
+      { label: "Volume", latex: "V=lwh" },
+      { label: "Surface area", latex: "A=2(lw+lh+wh)" },
+    ],
+    tips: ["Keep all three edges in the same unit."],
+  },
+
+  "geo-circle": {
+    overview: "Circumference, area, and diameter relations for a circle.",
+    howTo: ["Enter radius (or the value the field asks for).", "Read circumference and area."],
+    formulas: [
+      { label: "Area", latex: "A=\\pi r^{2}" },
+      { label: "Circumference", latex: "C=2\\pi r" },
+      { label: "Diameter", latex: "d=2r" },
+    ],
+  },
+
+  "geo-distance-2d": {
+    overview: "Euclidean distance between two points in the plane.",
+    howTo: ["Enter (x₁, y₁) and (x₂, y₂).", "Read the distance."],
+    formulas: [
+      { label: "Distance", latex: "d=\\sqrt{(x_2-x_1)^{2}+(y_2-y_1)^{2}}" },
+    ],
+    tips: ["Use the same coordinate units on both axes."],
+  },
+
   "unit-convert": {
     overview: "Unit conversion applies a scale factor (and sometimes an offset) between measurement systems.",
     howTo: ["Enter the value and choose from/to units.", "Read the converted result."],

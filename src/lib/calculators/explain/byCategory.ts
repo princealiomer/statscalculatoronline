@@ -75,11 +75,27 @@ export const categoryGuides: Record<
   },
   "geometry-plane": {
     whenToUse: "Use plane geometry calculators for 2D lengths, areas, and coordinate geometry.",
-    tips: ["Keep units consistent across all inputs."],
+    tips: [
+      "Keep units consistent across all inputs.",
+      "For distance and slope, use the same scale on both axes.",
+    ],
+    interpretation: [
+      "Area results are in square units of your length unit.",
+      "Coordinate tools assume a flat Cartesian plane.",
+    ],
   },
   "geometry-solids": {
-    whenToUse: "Use solid geometry calculators for volumes and surface areas of 3D shapes.",
-    tips: ["Distinguish lateral area from total surface area."],
+    whenToUse:
+      "Use solid geometry calculators for volumes and surface areas of 3D shapes from the dimensions labeled on each page.",
+    tips: [
+      "Use perpendicular (vertical) height for volume—not slant height along a face.",
+      "Keep every length in the same unit before multiplying.",
+      "Distinguish lateral area from total surface area when both are shown.",
+    ],
+    interpretation: [
+      "Volume is in cubic units of your length unit.",
+      "A pyramid or cone holds one-third the volume of a prism or cylinder with the same base and height.",
+    ],
   },
   conversions: {
     whenToUse: "Use converters to move between unit systems without manual lookup tables.",

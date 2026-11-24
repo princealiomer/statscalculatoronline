@@ -7,38 +7,77 @@ import type {
   FormulaBlock,
 } from "./types";
 
-function isStatsCategory(category: string) {
-  return [
-    "descriptive-statistics",
-    "hypothesis-testing",
-    "probability",
-    "confidence-interval",
-    "regression-analysis",
-    "correlation",
-    "multivariate-analysis",
-    "survival-analysis",
-    "experimental-design",
-    "causal-inference",
-    "reliability-analysis",
-    "cluster-analysis",
-    "measurement-systems",
-    "matrix-algebra",
-    "chart",
-  ].includes(category);
+type Domain =
+  | "stats"
+  | "geometry"
+  | "math"
+  | "finance"
+  | "physics"
+  | "conversion"
+  | "health"
+  | "time"
+  | "text"
+  | "general";
+
+function domainFor(category: string): Domain {
+  if (
+    [
+      "descriptive-statistics",
+      "hypothesis-testing",
+      "probability",
+      "confidence-interval",
+      "regression-analysis",
+      "correlation",
+      "multivariate-analysis",
+      "survival-analysis",
+      "experimental-design",
+      "causal-inference",
+      "reliability-analysis",
+      "cluster-analysis",
+      "measurement-systems",
+      "matrix-algebra",
+      "chart",
+    ].includes(category)
+  ) {
+    return "stats";
+  }
+  if (category === "geometry-plane" || category === "geometry-solids") return "geometry";
+  if (
+    ["algebra", "fractions", "general-math", "discrete-mathematics", "trigonometry"].includes(
+      category,
+    )
+  ) {
+    return "math";
+  }
+  if (["finance", "credit-analysis", "percentages", "academic-grades"].includes(category)) {
+    return "finance";
+  }
+  if (category === "physics" || category === "chemistry") return "physics";
+  if (category === "conversions") return "conversion";
+  if (category === "health") return "health";
+  if (category === "time") return "time";
+  if (["text-tools", "random-tools", "games"].includes(category)) return "text";
+  return "general";
 }
 
-function isFinanceLike(category: string) {
-  return ["finance", "credit-analysis", "percentages", "academic-grades"].includes(category);
+function uniqueStrings(items: string[]) {
+  return [...new Set(items.map((s) => s.trim()).filter(Boolean))];
 }
 
-function defaultFormulas(title: string): FormulaBlock[] {
-  return [
-    {
-      label: "General mapping",
-      latex: "\\text{result}=f(\\text{inputs})",
-      note: `Exact ${title} equations appear above the interactive calculator and in the formula cards below.`,
-    },
-  ];
+function uniqueFormulas(blocks: FormulaBlock[]) {
+  const seen = new Set<string>();
+  const out: FormulaBlock[] = [];
+  for (const f of blocks) {
+    const key = `${f.label}|${f.latex}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(f);
+  }
+  return out;
+}
+
+function isGenericFormula(f: FormulaBlock) {
+  return /\\text\{output\}|\\text\{result\}|f\(\\text\{inputs\}\)/i.test(f.latex);
 }
 
 export function buildOutline(
@@ -48,221 +87,519 @@ export function buildOutline(
   const tool = calc.title;
   const cat = getCategory(calc.category);
   const catName = cat?.name ?? "this topic";
-  const stats = isStatsCategory(calc.category);
-  const finance = isFinanceLike(calc.category);
+  const domain = domainFor(calc.category);
+  const desc = calc.description.replace(/\.*$/, "");
 
   const definition =
     guide.overview ||
-    `The ${tool} calculator on ${siteConfig.name} is a free online tool that computes ${tool.toLowerCase()} results from your inputs, then shows formulas, steps, and exportable reports.`;
+    `The ${tool} calculator on ${siteConfig.name} computes ${desc.toLowerCase()}. Enter the values shown on this page to get an instant result with the working formula.`;
 
   const problemSolved =
     guide.whenToUse ||
-    (stats
-      ? `It closes the gap between raw numbers and a defensible statistical conclusion—so you are not guessing whether a difference, association, or estimate is real.`
-      : finance
-        ? `It removes spreadsheet guesswork for ${tool.toLowerCase()} so you can compare options with transparent math instead of opaque rules of thumb.`
-        : `It turns a multi-step ${tool.toLowerCase()} problem into a checked, explainable answer with the underlying formula visible.`);
+    (domain === "stats"
+      ? `It helps you turn data into a clear statistical result—so you can tell whether a difference, association, or estimate is supported by the numbers.`
+      : domain === "geometry"
+        ? `It replaces hand calculations for ${tool.toLowerCase()} with a checked volume, area, or length from the dimensions you enter.`
+        : domain === "math"
+          ? `It solves the ${tool.toLowerCase()} problem quickly and shows the formula so you can verify the answer.`
+          : domain === "finance"
+            ? `It removes spreadsheet guesswork for ${tool.toLowerCase()} so you can compare options with transparent math.`
+            : domain === "physics"
+              ? `It evaluates the standard ${tool.toLowerCase()} relation from the quantities you enter, with matching units in mind.`
+              : domain === "conversion"
+                ? `It converts between units without looking up factors or risking an offset mistake.`
+                : `It turns a multi-step ${tool.toLowerCase()} task into a clear, explainable answer.`);
 
-  const keyComponents = [
-    `Primary inputs for ${tool} (typed values, pasted lists, or table-style fields on this page)`,
-    `Optional settings such as sample vs population, confidence level, sidedness, or units when the method requires them`,
-    `The computational engine for “${calc.engine}” that returns the statistic, interval, or derived quantity`,
-    `On-page formula cards, step-by-step show-work, and free APA / PDF / Word / CSV exports on ${siteConfig.name}`,
-  ];
+  const keyComponents =
+    domain === "geometry"
+      ? [
+          `The dimension fields on this page (matched to ${tool.toLowerCase()} inputs)`,
+          "Consistent length units for every measurement you enter",
+          "The geometry formula used for this shape",
+          "Step-by-step show-work after you calculate",
+        ]
+      : domain === "math"
+        ? [
+            `The inputs shown for ${tool.toLowerCase()}`,
+            "The algebraic or arithmetic formula for this tool",
+            "Step-by-step working after you calculate",
+          ]
+        : domain === "stats"
+          ? [
+              "Data or parameter fields required by this method",
+              "Options such as sample vs population, α, or sidedness when shown",
+              "The test statistic, estimate, or interval returned in Results",
+              "Formula cards and optional report exports",
+            ]
+          : domain === "finance"
+            ? [
+                "Money, rate, and time fields shown on this page",
+                "The compounding or payment formula used",
+                "Results with intermediate steps where available",
+              ]
+            : [
+                `The inputs shown for ${tool}`,
+                "The formula or conversion used by this tool",
+                "Clear results after you calculate",
+              ];
 
-  const value = stats
-    ? `Tracking ${tool.toLowerCase()} matters because decisions about product, content, experiments, and research claims depend on whether an effect is distinguishable from noise—and whether the estimate is precise enough to act on.`
-    : `Using a transparent ${tool.toLowerCase()} calculation protects rankings of options, budgets, and user-facing estimates from silent arithmetic errors that erode trust and waste effort.`;
+  const value =
+    domain === "stats"
+      ? `Tracking ${tool.toLowerCase()} matters because product, research, and experiment decisions depend on whether an effect is distinguishable from noise—and whether the estimate is precise enough to act on.`
+      : domain === "geometry"
+        ? `Getting ${tool.toLowerCase()} right matters whenever volume, surface, or length drives materials, weight, cost, or a homework grade. A wrong height or mixed units silently ruins the answer.`
+        : domain === "math"
+          ? `A correct ${tool.toLowerCase()} result saves time on homework, exams, and everyday number work—and the on-page formula helps you learn the method, not just the answer.`
+          : domain === "finance"
+            ? `Transparent ${tool.toLowerCase()} math helps you compare options without opaque spreadsheet shortcuts.`
+            : `A clear ${tool.toLowerCase()} calculation helps you avoid silent arithmetic mistakes when the result drives a decision.`;
 
-  const withoutIt = stats
-    ? `Without ${tool}, teams often ship changes on anecdote, misread seasonality as a breakthrough, or miss a real drop because nobody quantified uncertainty. That burns crawl budget–style effort: experiments you never power, pages you never prioritize, and journeys you never diagnose.`
-    : `Without a clear ${tool.toLowerCase()} workflow you risk inconsistent hand calculations, conflicting spreadsheet versions, and decisions that cannot be audited later.`;
+  const withoutIt =
+    domain === "stats"
+      ? `Without ${tool}, teams often ship changes on anecdote or miss a real shift because nobody quantified uncertainty.`
+      : domain === "geometry"
+        ? `Without a clear ${tool.toLowerCase()} check, people mix slant height with vertical height, mix units, or forget a constant like ⅓—and build or grade from the wrong number.`
+        : `Without a clear ${tool.toLowerCase()} workflow you risk inconsistent hand calculations and answers that are hard to recheck.`;
 
   const whenToRely =
     guide.whenToUse ||
-    `Use ${tool} for day-to-day checks when inputs change (new sample, new rate, new sizes). Use it in macro reviews when you set benchmarks, re-baseline a model, or document methods for a report or thesis.`;
+    (domain === "geometry"
+      ? `Use ${tool} whenever you know the shape’s dimensions and need volume, area, or related measures in matching units.`
+      : domain === "math"
+        ? `Use ${tool} for homework checks, quick evaluations, and verifying a manual solution.`
+        : `Use ${tool} when the inputs on this page are known and you need a transparent result.`);
 
-  const roles = stats
-    ? [
-        {
-          role: "SEO & growth specialists",
-          uses: [
-            `Compare segment or page cohorts with ${tool} before declaring a “winner.”`,
-            "Separate true decay or cannibalization signals from noisy short windows.",
-            "Document test results for stakeholders with APA-style exports from this page.",
-          ],
-        },
-        {
-          role: "Developers & tech teams",
-          uses: [
-            `Quantify latency, error-rate, or conversion shifts with ${tool} instead of eyeballing charts.`,
-            "Validate that a deploy changed a metric beyond sampling variation.",
-            "Pair numeric results with logs to isolate broken scripts or slow routes.",
-          ],
-        },
-        {
-          role: "Content creators & analysts",
-          uses: [
-            `Check whether engagement or rating differences for ${tool.toLowerCase()} contexts are meaningful.`,
-            "Align claims with search intent by backing them with transparent math.",
-            "Export plain-language write-ups for briefs and post-mortems.",
-          ],
-        },
-      ]
-    : [
-        {
-          role: "Operators & planners",
-          uses: [
-            `Run ${tool} whenever inputs or assumptions change.`,
-            "Keep a shareable record via CSV / Word export.",
-            "Compare scenarios side by side with the same formula.",
-          ],
-        },
-        {
-          role: "Students & educators",
-          uses: [
-            `Verify homework and lab answers for ${tool}.`,
-            "Show the formula and sample calculation in class.",
-            "Export APA-style text for methods sections when applicable.",
-          ],
-        },
-        {
-          role: "Builders & analysts",
-          uses: [
-            "Cross-check spreadsheet models against this calculator.",
-            "Trace disagreements to a specific input or assumption.",
-            "Link related tools from the similar-calculators widget.",
-          ],
-        },
-      ];
+  const roles =
+    domain === "geometry"
+      ? [
+          {
+            role: "Students & teachers",
+            uses: [
+              `Check ${tool.toLowerCase()} homework with the same formula taught in class.`,
+              "See how changing base or height scales the result.",
+              "Compare prism vs pyramid (or cylinder vs cone) intuition with related tools.",
+            ],
+          },
+          {
+            role: "Builders & DIY",
+            uses: [
+              "Estimate material volume for pyramidal or solid shapes.",
+              "Keep all measurements in one unit before calculating.",
+              "Cross-check a sketch dimension against the calculator output.",
+            ],
+          },
+          {
+            role: "Design & engineering",
+            uses: [
+              "Sanity-check 3D model volumes from base and height.",
+              "Pair volume with density for a rough mass estimate elsewhere.",
+              "Document the dimensions used for a quote or cut list.",
+            ],
+          },
+        ]
+      : domain === "math"
+        ? [
+            {
+              role: "Students",
+              uses: [
+                `Verify ${tool.toLowerCase()} answers step by step.`,
+                "Practice with sample values, then try your own.",
+                "Learn the formula alongside the numeric result.",
+              ],
+            },
+            {
+              role: "Teachers",
+              uses: [
+                "Demo the method live with different inputs.",
+                "Show common mistakes (domain errors, wrong operation).",
+                "Point students to related algebra or fraction tools.",
+              ],
+            },
+            {
+              role: "Everyday users",
+              uses: [
+                `Get a fast ${tool.toLowerCase()} result without a full CAS.`,
+                "Double-check a phone or spreadsheet answer.",
+                "Keep units and signs consistent with the problem statement.",
+              ],
+            },
+          ]
+        : domain === "stats"
+          ? [
+              {
+                role: "Analysts & researchers",
+                uses: [
+                  `Run ${tool} on cleaned data before drawing conclusions.`,
+                  "Report the statistic, uncertainty, and assumptions together.",
+                  "Export a draft write-up for notes or methods sections.",
+                ],
+              },
+              {
+                role: "Students",
+                uses: [
+                  `Check homework against the ${tool} formula cards.`,
+                  "Compare sample vs population options when shown.",
+                  "Practice reading p-values and intervals carefully.",
+                ],
+              },
+              {
+                role: "Experimenters",
+                uses: [
+                  "Pre-specify α and the primary metric before peeking.",
+                  "Re-run after collecting enough observations.",
+                  "Pair this test with effect size or a related calculator.",
+                ],
+              },
+            ]
+          : [
+              {
+                role: "Practitioners",
+                uses: [
+                  `Run ${tool} whenever inputs change.`,
+                  "Keep a record of the values you used.",
+                  "Compare scenarios with the same formula.",
+                ],
+              },
+              {
+                role: "Students & educators",
+                uses: [
+                  `Verify answers for ${tool}.`,
+                  "Show the formula and a worked example.",
+                  "Discuss units and assumptions out loud.",
+                ],
+              },
+              {
+                role: "Builders & analysts",
+                uses: [
+                  "Cross-check a spreadsheet against this page.",
+                  "Change one input at a time to see sensitivity.",
+                  "Open a related tool when you need a neighboring method.",
+                ],
+              },
+            ];
 
   const scenario =
     guide.example ||
-    (stats
-      ? `A growth team sees a 2.1% conversion lift after a landing-page change. They paste control and treatment data into the ${tool} calculator on ${siteConfig.name}, read the statistic and interval, then decide whether to ship widely or keep testing—avoiding a false win driven by a tiny sample.`
-      : `A planner enters the known inputs for ${tool}, reviews the formula card and sample-style output, exports a CSV for the project folder, then links the same page in the ticket so every teammate uses one source of truth.`);
+    (domain === "geometry"
+      ? `You measure a square base of 6 m and a vertical height of 8 m for a pyramidal roof cap. Enter base = 6 and height = 8 in the ${tool} calculator; volume is (1/3)·6²·8 = 96 m³. If you had used slant height instead of vertical height, the volume would be wrong.`
+      : domain === "math"
+        ? `Enter the values from your problem into the ${tool} calculator, confirm the operation and units, then compare the result and steps to your handwritten work.`
+        : domain === "stats"
+          ? `Paste a clean numeric sample into the ${tool} calculator, choose the options that match your design, then read the primary result with any interval or p-value shown.`
+          : `Enter the known inputs for ${tool}, review the formula and steps, then use the result in your plan or homework.`);
 
-  const formulas = guide.formulas?.length ? guide.formulas : defaultFormulas(tool);
+  const rawFormulas = uniqueFormulas(
+    (guide.formulas?.length ? guide.formulas : []).filter((f) => !isGenericFormula(f)),
+  );
+  const formulas = rawFormulas;
 
   const variableBreakdown =
-    formulas.length > 0
-      ? [
-          ...formulas.slice(0, 4).map((f) => `${f.label}: expressed as ${f.latex}${f.note ? ` — ${f.note}` : ""}`),
-          "Inputs: the numbers you type or paste in the calculator panel above.",
-          "Output: the primary statistic or quantity plus supporting fields (p-values, intervals, totals) shown in Results.",
-        ]
-      : [
-          "Inputs feed the method; the engine returns the primary result and supporting diagnostics.",
-        ];
+    domain === "geometry"
+      ? uniqueStrings([
+          ...formulas.slice(0, 3).map((f) => f.note || `${f.label} is shown in the formula card above.`),
+          "Use the same length unit for every dimension (cm with cm, m with m).",
+          "Volume outputs are in cubic units of that length; area outputs are in square units.",
+        ])
+      : domain === "math"
+        ? uniqueStrings([
+            ...formulas.slice(0, 3).map((f) => f.note || `${f.label}: see the rendered formula card.`),
+            "Match variable names on the formula cards to the labeled fields above.",
+            "Watch domain restrictions (division by zero, even roots of negatives, logs of non-positives).",
+          ])
+        : domain === "stats"
+          ? uniqueStrings([
+              ...formulas.slice(0, 3).map((f) => f.note || `${f.label}: see the formula card.`),
+              "Inputs: the numbers or groups you enter in the calculator panel.",
+              "Output: the primary statistic plus supporting fields (p-values, intervals, tables) in Results.",
+            ])
+          : uniqueStrings([
+              ...formulas.slice(0, 3).map((f) => f.note || `${f.label}: see the formula card.`),
+              "Inputs feed the method; Results show the primary quantity and any helpers.",
+            ]);
 
   const sampleCalculation =
     guide.example ||
-    `Example workflow: enter a small, known data set (or use Sample data), click Calculate, then match the on-screen ${tool} result to the formula cards. Change one input at a time to see how the output moves—this is the fastest way to internalize the metric.`;
+    (domain === "geometry"
+      ? `Example: base side b = 6, height h = 8 → V = (1/3)·b²·h = (1/3)·36·8 = 96 (cubic units). Change h to 4 and the volume halves.`
+      : `Example: enter a small known case, click Calculate, then match the on-screen ${tool} result to the formula cards. Change one input at a time to see how the output moves.`);
 
   const decoding = guide.interpretation?.length
     ? guide.interpretation
-    : stats
+    : domain === "geometry"
       ? [
-          `Good: results that meet your pre-set decision rule (for example p ≤ α, or an interval excluding the null) with adequate sample size.`,
-          `Average / inconclusive: effects that point the “right” way but sit near the decision boundary—collect more data or use a better design.`,
-          `Critical: strong evidence against your claim, assumption failures (tiny n, extreme imbalance), or contradictory companion metrics.`,
+          "Volume should grow when you increase base or height (for a pyramid, base enters squared).",
+          "If the number looks huge or tiny, check whether you mixed meters with centimeters.",
+          "Surface-area tools distinguish lateral area from total area—read the label on each result.",
         ]
-      : [
-          `Good: outputs that match your planning constraints and pass a quick sanity check against known benchmarks.`,
-          `Average: workable but sensitive to one input—stress-test that input.`,
-          `Critical: impossible units, negative quantities where none should exist, or results that flip with tiny input noise.`,
-        ];
+      : domain === "math"
+        ? [
+            "Confirm the operation matches the problem (add vs multiply, simplify vs convert).",
+            "Simplified fractions and exact roots are preferred when the tool offers them.",
+            "Impossible or blank results usually mean a domain error in the inputs.",
+          ]
+        : domain === "stats"
+          ? [
+              "Good: results that meet your pre-set decision rule with adequate sample size.",
+              "Inconclusive: effects near the decision boundary—collect more data or refine the design.",
+              "Critical: assumption failures, tiny n, or contradictory companion metrics.",
+            ]
+          : [
+              "Good: outputs that pass a quick sanity check against a known case.",
+              "Sensitive: results that swing hard when one input changes slightly—double-check that input.",
+              "Critical: impossible units or negative quantities where none should exist.",
+            ];
 
-  const redFlags = [
-    "False alarms from tiny samples or short windows that look “significant” only by chance.",
-    "Seasonality or campaign spikes mistaken for a lasting change.",
-    stats
-      ? "Mixing percentages with counts, or treating dependent observations as independent."
-      : "Unit mismatches (monthly vs annual rates, decimals vs percents).",
-  ];
+  const redFlags = uniqueStrings([
+    ...(domain === "geometry"
+      ? [
+          "Using slant height instead of perpendicular (vertical) height for volume.",
+          "Mixing length units (cm with m) before multiplying.",
+          "Forgetting constants such as ⅓ for a pyramid or ½ for a triangular area.",
+        ]
+      : domain === "math"
+        ? [
+            "Wrong operation for the word problem.",
+            "Leaving an unsimplified fraction when the tool already reduced it.",
+            "Ignoring domain restrictions called out in the tips.",
+          ]
+        : domain === "stats"
+          ? [
+              "Tiny samples that look “significant” only by chance.",
+              "Mixing percentages with counts, or treating dependent rows as independent.",
+              "Seasonality or short windows mistaken for a lasting change.",
+            ]
+          : [
+              "Unit mismatches (monthly vs annual, decimals vs percents).",
+              "Copying the wrong field into a downstream spreadsheet.",
+            ]),
+    ...(guide.tips ?? []).slice(0, 2),
+  ]);
 
-  const hiddenWins = [
-    "Steady improvement across several small samples even when a single test is not decisive.",
-    "Narrower intervals after cleaning outliers or fixing measurement error—precision is a win.",
-    "Alignment between this metric and a companion KPI (traffic quality, revenue, completion rate).",
-  ];
+  const hiddenWins =
+    domain === "geometry"
+      ? [
+          "Catching a slant-vs-vertical height mix-up before you order materials.",
+          "Confirming that doubling height doubles volume while doubling base side multiplies volume by four (square base).",
+          "Using matching units once, then converting the final cubic result if needed.",
+        ]
+      : domain === "stats"
+        ? [
+            "Steady improvement across several samples even when a single test is not decisive.",
+            "Narrower intervals after cleaning measurement error.",
+            "Alignment between this metric and a companion KPI.",
+          ]
+        : [
+            "Matching a textbook worked example before trusting a harder case.",
+            "Finding the sensitive input by changing one value at a time.",
+            "Linking a related calculator when you need the next step in the method.",
+          ];
 
-  const impact = stats
-    ? `Correlate ${tool} outcomes with leading indicators (qualified traffic, activation, revenue per visitor). A statistically clear win that does not move a business KPI still needs a product or intent review.`
-    : `Tie ${tool} outputs to the decision they fund—budget, schedule, or UX change—and re-run after the change lands.`;
+  const impact =
+    domain === "geometry"
+      ? `Tie ${tool} outputs to the decision they support—material volume, weight estimate, or a graded problem—and re-check dimensions if the number looks off.`
+      : domain === "stats"
+        ? `Correlate ${tool} outcomes with the real decision metric. A statistically clear win that does not move the outcome you care about still needs review.`
+        : `Use the ${tool} result in the next step of your work, and keep the inputs you used so you can reproduce the answer.`;
 
-  const workflow = {
-    audit: `Filter to the segment that matters (device, locale, cohort, time window). Paste only clean numeric inputs into the ${tool} calculator; remove labels and empty cells.`,
-    diagnose: `If the result looks wrong, check assumptions (independence, normality, equal variance, units). Use related calculators on ${siteConfig.name} (similar-tools widget) to test an alternate method.`,
-    execute: `Ship the content, code, or process fix suggested by the diagnosis—document the pre/post inputs in the free report export.`,
-    measure: `Wait for enough new observations to re-run ${tool} with comparable power; avoid calling a winner on one noisy day.`,
-  };
+  const workflow =
+    domain === "geometry"
+      ? {
+          audit: `List the dimensions the shape needs (for ${tool}, the labeled fields above). Convert every length to one unit.`,
+          diagnose: `If the result looks wrong, check vertical vs slant height, base vs radius, and unit consistency.`,
+          execute: `Use the volume or area in your estimate, model, or homework write-up.`,
+          measure: `If you cut or build from the number, re-measure the critical dimension and re-run ${tool}.`,
+        }
+      : domain === "math"
+        ? {
+            audit: `Copy the problem values into the labeled fields for ${tool}.`,
+            diagnose: `If the answer disagrees with yours, compare operations and simplify steps.`,
+            execute: `Record the result and the formula used.`,
+            measure: `Try one alternate input set (or the Sample values) to confirm the tool behaves as expected.`,
+          }
+        : domain === "stats"
+          ? {
+              audit: `Filter to the segment that matters. Paste only clean numeric inputs into ${tool}.`,
+              diagnose: `If the result looks wrong, check assumptions and options (sample vs population, sidedness, α).`,
+              execute: `Document the pre/post inputs if you are comparing conditions.`,
+              measure: `Wait for enough new observations before calling a lasting change.`,
+            }
+          : {
+              audit: `Enter the required inputs for ${tool} exactly as labeled.`,
+              diagnose: `If something looks off, re-check units and required fields.`,
+              execute: `Apply the result to your task.`,
+              measure: `Re-run when inputs change.`,
+            };
 
-  const troubleshooting = [
-    {
-      q: `Why isn’t my ${tool} data calculating?`,
-      a: `Confirm every required field is filled, numbers use dots for decimals, and lists are separated by commas/spaces/new lines. Empty rows, letters, or mismatched group sizes often block the engine. Try Sample data, then replace with yours.`,
-    },
-    {
-      q: "What if two metrics contradict each other?",
-      a: stats
-        ? `High volume with a non-significant ${tool} result usually means you lack power or the effect is tiny. Significant ${tool} with flat revenue can mean you optimized a vanity metric. Check sample size, window length, and the companion KPI together.`
-        : `When two derived numbers disagree, lock units and time bases first, then re-run both with identical inputs. Export CSV from each calculator for a side-by-side audit.`,
-    },
-    {
-      q: `Why does ${tool} look alarming after a small change?`,
-      a: `Low sample size, multiple comparisons, or a shifted mix of users can exaggerate movement. Re-run with a longer window, apply a correction when you tested many things, and read the confidence interval—not only a single p-value or point estimate.`,
-    },
-    {
-      q: "Can I trust the free export for publication?",
-      a: `Exports on ${siteConfig.name} are excellent for drafts, homework, and internal notes. For journal or regulatory work, restate assumptions and confirm the exact method (for example Welch vs pooled) matches your protocol.`,
-    },
-  ];
+  const troubleshooting =
+    domain === "geometry"
+      ? [
+          {
+            q: `Why does my ${tool} volume look wrong?`,
+            a: `Confirm you entered perpendicular height (straight up from the base), not slant height along a face, and that every length uses the same unit.`,
+          },
+          {
+            q: "Do I need matching units?",
+            a: "Yes. If the base is in meters and the height is in centimeters, convert first. The calculator multiplies the numbers you type; it does not guess unit labels.",
+          },
+          {
+            q: "Where is the formula?",
+            a: `The formula cards on this page show the exact relation used for ${tool}. After Calculate, the steps repeat the same math with your numbers.`,
+          },
+          {
+            q: "Can I use this for homework?",
+            a: `Yes—show the formula, your inputs, and the result. For formal reports, state units clearly (for example m³).`,
+          },
+        ]
+      : domain === "math"
+        ? [
+            {
+              q: `Why isn’t ${tool} calculating?`,
+              a: "Fill every required field with valid numbers. Watch for division by zero or inputs outside the allowed domain.",
+            },
+            {
+              q: "My answer looks different from the textbook.",
+              a: "Check whether the book wants a simplified fraction, decimal rounding, or a different form (mixed number, radical). Match formats before assuming an error.",
+            },
+            {
+              q: "Can I trust the steps?",
+              a: `The steps follow the same formula shown on this page. Use them to find which line diverges from your work.`,
+            },
+            {
+              q: "What next if I need a related skill?",
+              a: `Open a similar calculator from the widgets below (for example simplify, convert, or a neighboring algebra tool).`,
+            },
+          ]
+        : [
+            {
+              q: `Why isn’t my ${tool} data calculating?`,
+              a: `Confirm every required field is filled and numbers use dots for decimals. Empty rows or letters often block the engine. Try Sample data, then replace with yours.`,
+            },
+            {
+              q: "What if two results disagree?",
+              a:
+                domain === "stats"
+                  ? `Check sample size, window length, and whether you optimized a vanity metric. Read the interval—not only a single p-value.`
+                  : `Lock units and definitions first, then re-run both calculations with identical inputs.`,
+            },
+            {
+              q: `Why does ${tool} look alarming after a small change?`,
+              a:
+                domain === "stats"
+                  ? `Low sample size or a shifted mix of users can exaggerate movement. Prefer longer windows and pre-set decision rules.`
+                  : `Re-check the sensitive input and whether the formula is nonlinear in that input.`,
+            },
+            {
+              q: "Can I use the export for class or drafts?",
+              a: `Yes for homework, labs, and internal notes. For formal publication, restate assumptions and confirm the method matches your protocol.`,
+            },
+          ];
 
-  const benchmarks: CalculatorOutline["benchmarks"] = [
-    {
-      segment: "E-commerce",
-      guidance: stats
-        ? `Expect noisier daily conversion tests; prefer weekly aggregates and pre-registered MDE before relying on ${tool}.`
-        : `Stress-test rates and fees; small % errors compound across cart volume.`,
-    },
-    {
-      segment: "SaaS / product analytics",
-      guidance: `Pair ${tool} with retention or activation. A “significant” click lift that does not move activation is incomplete.`,
-    },
-    {
-      segment: "Lead gen / content",
-      guidance: `Organic and paid mixes differ; segment before running ${tool}. Content decay often shows first in engagement depth, then in rankings.`,
-    },
-    {
-      segment: "Academic / research",
-      guidance: `Pre-specify α, sidedness, and exclusions. Report effect sizes and intervals alongside the primary ${tool} output.`,
-    },
-  ];
+  const benchmarks: CalculatorOutline["benchmarks"] =
+    domain === "geometry"
+      ? [
+          {
+            segment: "Classroom geometry",
+            guidance: `Always label units. For a square-base pyramid, volume is one-third of the prism with the same base and height.`,
+          },
+          {
+            segment: "Construction / DIY",
+            guidance: `Measure vertical height with a level or plumb reference when possible; slant measurements belong to face area, not volume.`,
+          },
+          {
+            segment: "3D modeling",
+            guidance: `Confirm whether your model’s “height” is apex altitude or a face edge before trusting ${tool}.`,
+          },
+          {
+            segment: "Quick sanity check",
+            guidance: `If you double every linear dimension, volumes scale by 8 and areas by 4—use that to spot unit mistakes.`,
+          },
+        ]
+      : domain === "math"
+        ? [
+            {
+              segment: "Homework",
+              guidance: `Match the requested form (exact vs decimal) before comparing to an answer key.`,
+            },
+            {
+              segment: "Exams",
+              guidance: `Write the formula, substitute, then simplify—same order as the on-page steps.`,
+            },
+            {
+              segment: "Everyday calc",
+              guidance: `Prefer exact fractions when money or recipes need clean ratios.`,
+            },
+            {
+              segment: "Teaching",
+              guidance: `Change one input live so students see which variable drives the result.`,
+            },
+          ]
+        : domain === "stats"
+          ? [
+              {
+                segment: "Experiments",
+                guidance: `Pre-register the metric and minimum detectable effect before relying on ${tool}.`,
+              },
+              {
+                segment: "Product analytics",
+                guidance: `Pair ${tool} with a north-star outcome, not only a click or open rate.`,
+              },
+              {
+                segment: "Content / research",
+                guidance: `Segment before testing; mixed traffic sources inflate noise.`,
+              },
+              {
+                segment: "Academic",
+                guidance: `Pre-specify α, sidedness, and exclusions. Report effect sizes with the primary result.`,
+              },
+            ]
+          : [
+              {
+                segment: "Everyday use",
+                guidance: `Re-run ${tool} when any driving input changes.`,
+              },
+              {
+                segment: "Team handoff",
+                guidance: `Share the inputs you used so others can reproduce the number.`,
+              },
+              {
+                segment: "Quality check",
+                guidance: `Compare against a known example before trusting a high-stakes case.`,
+              },
+              {
+                segment: "Documentation",
+                guidance: `Note units and assumptions next to the result.`,
+              },
+            ];
 
-  const integrations = [
-    `Combine ${tool} results with related ${catName} calculators from the similar-tools widget on this page.`,
-    stats
-      ? "Cross-check with traffic or session analytics (for example Search Console impressions/clicks plus on-site conversion) so the full journey from query to outcome is visible."
-      : "Cross-check spreadsheet models and accounting/CRM exports against this calculator’s CSV download.",
-    `Use ${siteConfig.name} critical-value tables and the statistical test selector when you need a companion reference.`,
-    "Link this page in tickets and docs so SEO, eng, and content share one method definition.",
-  ];
+  const integrations =
+    domain === "geometry"
+      ? [
+          `Compare related ${catName} shapes from the similar-tools list (prism vs pyramid, cone vs cylinder).`,
+          "Convert final cubic or square units with a length/volume converter if your plans use a different system.",
+          "Keep a sketch of base and height next to the numeric result.",
+        ]
+      : domain === "math"
+        ? [
+            `Open related ${catName} tools when you need the next algebraic step.`,
+            "Use fraction and percent converters when a problem mixes forms.",
+          ]
+        : domain === "stats"
+          ? [
+              `Combine ${tool} with related ${catName} calculators from the similar-tools list.`,
+              `Use ${siteConfig.name} critical-value tables when you need a companion reference.`,
+            ]
+          : [
+              `Combine ${tool} with related ${catName} calculators when you need a neighboring method.`,
+            ];
 
-  const uiTips = [
-    `Use the calculator panel at the top of this ${tool} page—paste data, then Calculate.`,
-    "Tap Sample data to learn the expected format, then Clear and enter your own values.",
-    "After results appear, open Free report & exports for APA text, CSV, Word, and Print/PDF.",
-    "Jump links under the title go to formulas, similar tools, and FAQ without leaving the page.",
-  ];
-
-  // Enrich with legacy howTo tips when present
-  if (guide.howTo?.length) {
-    uiTips.unshift(...guide.howTo.slice(0, 2));
-  }
-  if (guide.tips?.length) {
-    redFlags.push(...guide.tips.slice(0, 2));
-  }
+  const uiTips = uniqueStrings([
+    ...(guide.howTo ?? []).slice(0, 3),
+    domain === "geometry"
+      ? `Enter the labeled dimensions for ${tool} (for a square-base pyramid: base side and vertical height).`
+      : `Use the calculator fields at the top of this ${tool} page.`,
+    "Try Sample values if shown, then replace them with your own.",
+    "After results appear, read the steps to confirm the formula matched your intent.",
+  ]).slice(0, 6);
 
   return {
     toolName: tool,
@@ -270,7 +607,10 @@ export function buildOutline(
     why: { value, withoutIt, whenToRely },
     howUsed: { roles, scenario },
     formula: {
-      intro: `Below is the mechanics behind ${tool} as used on ${siteConfig.name}. Symbols follow common textbook notation.`,
+      intro:
+        formulas.length > 0
+          ? `The formula below is the one used for ${tool} on ${siteConfig.name}. Symbols match the input labels on this page.`
+          : `Enter your values above, then review the step-by-step working for ${tool}. Formula cards appear here when a closed-form expression is available.`,
       formulas,
       variableBreakdown,
       sampleCalculation,
@@ -280,6 +620,6 @@ export function buildOutline(
     troubleshooting,
     benchmarks,
     integrations,
-    uiTips: [...new Set(uiTips)].slice(0, 6),
+    uiTips,
   };
 }

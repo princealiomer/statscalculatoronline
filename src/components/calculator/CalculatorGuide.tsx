@@ -25,8 +25,8 @@ function SectionNav({ tool }: { tool: string }) {
     { href: "#workflow", label: "6. How to act" },
     { href: "#ui-tips", label: "UI tips" },
     { href: "#faq", label: "Troubleshooting" },
-    { href: "#benchmarks", label: "Benchmarks" },
-    { href: "#integrations", label: "Integrations" },
+    { href: "#benchmarks", label: "Contexts" },
+    { href: "#integrations", label: "Related tools" },
   ];
   return (
     <nav aria-label={`${tool} guide sections`} className="flex flex-wrap gap-2">
@@ -65,9 +65,8 @@ export function CalculatorGuide({ calculator }: { calculator: CalculatorDef }) {
           Understanding &amp; Using {tool}
         </h2>
         <p className="max-w-3xl text-[15px] leading-relaxed text-muted-foreground sm:text-base">
-          A complete outline for the free {tool} calculator: definition, purpose, practical uses,
-          formulas, how to read results, action workflow, troubleshooting, benchmarks, and how this
-          metric connects to the rest of your stack.
+          A practical guide for the free {tool} calculator: what it computes, when to use it, the
+          formula, how to enter inputs, and how to avoid common mistakes.
         </p>
         <SectionNav tool={tool} />
       </header>
@@ -79,7 +78,7 @@ export function CalculatorGuide({ calculator }: { calculator: CalculatorDef }) {
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <Badge variant="outline">High-level definition</Badge>
+              <Badge variant="outline">What it calculates</Badge>
               <CardDescription className="text-[15px] leading-relaxed text-foreground/80">
                 {o.whatIs.definition}
               </CardDescription>
@@ -106,20 +105,20 @@ export function CalculatorGuide({ calculator }: { calculator: CalculatorDef }) {
 
       <section id="why" className="flex scroll-mt-24 flex-col gap-4">
         <h3 className="font-display text-xl text-foreground sm:text-2xl">
-          2. Why Is {tool}? (Purpose &amp; Importance)
+          2. Why Use {tool}?
         </h3>
         <Card>
           <CardContent className="flex flex-col gap-3 pt-(--card-spacing) text-[15px] leading-relaxed text-muted-foreground">
             <p>
-              <span className="font-semibold text-foreground">Business &amp; SEO value: </span>
+              <span className="font-semibold text-foreground">Why it helps: </span>
               {o.why.value}
             </p>
             <p>
-              <span className="font-semibold text-foreground">What happens without it: </span>
+              <span className="font-semibold text-foreground">What goes wrong without it: </span>
               {o.why.withoutIt}
             </p>
             <p>
-              <span className="font-semibold text-foreground">When to rely on it: </span>
+              <span className="font-semibold text-foreground">When to use it: </span>
               {o.why.whenToRely}
             </p>
           </CardContent>
@@ -245,15 +244,15 @@ export function CalculatorGuide({ calculator }: { calculator: CalculatorDef }) {
 
       <section id="workflow" className="flex scroll-mt-24 flex-col gap-4">
         <h3 className="font-display text-xl text-foreground sm:text-2xl">
-          6. How to Use {tool}? (Actionable Implementation Guide)
+          6. How to Use {tool}
         </h3>
         <ol className="grid gap-3 sm:grid-cols-2">
           {(
             [
-              ["Audit", o.workflow.audit],
-              ["Diagnose", o.workflow.diagnose],
-              ["Execute", o.workflow.execute],
-              ["Measure", o.workflow.measure],
+              ["Prepare inputs", o.workflow.audit],
+              ["Check the result", o.workflow.diagnose],
+              ["Apply it", o.workflow.execute],
+              ["Re-check if needed", o.workflow.measure],
             ] as const
           ).map(([label, text], i) => (
             <li key={label}>
@@ -272,11 +271,10 @@ export function CalculatorGuide({ calculator }: { calculator: CalculatorDef }) {
 
       <section id="ui-tips" className="flex scroll-mt-24 flex-col gap-3">
         <h3 className="font-display text-xl text-foreground sm:text-2xl">
-          Visual &amp; interactive enhancements on this page
+          Tips for using this page
         </h3>
         <p className="text-sm text-muted-foreground">
-          Annotated path through the Stats Calculator Online {tool} interface—no separate dashboard
-          login required.
+          Quick path through the {tool} calculator on {siteConfig.name}.
         </p>
         <ol className="list-decimal pl-5 text-sm text-muted-foreground">
           {o.uiTips.map((t) => (
@@ -320,11 +318,10 @@ export function CalculatorGuide({ calculator }: { calculator: CalculatorDef }) {
 
       <section id="benchmarks" className="flex scroll-mt-24 flex-col gap-3">
         <h3 className="font-display text-xl text-foreground sm:text-2xl">
-          Industry benchmarks &amp; segment variations
+          Practical contexts
         </h3>
         <p className="text-sm text-muted-foreground">
-          Acceptable thresholds for {tool} shift by business model and channel—use these as starting
-          guidance, not universal law.
+          How people typically use {tool} in different settings—starting guidance, not universal rules.
         </p>
         <ul className="grid gap-3 sm:grid-cols-2">
           {o.benchmarks.map((b) => (
@@ -342,7 +339,7 @@ export function CalculatorGuide({ calculator }: { calculator: CalculatorDef }) {
 
       <section id="integrations" className="flex scroll-mt-24 flex-col gap-3">
         <h3 className="font-display text-xl text-foreground sm:text-2xl">
-          Integration with other metrics (the holistic view)
+          Related tools
         </h3>
         <Separator />
         <ul className="list-disc pl-5 text-sm leading-relaxed text-muted-foreground">
