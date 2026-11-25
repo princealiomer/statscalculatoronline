@@ -215,3 +215,122 @@ details > summary {
     @apply font-sans;
   }
 }
+
+/* —— 404 page motion —— */
+@keyframes stats-letter-fade {
+  0%,
+  12% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+  38%,
+  52% {
+    opacity: 0;
+    transform: translateY(0.12em) scale(0.96);
+    filter: blur(2px);
+  }
+  78%,
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes not-found-zero-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes not-found-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes not-found-rule {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+.stats-fade-letter {
+  animation: stats-letter-fade 3.6s ease-in-out infinite;
+  will-change: opacity, transform, filter;
+}
+
+.not-found-zero {
+  animation: not-found-zero-pulse 2.8s ease-in-out infinite;
+}
+
+.not-found-kicker {
+  animation: not-found-rise 0.7s ease-out both;
+}
+
+.not-found-code {
+  animation: not-found-rise 0.85s ease-out 0.08s both;
+}
+
+.not-found-rule {
+  transform-origin: center;
+  animation: not-found-rule 0.9s ease-out 0.35s both;
+}
+
+.not-found-copy {
+  animation: not-found-rise 0.8s ease-out 0.45s both;
+}
+
+.not-found-copy-delay {
+  animation: not-found-rise 0.8s ease-out 0.58s both;
+}
+
+.not-found-actions {
+  animation: not-found-rise 0.8s ease-out 0.7s both;
+}
+
+.not-found-links {
+  animation: not-found-rise 0.8s ease-out 0.85s both;
+}
+
+.not-found-grid {
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--brand-ink) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--brand-ink) 6%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stats-fade-letter,
+  .not-found-zero,
+  .not-found-kicker,
+  .not-found-code,
+  .not-found-rule,
+  .not-found-copy,
+  .not-found-copy-delay,
+  .not-found-actions,
+  .not-found-links {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
