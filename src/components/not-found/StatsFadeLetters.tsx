@@ -1,23 +1,48 @@
 "use client";
 
-const LETTERS = ["S", "T", "A", "T", "S"] as const;
+/** Key statistics symbols — fade in / out on the 404 page */
+const SYMBOLS = [
+  { glyph: "μ", name: "mu — population mean", tone: "ink" },
+  { glyph: "x̄", name: "x-bar — sample mean", tone: "teal" },
+  { glyph: "σ", name: "sigma — population SD", tone: "amber" },
+  { glyph: "s", name: "s — sample SD", tone: "ink" },
+  { glyph: "Σ", name: "capital sigma — summation", tone: "teal" },
+  { glyph: "σ²", name: "sigma squared — population variance", tone: "amber" },
+  { glyph: "s²", name: "s squared — sample variance", tone: "ink" },
+  { glyph: "χ²", name: "chi-square", tone: "teal" },
+  { glyph: "α", name: "alpha — significance level", tone: "amber" },
+  { glyph: "β", name: "beta — Type II error", tone: "ink" },
+  { glyph: "ρ", name: "rho — population correlation", tone: "teal" },
+  { glyph: "r", name: "r — sample correlation", tone: "amber" },
+] as const;
+
+const toneClass = {
+  ink: "text-[var(--brand-ink)]",
+  teal: "text-[var(--brand-accent)]",
+  amber: "text-[var(--brand-amber)]",
+} as const;
 
 export function StatsFadeLetters() {
   return (
-    <p
-      className="stats-fade-row font-display flex items-baseline justify-center gap-[0.06em] text-[clamp(3.5rem,14vw,8.5rem)] font-semibold leading-none tracking-[-0.04em] text-[var(--brand-ink)]"
-      aria-label="Stats"
+    <div
+      className="stats-fade-row flex w-full max-w-2xl flex-wrap items-center justify-center gap-x-4 gap-y-3 sm:gap-x-6 sm:gap-y-4"
+      aria-label="Statistics symbols"
     >
-      {LETTERS.map((letter, i) => (
+      {SYMBOLS.map((symbol, i) => (
         <span
-          key={`${letter}-${i}`}
-          className="stats-fade-letter inline-block"
-          style={{ animationDelay: `${i * 0.22}s` }}
+          key={`${symbol.glyph}-${i}`}
+          className={`stats-fade-letter font-display inline-block text-[clamp(1.75rem,5.5vw,3.25rem)] font-semibold leading-none tracking-tight ${toneClass[symbol.tone]}`}
+          style={{ animationDelay: `${i * 0.28}s` }}
+          title={symbol.name}
           aria-hidden
         >
-          {letter}
+          {symbol.glyph}
         </span>
       ))}
-    </p>
+      <span className="sr-only">
+        Statistics symbols: mu, x-bar, sigma, s, summation, variance, chi-square, alpha, beta,
+        correlation
+      </span>
+    </div>
   );
 }

@@ -219,18 +219,18 @@ details > summary {
 /* —— 404 page motion —— */
 @keyframes stats-letter-fade {
   0%,
-  12% {
+  10% {
     opacity: 1;
     transform: translateY(0) scale(1);
     filter: blur(0);
   }
-  38%,
-  52% {
+  35%,
+  48% {
     opacity: 0;
-    transform: translateY(0.12em) scale(0.96);
-    filter: blur(2px);
+    transform: translateY(0.18em) scale(0.92);
+    filter: blur(3px);
   }
-  78%,
+  75%,
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -273,7 +273,7 @@ details > summary {
 }
 
 .stats-fade-letter {
-  animation: stats-letter-fade 3.6s ease-in-out infinite;
+  animation: stats-letter-fade 5.2s ease-in-out infinite;
   will-change: opacity, transform, filter;
 }
 

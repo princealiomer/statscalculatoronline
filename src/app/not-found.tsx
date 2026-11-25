@@ -33,14 +33,14 @@ export default function NotFound() {
           <div className="not-found-rule h-px w-24 bg-[color-mix(in_oklab,var(--brand-ink)_18%,transparent)] sm:w-32" />
         </div>
 
-        <div className="flex w-full max-w-3xl flex-col items-center gap-4">
+        <div className="flex w-full max-w-3xl flex-col items-center gap-5">
           <StatsFadeLetters />
           <h1 className="not-found-copy max-w-lg font-display text-2xl font-semibold tracking-tight text-[var(--brand-ink)] sm:text-3xl">
-            This calculation went missing
+            This statistic went missing
           </h1>
           <p className="not-found-copy-delay max-w-md text-[15px] leading-relaxed text-[var(--brand-ink-soft)] sm:text-base">
-            The page you asked for isn&apos;t on {siteConfig.name}. Head home or open the
-            calculator catalog and pick a tool that exists.
+            μ, σ, χ², α… those symbols are here — this URL isn&apos;t. Head home on{" "}
+            {siteConfig.name} or open a calculator that exists.
           </p>
         </div>
 
