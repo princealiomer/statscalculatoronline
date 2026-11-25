@@ -24,7 +24,6 @@ const STATS_CATEGORIES = new Set([
   "cluster-analysis",
   "measurement-systems",
   "matrix-algebra",
-  "chart",
 ]);
 
 export function calculatorKeywords(calc: CalculatorDef): string[] {

@@ -710,6 +710,205 @@ export const engineGuides: Record<string, Partial<CalculatorGuideContent>> = {
     tips: ["Athletes may have high BMI from muscle mass.", "Not medical advice."],
   },
 
+  "grade-weighted": {
+    overview: "Computes a weighted course grade from score/weight rows and maps it to a letter for planning.",
+    whenToUse: "Use when your syllabus lists category weights and you have current scores.",
+    howTo: [
+      "Enter one row per category as: score, weight% (example: 88, 30).",
+      "Click Calculate for the weighted average and letter.",
+      "Confirm weights match your syllabus before trusting the result.",
+    ],
+    example: "Rows 90,40 and 80,60 → weighted grade = (90·40 + 80·60) / 100 = 84.",
+    formulas: [
+      {
+        label: "Weighted grade",
+        latex: "G=\\dfrac{\\sum (s_i w_i)}{\\sum w_i}",
+        note: "s = score, w = weight (often percent of the course).",
+      },
+    ],
+    interpretation: [
+      "Weighted grade is the syllabus-style average.",
+      "Letter cutoffs vary by school—treat the letter as a guide.",
+      "Not an official portal grade.",
+    ],
+    tips: ["Weights often sum to 100.", "Don’t mix raw points with percents without converting."],
+  },
+
+  "final-grade": {
+    overview: "Solves for the final-exam score needed to reach a target course grade given current average and final weight.",
+    whenToUse: "Use before finals when you know your current grade, target, and final exam weight.",
+    howTo: [
+      "Enter current grade, desired course grade, and final weight %.",
+      "Click Calculate to see the needed final score.",
+      "If the needed score is above 100, the target may be unreachable under these weights.",
+    ],
+    example: "Current 85, desired 90, final weight 20% → needed = (90·100 − 85·80) / 20 = 110 (likely unreachable).",
+    formulas: [
+      {
+        label: "Needed on final",
+        latex: "F=\\dfrac{D\\cdot 100 - C\\cdot (100-w)}{w}",
+        note: "C = current, D = desired, w = final weight percent.",
+      },
+    ],
+    interpretation: [
+      "Needed on final is the score required on that weighted exam.",
+      "Values over 100 mean the target isn’t reachable with the stated weights.",
+      "Planning estimate only.",
+    ],
+    tips: ["Confirm the final’s weight on the syllabus.", "Re-run after each graded assignment updates C."],
+  },
+
+  vintage: {
+    overview:
+      "Summarizes cohort / vintage performance from a pasted design matrix for educational credit-risk demos.",
+    whenToUse:
+      "Use when you want a quick educational vintage-style summary and cohort definitions are already aligned.",
+    howTo: [
+      "Paste a numeric matrix (outcome in the first column) or use the labeled cohort fields.",
+      "Click Calculate to see n, outcome mean, and estimator label.",
+      "Compare a second vintage only after windows and denominators match.",
+    ],
+    formulas: [
+      {
+        label: "Cohort mean (demo)",
+        latex: "\\bar{y}=\\dfrac{1}{n}\\sum_{i=1}^{n} y_i",
+        note: "Educational summary of the pasted outcome column—not a full bureau model.",
+      },
+    ],
+    interpretation: [
+      "Outcome mean is a simple cohort summary from the pasted matrix.",
+      "Align months-on-book and balance denominators before comparing vintages.",
+      "Not a credit decision engine.",
+    ],
+    tips: ["Align cohort definitions first.", "Educational use only."],
+  },
+
+  gpa: {
+    overview: "Computes GPA from letter grades and credit hours using a standard 4.0-style scale.",
+    whenToUse: "Use for term or cumulative GPA planning from known letters and credits.",
+    howTo: [
+      "Enter rows as: letter, credits (example: A, 3).",
+      "Click Calculate for quality points and GPA.",
+      "Confirm your school’s plus/minus scale if it differs.",
+    ],
+    example: "A 3 credits and B 3 credits → GPA = (4·3 + 3·3) / 6 = 3.5.",
+    formulas: [
+      {
+        label: "GPA",
+        latex: "\\mathrm{GPA}=\\dfrac{\\sum (p_i c_i)}{\\sum c_i}",
+        note: "p = grade points for the letter, c = credit hours.",
+      },
+    ],
+    interpretation: [
+      "GPA is credit-weighted grade points.",
+      "Letter→point maps can differ by institution.",
+      "Not an official transcript.",
+    ],
+    tips: ["Include credit hours, not only letters.", "Check plus/minus policies at your school."],
+  },
+
+  "pregnancy-due": {
+    overview:
+      "Estimates a pregnancy due date from the first day of the last menstrual period (LMP) using Naegele’s rule, and reports approximate gestational age from LMP to today.",
+    whenToUse:
+      "Use this for educational due-date estimates when you know the LMP. Do not use it as medical advice or instead of ultrasound dating.",
+    howTo: [
+      "Enter LMP as YYYY-MM-DD (first day of the last menstrual period).",
+      "Click Calculate to see estimated due date and gestational age.",
+      "Read the steps—due date is LMP + 280 days (about 40 weeks).",
+    ],
+    example:
+      "LMP = 2026-01-15 → estimated due date = 2026-10-22 (LMP + 280 days). Gestational age is weeks and days from LMP to today.",
+    formulas: [
+      {
+        label: "Naegele’s rule",
+        latex: "\\mathrm{EDD}=\\mathrm{LMP}+280\\ \\mathrm{days}",
+        note: "Educational estimate ≈ 40 weeks from LMP; not a clinical due date.",
+      },
+      {
+        label: "Gestational age",
+        latex: "\\mathrm{days}=\\mathrm{today}-\\mathrm{LMP};\\quad w=\\lfloor\\mathrm{days}/7\\rfloor",
+        note: "Shown as weeks and leftover days; future LMP yields 0w 0d.",
+      },
+    ],
+    interpretation: [
+      "Estimated due date: calendar date from LMP + 280 days.",
+      "Gestational age: how far along the estimate is from LMP to today.",
+      "Clinics may date pregnancy with ultrasound—those dates can differ.",
+    ],
+    tips: [
+      "Use YYYY-MM-DD for LMP.",
+      "Educational only—not medical advice.",
+    ],
+    faq: [
+      {
+        q: "Why isn’t my due date calculating?",
+        a: "Enter the first day of your last menstrual period (LMP) as YYYY-MM-DD (for example 2026-01-15). Blank or invalid dates are rejected.",
+      },
+      {
+        q: "How is the due date estimated?",
+        a: "This page uses Naegele’s rule: LMP + 280 days (about 40 weeks). It is an educational estimate, not a clinical due date.",
+      },
+      {
+        q: "Why does gestational age look wrong?",
+        a: "Gestational age here is counted from LMP to today’s date. A future LMP shows 0 weeks; an earlier LMP increases weeks and days.",
+      },
+      {
+        q: "Is this medical advice?",
+        a: "No. Ultrasound dating and clinician guidance can differ. Use the result for planning education only.",
+      },
+    ],
+  },
+
+  "period-estimate": {
+    overview:
+      "Estimates the next period start and an approximate ovulation date from the last period start and a typical cycle length.",
+    whenToUse:
+      "Use for educational cycle planning when cycles are roughly regular. Not for contraception or diagnosis.",
+    howTo: [
+      "Enter last period start as YYYY-MM-DD and cycle length in days.",
+      "Click Calculate for next-period and ovulation estimates.",
+      "Remember cycles vary—this is a simple day-count model.",
+    ],
+    example:
+      "Last start = 2026-03-01, cycle = 28 → next period ≈ 2026-03-29; ovulation ≈ 14 days before that next period.",
+    formulas: [
+      {
+        label: "Next period",
+        latex: "\\mathrm{next}=\\mathrm{last}+\\mathrm{cycle}\\ \\mathrm{days}",
+      },
+      {
+        label: "Ovulation (est.)",
+        latex: "\\mathrm{ovulation}\\approx\\mathrm{next}-14\\ \\mathrm{days}",
+        note: "Common educational rule of thumb; not fertility medical advice.",
+      },
+    ],
+    interpretation: [
+      "Next period: last start plus cycle length.",
+      "Ovulation: roughly mid-cycle under a fixed-length model.",
+      "Irregular cycles need personalized guidance beyond this estimate.",
+    ],
+    tips: ["Educational only—not birth control or medical advice.", "Use YYYY-MM-DD dates."],
+    faq: [
+      {
+        q: "Why isn’t my period estimate calculating?",
+        a: "Enter the last period start as YYYY-MM-DD and a cycle length in days (typically around 28). Invalid dates or extreme cycle lengths are rejected.",
+      },
+      {
+        q: "How are next period and ovulation estimated?",
+        a: "Next period ≈ last start + cycle length. Ovulation is estimated about 14 days before the next period. Cycles vary—this is educational only.",
+      },
+      {
+        q: "Is this birth-control or medical advice?",
+        a: "No. Do not rely on this estimate for contraception or diagnosis. Confirm with a clinician when it matters.",
+      },
+      {
+        q: "What if my cycles are irregular?",
+        a: "A single average cycle length is a rough model. Irregular cycles need personalized medical guidance, not a fixed-day calculator alone.",
+      },
+    ],
+  },
+
   pythagorean: {
     overview: "Pythagorean theorem relates side lengths of a right triangle.",
     howTo: ["Enter any two of a, b, c (hypotenuse).", "Solve for the missing side."],

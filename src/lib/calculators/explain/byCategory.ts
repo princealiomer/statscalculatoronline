@@ -99,15 +99,42 @@ export const categoryGuides: Record<
   },
   conversions: {
     whenToUse: "Use converters to move between unit systems without manual lookup tables.",
-    tips: ["Confirm whether temperature needs an offset (C↔F) versus a pure scale factor."],
+    tips: [
+      "Match the from-unit to the number you already have, then convert.",
+      "For temperature, remember C↔F needs an offset—not only a scale factor.",
+    ],
+    interpretation: [
+      "Read the output unit on the result row before using the number downstream.",
+    ],
+  },
+  chart: {
+    whenToUse: "Use chart makers to visualize distributions, comparisons, and relationships.",
+    howTo: [
+      "Enter numeric values (and labels if asked).",
+      "Click Calculate to plot the chart.",
+      "Fix any mistyped value that dominates the scale.",
+    ],
+    tips: [
+      "Label axes and units in your write-up.",
+      "Choose a chart type that matches the question (distribution vs comparison vs trend).",
+    ],
+    interpretation: [
+      "Largest input should map to the tallest bar or largest slice.",
+      "Non-numeric cells leave gaps or empty charts.",
+    ],
   },
   physics: {
     whenToUse: "Use physics calculators for textbook relations among force, energy, motion, and waves.",
     tips: ["SI units are assumed unless noted.", "Signs depend on your chosen coordinate system."],
   },
   health: {
-    whenToUse: "Use health calculators for screening indexes and training estimates.",
-    tips: ["Outputs are educational only and not medical advice."],
+    whenToUse:
+      "Use health calculators for educational screening indexes, training estimates, and calendar planning—not as medical advice.",
+    interpretation: [
+      "Results are educational estimates only.",
+      "Clinical decisions need a qualified clinician.",
+    ],
+    tips: ["Outputs are educational only and not medical advice.", "Prefer YYYY-MM-DD for date fields."],
   },
   time: {
     whenToUse: "Use time tools for ages, durations, and clock conversions.",
@@ -137,10 +164,6 @@ export const categoryGuides: Record<
   "survival-analysis": {
     whenToUse: "Use survival methods for time-to-event data with possible censoring.",
     tips: ["Do not treat censored times as events.", "Check proportional-hazards assumptions for Cox models."],
-  },
-  chart: {
-    whenToUse: "Use chart makers to visualize distributions, comparisons, and relationships.",
-    tips: ["Label axes and units.", "Choose a chart type that matches the question (distribution vs comparison vs trend)."],
   },
   "causal-inference": {
     whenToUse: "Use causal estimators when an identification strategy (DiD, IV, RDD) is already justified.",

@@ -70,4 +70,6 @@ export type CalculatorGuideContent = {
   tips: string[];
   whenToUse?: string;
   example?: string;
+  /** Page-specific FAQ; preferred over domain defaults when present */
+  faq?: FaqItem[];
 };
