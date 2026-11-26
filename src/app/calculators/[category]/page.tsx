@@ -16,6 +16,7 @@ import { getPopularCalculators } from "@/lib/calculators/related";
 import { buildPageMetadata } from "@/lib/seo/meta";
 import { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
 import { categorySeo } from "@/lib/calculators/categorySeo";
+import { buildCategoryJsonLd } from "@/lib/calculators/seo";
 import { ContentPage } from "@/components/ContentPage";
 import {
   Card,
@@ -123,46 +124,58 @@ function CategoryView({
   const heading = /calculators?$/i.test(title) ? title : `${title} Calculators`;
   const tips = tidbitsForPath(categoryId, 3);
   const more = getPopularCalculators(6).filter((c) => c.category !== categoryId);
+  const jsonLd = buildCategoryJsonLd({
+    categoryId,
+    title,
+    description,
+    items,
+  });
 
   return (
-    <ContentPage
-      wide
-      title={heading}
-      crumbs={[
-        { href: "/", label: "Home" },
-        { href: "/calculators", label: "Calculators" },
-        { label: title },
-      ]}
-      description={
-        <>
-          {description} Free tools on Stats Calculator Online with formulas, how-to steps, similar
-          calculator widgets, tidbits, and exportable reports.
-        </>
-      }
-    >
-      <ul className="grid gap-3 sm:grid-cols-2">
-        {items.map((c) => (
-          <li key={c.slug}>
-            <Link href={`/calculators/${c.category}/${c.slug}`} className="block h-full">
-              <Card className="h-full min-h-14 transition hover:ring-primary/30">
-                <CardHeader>
-                  <CardTitle className="text-base">{calculatorDisplayTitle(c)}</CardTitle>
-                  <CardDescription className="text-sm leading-snug">{c.description}</CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ContentPage
+        wide
+        title={heading}
+        crumbs={[
+          { href: "/", label: "Home" },
+          { href: "/calculators", label: "Calculators" },
+          { label: title },
+        ]}
+        description={
+          <>
+            {description} Free tools on Stats Calculator Online with formulas, how-to steps, similar
+            calculator widgets, tidbits, and exportable reports.
+          </>
+        }
+      >
+        <ul className="grid gap-3 sm:grid-cols-2">
+          {items.map((c) => (
+            <li key={c.slug}>
+              <Link href={`/calculators/${c.category}/${c.slug}`} className="block h-full">
+                <Card className="h-full min-h-14 transition hover:ring-primary/30">
+                  <CardHeader>
+                    <CardTitle className="text-base">{calculatorDisplayTitle(c)}</CardTitle>
+                    <CardDescription className="text-sm leading-snug">{c.description}</CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            </li>
+          ))}
+        </ul>
 
-      <div className="flex flex-col gap-8">
-        <TidbitsWidget items={tips} />
-        <SimilarCalculatorsWidget
-          items={more}
-          title="Users also open these calculators"
-          subtitle="Cross-topic picks from Stats Calculator Online"
-        />
-      </div>
-    </ContentPage>
+        <div className="flex flex-col gap-8">
+          <TidbitsWidget items={tips} />
+          <SimilarCalculatorsWidget
+            items={more}
+            title="Users also open these calculators"
+            subtitle="Cross-topic picks from Stats Calculator Online"
+          />
+        </div>
+      </ContentPage>
+    </>
   );
 }

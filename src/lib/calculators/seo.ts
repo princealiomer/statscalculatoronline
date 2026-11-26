@@ -3,6 +3,7 @@ import type { CalculatorDef } from "@/lib/calculators/types";
 import { getCategory } from "@/lib/calculators/registry";
 import { getCalculatorGuide, getCalculatorOutline } from "@/lib/calculators/explain";
 import { seoBySlug } from "@/lib/calculators/seoTargeting";
+import { categorySeo } from "@/lib/calculators/categorySeo";
 import { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
 import { siteConfig } from "@/config/site";
 import { buildPageMetadata, seoDescription } from "@/lib/seo/meta";
@@ -86,6 +87,64 @@ export function calculatorAnswerBlock(calc: CalculatorDef): string {
       : `The free ${display} computes ${calc.description.toLowerCase()}. ${definition}`;
   if (lead.length <= 320) return lead;
   return `${lead.slice(0, 317).replace(/\s+\S*$/, "").trimEnd()}…`;
+}
+
+/** ItemList + BreadcrumbList for category hub pages (`/calculators/[category]`). */
+export function buildCategoryJsonLd(opts: {
+  categoryId: string;
+  title: string;
+  description: string;
+  items: CalculatorDef[];
+}) {
+  const { categoryId, title, description, items } = opts;
+  const pageName = /calculators?$/i.test(title) ? title : `${title} Calculators`;
+  const url = `${siteConfig.url}/calculators/${categoryId}`;
+  const targeted = categorySeo[categoryId];
+  const pageDescription =
+    targeted?.description ??
+    `${description} Free ${title.toLowerCase()} calculators with formulas, steps, and PDF exports.`;
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        name: pageName,
+        description: pageDescription,
+        url,
+        isPartOf: { "@type": "WebSite", name: siteConfig.name, url: siteConfig.url },
+        mainEntity: { "@id": `${url}#itemlist` },
+      },
+      {
+        "@type": "ItemList",
+        "@id": `${url}#itemlist`,
+        name: pageName,
+        description: pageDescription,
+        numberOfItems: items.length,
+        itemListOrder: "https://schema.org/ItemListOrderAscending",
+        itemListElement: items.map((c, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: calculatorDisplayTitle(c),
+          url: `${siteConfig.url}/calculators/${c.category}/${c.slug}`,
+          description: c.description,
+        })),
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: siteConfig.url },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Calculators",
+            item: `${siteConfig.url}/calculators`,
+          },
+          { "@type": "ListItem", position: 3, name: pageName, item: url },
+        ],
+      },
+    ],
+  };
 }
 
 export function buildCalculatorJsonLd(calc: CalculatorDef) {
