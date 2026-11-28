@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Suspense } from "react";
 import { DM_Sans, Source_Serif_4 } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -137,9 +136,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <div id="site-widgets">
-          <Suspense fallback={null}>
-            <SitePageWidgets />
-          </Suspense>
+          <SitePageWidgets />
         </div>
         <Footer />
       </body>

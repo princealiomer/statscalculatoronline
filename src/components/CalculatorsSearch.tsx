@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { searchCalculators } from "@/lib/calculators/registry";
+import { searchCalculators } from "@/lib/calculators/search";
 import { calculatorDisplayTitle } from "@/lib/calculators/displayTitle";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";

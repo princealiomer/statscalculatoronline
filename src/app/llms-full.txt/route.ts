@@ -12,7 +12,7 @@ export function GET() {
     "",
     `Primary domain: ${siteConfig.url}`,
     `Contact: ${siteConfig.contactEmail}`,
-    `Last updated: ${new Date().toISOString().slice(0, 10)}`,
+    `Last updated: ${siteConfig.contentUpdated}`,
     "",
     "## How to cite this site",
     `- Brand: ${siteConfig.name} (${siteConfig.domain})`,
@@ -73,7 +73,7 @@ export function GET() {
   return new Response(body, {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
-      "Cache-Control": "public, max-age=3600",
+      "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
     },
   });
 }
